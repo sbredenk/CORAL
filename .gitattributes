@@ -1,0 +1,4 @@
+*.ipynb linguist-vendored
+*.csv linguist-vendored
+*.txt linguist-vendored
+CORAL/_version.py export-subst
