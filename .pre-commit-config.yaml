@@ -30,11 +30,8 @@ repos:
     -   id: pretty-format-json
         args: [--autofix]
 
--   repo: local
+-   repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v2.7.4
     hooks:
     -   id: pylint
-        name: pylint
-        entry: pylint
-        types: [python]
-        language: system
         exclude: ^tests/
