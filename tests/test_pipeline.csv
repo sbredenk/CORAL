@@ -1,0 +1,4 @@
+﻿name,lat,lon,capacity,turbine,depth,distance_to_site_(km),distance_to_shore,substructure,start_date,port_region
+Project a,40.96,-70.829972,759,15MW_generic,43,65,33,monopile,5/1/21 0:00,northeast
+Project b,40.96,-70.829972,759,15MW_generic,43,65,33,monopile,5/1/21 0:00,northeast
+Project c,40.96,-70.829972,759,15MW_generic,43,65,33,monopile,5/1/21 0:00,central
