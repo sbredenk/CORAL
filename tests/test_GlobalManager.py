@@ -7,6 +7,7 @@ __email__ = "jake.nunemaker@nrel.gov"
 import os
 from copy import deepcopy
 
+import pytest
 from ORBIT import ProjectManager
 
 from CORAL import GlobalManager
@@ -165,3 +166,48 @@ def test_staggered_resources_by_int():
     assert first["Started"] == 0
     assert second["Started"] == 400
     assert third["Started"] == 1000
+
+
+def test_zero_initial_resource_capacity():
+
+    allocations = {
+        "wtiv": ("test_wtiv", 2),
+        "port": [("test_port_1", 1), ("test_port_2", 0)],
+    }
+
+    config1 = deepcopy(BASE)
+    config1["wtiv"] = "_shared_pool_:test_wtiv"
+    config1["port"] = "_shared_pool_:test_port_1"
+
+    config2 = deepcopy(BASE)
+    config2["wtiv"] = "_shared_pool_:test_wtiv"
+    config2["port"] = "_shared_pool_:test_port_2"
+
+    configs = [config1, config2]
+    manager = GlobalManager(configs, allocations, library_path=LIBRARY_PATH)
+    manager.add_future_resources("port", "test_port_2", [250])
+    manager.run()
+
+    assert len(manager.logs) == 2
+
+    first, second = manager.logs
+    assert first["Started"] == 0
+    assert second["Started"] == 250
+
+
+def test_zero_initial_resource_capacity_no_future():
+
+    allocations = {
+        "wtiv": ("test_wtiv", 2),
+        "port": [("test_port_1", 1), ("test_port_2", 0)],
+    }
+
+    config = deepcopy(BASE)
+    config["wtiv"] = "_shared_pool_:test_wtiv"
+    config["port"] = "_shared_pool_:test_port_2"
+
+    configs = [config]
+    manager = GlobalManager(configs, allocations, library_path=LIBRARY_PATH)
+
+    with pytest.raises(RuntimeError):
+        manager.run()
