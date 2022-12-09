@@ -153,6 +153,11 @@ class GlobalManager:
         """Main simulation run method."""
 
         self.env.run()
+        if len(self.logs) != len(self.configs):
+            raise RuntimeError(
+                "Missing simulations. Confirm that all resources that started "
+                "with zero capacity have future capacity added."
+            )
 
     def _initialize(self, name, start, config):
         """
