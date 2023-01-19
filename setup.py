@@ -1,5 +1,6 @@
 """Distribution setup."""
 
+import versioneer
 from setuptools import setup, find_packages
 
 with open("README.rst", encoding="utf-8") as fh:
@@ -10,6 +11,8 @@ setup(
     name="CORAL",
     author="Jake Nunemaker",
     description=long_description,
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(
         exclude=["*.tests", "*.tests.*", "tests.*", "tests"]
     ),
