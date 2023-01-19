@@ -10,7 +10,9 @@ with open("README.rst", encoding="utf-8") as fh:
 setup(
     name="CORAL",
     author="Jake Nunemaker",
-    description=long_description,
+    description="Concurrent ORBIT for shared Resource Analysis Library",
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(
