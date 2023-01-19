@@ -217,7 +217,13 @@ class SharedResource(Resource):
             Function to call on successful resource release.
         """
 
-        super().__init__(env, capacity)
+        if capacity == 0:
+            super().__init__(env, 1)
+            _ = self.request()
+
+        else:
+            super().__init__(env, capacity)
+
         self.load_data(path)
         self.callback = callback
 
