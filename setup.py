@@ -8,7 +8,7 @@ with open("README.rst", encoding="utf-8") as fh:
 
 
 setup(
-    name="CORAL",
+    name="coral-nrel",
     author="Jake Nunemaker",
     description="Concurrent ORBIT for shared Resource Analysis Library",
     long_description=long_description,
