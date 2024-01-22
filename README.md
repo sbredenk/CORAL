@@ -4,7 +4,7 @@ CORAL
 Concurrent ORBIT for shared Resource Analysis Library
 
 
-:Authors: `Jake Nunemaker <https://www.linkedin.com/in/jake-nunemaker/>`_, `Matt Shields <https://www.linkedin.com/in/matt-shields-834a6b66/>`_, `Sophie Bredenkamp <https://www.linkedin.com/in/sophie-bredenkamp-839321150/>`
+:Authors: `Jake Nunemaker <https://www.linkedin.com/in/jake-nunemaker/>`_, `Matt Shields <https://www.linkedin.com/in/matt-shields-834a6b66/>`_, `Sophie Bredenkamp <https://www.linkedin.com/in/sophie-bredenkamp-839321150/>`_
 
 
 Installation
