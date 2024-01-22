@@ -7,16 +7,9 @@ Concurrent ORBIT for shared Resource Analysis Library
 :Authors: `Jake Nunemaker <https://www.linkedin.com/in/jake-nunemaker/>`_, `Matt Shields <https://www.linkedin.com/in/matt-shields-834a6b66/>`_, `Sophie Bredenkamp <https://www.linkedin.com/in/sophie-bredenkamp-839321150/>`_
 
 
-Installation
-------------
-
-
-
 Development Setup
 -----------------
 
-The steps below are for more advanced users that would like to modify and
-and contribute to CORAL.
 
 Environment
 ~~~~~~~~~~~
@@ -65,7 +58,10 @@ Instructions
 
        # OR if you are you going to be contributing to the code or building documentation
        pip install -e '.[dev]'
-
+6. Install ORBIT wherever you would like (in coral path works: ``<path-to-CORAL>/``) using the following command.
+	
+	pip install orbit-nrel
+	
 
 Dependencies
 ~~~~~~~~~~~~
@@ -97,5 +93,5 @@ Recommended packages for easy iteration and running of code:
 
 Setting Up a Run
 ----------------
-See coral_example_setup.ipynb for detailed explanation on running the model.
+See coral_example_setup.ipynb for detailed explanation on running the model and understanding outputs.
 
