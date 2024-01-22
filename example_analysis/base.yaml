@@ -17,7 +17,7 @@ oss_install_vessel: example_heavy_lift_vessel
 spi_vessel: example_scour_protection_vessel
 # Module Specific
 OffshoreSubstationInstallation:
-  feeder: _shared_pool_:example_heavy_feeder
+  feeder: example_heavy_feeder
   num_feeders: 1
 array_system_design:
   cables:

@@ -131,7 +131,7 @@ class Pipeline:
 
             # Vessels
 
-            # config["wtiv"] = "_shared_pool_:example_wtiv"
+            config["wtiv"] = "_shared_pool_:example_wtiv"
             config.update(
                 {
                     "MonopileInstallation": {
