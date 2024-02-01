@@ -1,0 +1,38 @@
+agent,phase,action,duration
+Substructure Assembly Line 1,MooredSubInstallation,Substructure Assembly,325416.0
+Towing Group 1,MooredSubInstallation,Ballast to Operational Draft,3930.0
+Towing Group 1,MooredSubInstallation,Ballast to Towing Draft,3930.0
+Towing Group 1,MooredSubInstallation,Check Mooring Lines,3930.0
+Towing Group 1,MooredSubInstallation,"Connect Mooring Lines, Pre-tension and pre-stretch",13100.0
+Towing Group 1,MooredSubInstallation,Delay,127103.0
+Towing Group 1,MooredSubInstallation,Delay: No Completed Assemblies Available,255523.62072077923
+Towing Group 1,MooredSubInstallation,Position Substructure,1310.0
+Towing Group 1,MooredSubInstallation,Tow Substructure,19659.405818181818
+Towing Group 1,MooredSubInstallation,Transit,7723.338
+Towing Group 2,MooredSubInstallation,Ballast to Operational Draft,3894.0
+Towing Group 2,MooredSubInstallation,Ballast to Towing Draft,3894.0
+Towing Group 2,MooredSubInstallation,Check Mooring Lines,3894.0
+Towing Group 2,MooredSubInstallation,"Connect Mooring Lines, Pre-tension and pre-stretch",12980.0
+Towing Group 2,MooredSubInstallation,Delay,123624.0
+Towing Group 2,MooredSubInstallation,Delay: No Completed Assemblies Available,259226.18803896106
+Towing Group 2,MooredSubInstallation,Position Substructure,1298.0
+Towing Group 2,MooredSubInstallation,Tow Substructure,19643.496363636365
+Towing Group 2,MooredSubInstallation,Transit,7717.0878571428575
+Towing Group 3,MooredSubInstallation,Ballast to Operational Draft,3798.0
+Towing Group 3,MooredSubInstallation,Ballast to Towing Draft,3798.0
+Towing Group 3,MooredSubInstallation,Check Mooring Lines,3798.0
+Towing Group 3,MooredSubInstallation,"Connect Mooring Lines, Pre-tension and pre-stretch",12660.0
+Towing Group 3,MooredSubInstallation,Delay,117718.0
+Towing Group 3,MooredSubInstallation,Delay: No Completed Assemblies Available,263469.55946103897
+Towing Group 3,MooredSubInstallation,Position Substructure,1266.0
+Towing Group 3,MooredSubInstallation,Tow Substructure,19282.234
+Towing Group 3,MooredSubInstallation,Transit,7575.163357142857
+Turbine Assembly Line 1,MooredSubInstallation,Delay,131537.0
+Turbine Assembly Line 1,MooredSubInstallation,Delay: No Substructures in Wet Storage,6653.5
+Turbine Assembly Line 1,MooredSubInstallation,Electrical Completion,139464.0
+Turbine Assembly Line 1,MooredSubInstallation,Lift and Attach Blade,20338.5
+Turbine Assembly Line 1,MooredSubInstallation,Lift and Attach Nacelle,23244.0
+Turbine Assembly Line 1,MooredSubInstallation,Lift and Attach Tower Section,15496.0
+Turbine Assembly Line 1,MooredSubInstallation,Mechanical Completion,46488.0
+Turbine Assembly Line 1,MooredSubInstallation,Move Substructure,15496.0
+Turbine Assembly Line 1,MooredSubInstallation,Prepare for Turbine Assembly,23244.0

@@ -95,3 +95,19 @@ def plot_shared_resource_capacities(
 
         fp = os.path.join(directory, f"{label}.png")
         fig.savefig(fp)
+
+def get_action_logs(manager):
+    dfs=[]
+    names=[]
+
+    for project in manager._projects.items():
+        names.append(project[0])
+        dfs.append(project[1].actions)
+
+    total = []
+    for project in dfs:
+        df = pd.DataFrame.from_dict(project)
+        data = df.groupby(['agent','action']).sum(numeric_only=True)['duration']
+        total.append(data)
+
+    return total

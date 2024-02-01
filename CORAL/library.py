@@ -10,9 +10,16 @@ import yaml
 from simpy import Resource
 from ORBIT.core.library import loader, default_library
 
-CATEGORY_MAP = {"wtiv": "vessels", 
-                "feeder": "vessels", 
-                "port": "ports"}
+CATEGORY_MAP = {
+    "wtiv": "vessels",
+    "feeder": "vessels",
+    "port": "ports",
+    "ahts_vessel": "vessels",
+    "towing_vessel": "vessels",
+    "mooring_install_vessel": "vessels",
+    "array_cable_install_vessel": "vessels",
+    "export_cable_install_vessel": "vessels"
+}
 
 
 class SharedLibrary:
@@ -233,6 +240,7 @@ class SharedResource(Resource):
         """Load library data for eventual insert into ORBIT config."""
 
         with open(path, "r") as f:
+            print(path)
             data = yaml.load(f, Loader=loader)
 
         self.data = data
