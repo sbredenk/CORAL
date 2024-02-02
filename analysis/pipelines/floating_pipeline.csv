@@ -1,0 +1,20 @@
+﻿name,location,lat,lon,capacity,turbine,depth,distance_to_site_(km),distance_to_shore,substructure,estimated_cod,estimated_start,start_date,associated_port,port_region,Notes
+project 1,MA,41.00642,-70.47765,800,12MW_generic,800,100,33,semisub,2024,2023,5/1/2023 0:00,new_bedford,northeast,
+project 2,MA/RI,41.078046,-71.543159,132,12MW_generic,800,57,56,semisub,2023,2023,5/1/2023 0:00,new_london,northeast,
+project 3,MA/RI,41.270313,-71.144904,704,12MW_generic,800,80,15,semisub,2024,2023,6/1/2023 0:00,new_london,northeast,
+project 4,MA/RI,40.979722,-71.279167,880,12MW_generic,800,75,48,semisub,2025,2024,6/1/2024 0:00,new_london,northeast,Updated expected COD/start date
+project 5,MA/RI,40.979722,-71.279167,880,15MW_generic,800,240,48,semisub,2028,2027,5/1/2027 0:00,new_bedford,northeast,Added. 
+project 6,MA,40.96,-70.829972,2000,15MW_generic,800,65,33,semisub,2030,2028,5/1/2028 0:00,new_london,northeast,"Consolidated Bay state a, b, c.  Updated expected COD/start date.  Updated to New London"
+project 7,MA,40.917778,-70.885278,804,15MW_generic,800,300,37,semisub,2026,2025,6/1/2025 0:00,new_bedford,northeast,Assumes Salem (and pushed start date to 2025)
+project 8,MA,0,0,1232,15MW_generic,800,300,50,semisub,2027,2026,5/1/2026 0:00,new_bedford,northeast,Updated from VW south (residual).  Assumes Salem.  Update start date/COD (Salem readiness)
+project 9,MA,40.730556,-70.599444,1230,15MW_generic,800,320,96,semisub,2030,2029,5/1/2029 0:00,sbmt,northeast,Updated start date.  Stage out of SBMT
+project 10,MA,40.730556,-70.599444,1200,15MW_generic,800,300,96,semisub,2030,2029,5/1/2029 0:00,new_bedford,northeast,Added.  Stage out of SBMT
+project 11,MA,40.802396,-70.340331,804,15MW_generic,800,135,60,semisub,2026,2025,5/1/2025 0:00,new_bedford,northeast,Moved date for MF1 back to 2025 and MF2 to 2026
+project 12,MA,40.802396,-70.340331,400,15MW_generic,800,135,60,semisub,2027,2026,6/1/2026 0:00,new_bedford,northeast,Updated capacity (split to residual).  
+project 13,MA,40.802396,-70.340331,800,15MW_generic,800,135,60,semisub,2029,2028,5/1/2028 0:00,new_bedford,northeast,Added.  
+project 14,MA,0,0,1607,15MW_generic,800,300,33,semisub,2034,2033,5/1/2033 0:00,new_london,northeast,Added.  Was Liberty Wind.  Assumes Salem.  Match COD from Phase 1 report
+project 15,NY,40.399963,-73.524447,816,15MW_generic,800,66,32,semisub,2028,2027,5/1/2027 0:00,sbmt,central,Updated start date/COD
+project 16,NY,40.03629,-73.199608,1260,15MW_generic,800,66,48,semisub,2029,2028,5/1/2028 0:00,sbmt,central,Updated start date/COD
+project 17,NY,39.726,-73.156,523,15MW_generic,800,125,50,semisub,2030,2029,5/1/2029 0:00,njwp,central,Added.  Need to review site specs
+project 18,NY,39.726,-73.156,868,15MW_generic,800,280,50,semisub,2031,2030,5/1/2030 0:00,sbmt,central,Added.  Need to review site specs
+project 19,NY,39.726,-73.156,964,15MW_generic,800,115,50,semisub,2030,2029,5/2/2029 0:00,njwp,central,Added.  Need to review site specs

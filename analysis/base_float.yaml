@@ -1,0 +1,75 @@
+site:
+  distance: 50
+plant:
+  layout: grid
+  row_spacing: 7
+  substation_distance: 1
+  turbine_spacing: 7
+landfall:
+  interconnection_distance: 3
+  trench_length: 2
+# Vessels
+towing_vessel_groups:
+  towing_vessels: 2
+  ahts_vessels: 1
+  num_groups: 3
+# array_cable_install_vessel: _shared_pool_:example_array_cable_lay_vessel
+# export_cable_install_vessel: _shared_pool_:example_export_cable_lay_vessel
+# oss_install_vessel: example_support_vessel # assume that this is towed out with a anchor handling vessel
+# Port characteristics: define in individual port YAMLs
+
+# Module Specific
+offshore_substation_substructure:
+  takt_time: 336
+
+substructure:
+  takt_time: 168
+  towing_speed: 5.5
+  unit_cost: 11757583 # USD, IEA VolutrnUS Reference Hull. Output from a run by Garret , Wisdem. 19 Aug 2022.
+
+mooring_system_design:
+    num_lines: 3 # int
+    anchor_type: "Drag Embedment"
+
+array_system_design:
+  cables:
+   - XLPE_500mm_132kV_dynamic
+export_system_design:
+  cables: HVDC_2000mm_320kV
+  percent_added_length: 0.0
+substation_design:
+  floating_oss: True
+
+# Configured Phases
+design_phases:
+- OffshoreSubstationDesign  # SemiTaut Mooring seems to need this
+- ArraySystemDesign
+- ElectricalDesign
+- SemiSubmersibleDesign
+- SemiTautMooringSystemDesign
+install_phases:
+  ### to run with all phases:
+  #ArrayCableInstallation: !!python/tuple
+  #- MooredSubInstallation
+  #- 0.25 # Start array cable installation when 25% of floaters are installed
+  #ExportCableInstallation: 0
+  #MooredSubInstallation: !!python/tuple
+  #- MooringSystemInstallation
+  #- 0.4 # Start substructure install when 40% of mooring lines installed
+  #MooringSystemInstallation: 0
+  #FloatingSubstationInstallation: !!python/tuple
+  #- ExportCableInstallation
+  #- 0.25 # Start OSS installation when 25% of cable installation is complete
+  ### to run without cable and mooring install phases:
+  MooredSubInstallation: 0
+
+  # 0.25, 0.4, 0.25:   54, 98, 78, 67, 89, 90
+  # 0.5, 0.4, 0.25:    51, 98, 78, 65, 90, 88
+  # 0.6, 0.4, 0.25:    50, 98, 77, 64, 89, 88
+  # 0.7, 0.4, 0.25:    46, 94, 72, 61, 86, 84
+  # 0.8, 0.4, 0.25:    44, 94, 71, 60, 84, 81
+  # 0.8, 0.25, 0.25:   44, 94, 71, 60, 84, 81
+  # 0.8, 0.25, 0.1:    44, 94, 71, 60, 84, 81
+  # 0.8, 0.1, 0.1:     44, 94, 71, 60, 84, 81
+  # 0.8, 0.8, 0.8:     44, 94, 71, 60, 84, 81
+  # takt_time = 366:   38, 77, 57, 50, 67, 66

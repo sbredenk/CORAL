@@ -64,7 +64,7 @@ class FixedPipeline(BasePipeline):
             Toggle for enforcing feeder barges for all fixed bottom projects.
         """
 
-        self.projects = pd.read_excel(projects_fp, sheet_name=sheet_name, parse_dates=["start_date"])
+        self.projects = pd.read_csv(projects_fp, parse_dates=["start_date"])
         self.append_num_turbines()
         self.base = load_config(base_config)
         self.regional_ports = regional_ports
@@ -174,7 +174,7 @@ class FloatingPipeline(BasePipeline):
     Coast projects.
     """
 
-    def __init__(self, projects_fp, base_config, sheet_name=0, regional_ports=False):
+    def __init__(self, projects_fp, base_config, sheet_name=0, regional_ports=True):
         """
         Creates an instance of `FixedPipeline`.
 
@@ -190,7 +190,7 @@ class FloatingPipeline(BasePipeline):
             Toggle for regional ports or specific ports.
         """
 
-        self.projects = pd.read_excel(projects_fp, sheet_name=sheet_name, parse_dates=["start_date"])
+        self.projects = pd.read_csv(projects_fp, parse_dates=["start_date"])
         self.append_num_turbines()
         self.base = load_config(base_config)
         self.regional_ports = regional_ports

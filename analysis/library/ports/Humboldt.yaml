@@ -1,7 +1,0 @@
-# Define capacity available to one project using the port
-port:
-    monthly_rate: 2000000.0
-    sub_assembly_lines: 1 # how many you can produce in parallel
-    turbine_assembly_cranes: 1  # has to change same number as sub_assembly_lines.
-    assembly_storage: 2  # storage of integrated turbine + floater
-    # sub_storage: 2 # storage of assembled floater (no turbine)
