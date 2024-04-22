@@ -1,0 +1,49 @@
+site:
+  distance: 50
+  distance_to_landfall: 50
+plant:
+  layout: grid
+  row_spacing: 7
+  substation_distance: 1
+  turbine_spacing: 7
+landfall:
+  interconnection_distance: 3
+  trench_length: 2
+# Vessels
+towing_vessel_groups:
+  towing_vessels: 2
+  ahts_vessels: 1
+  num_groups: 3
+
+# Module Specific
+offshore_substation_substructure:
+  takt_time: 336
+
+substructure:
+  takt_time: 168
+  towing_speed: 5.5
+  unit_cost: 11757583 # USD, IEA VolutrnUS Reference Hull. Output from a run by Garret , Wisdem. 19 Aug 2022.
+
+mooring_system_design:
+    num_lines: 3 # int
+    anchor_type: "Drag Embedment"
+
+array_system_design:
+  cables:
+   - XLPE_500mm_132kV_dynamic
+export_system_design:
+  cables: HVDC_2000mm_320kV
+  percent_added_length: 0.0
+substation_design:
+  floating_oss: True
+
+# Configured Phases
+design_phases:
+- OffshoreSubstationDesign  # SemiTaut Mooring seems to need this
+- ArraySystemDesign
+- ElectricalDesign
+- SemiSubmersibleDesign
+- SemiTautMooringSystemDesign
+install_phases:
+  ### to run without cable and mooring install phases:
+  MooredSubInstallation: 0

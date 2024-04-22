@@ -256,7 +256,7 @@ class GlobalManager:
                 delay = (date - self._start).days * 24
 
             else:
-                delay = date - self._start
+                delay = (date - self._start.date()).days
 
             if delay < 0:
                 raise ValueError(

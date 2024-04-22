@@ -18,8 +18,9 @@ class Pipeline:
     def __init__(
         self,
         projects_fp,
-        base_config,
-        regional_ports=True,
+        fixed_base_config,
+        float_base_config,
+        regional_ports=False,
         enforce_feeders=False,
     ):
         """
@@ -39,7 +40,8 @@ class Pipeline:
 
         self.projects = pd.read_csv(projects_fp, parse_dates=["start_date"])
         self.append_num_turbines()
-        self.base = load_config(base_config)
+        self.base_fixed = load_config(fixed_base_config)
+        self.base_float = load_config(float_base_config)
         self.regional_ports = regional_ports
         self.enforce_feeders = enforce_feeders
 
@@ -68,7 +70,11 @@ class Pipeline:
         configs = []
         for _, data in self.projects.iterrows():
 
-            config = deepcopy(self.base)
+            if data["substructure"] == "semisub":
+                config = deepcopy(self.base_float)
+            else:
+                config = deepcopy(self.base_fixed)
+
             config["project_name"] = data["name"]
             config["project_coords"] = (data["lat"], data["lon"])
             config["project_start"] = data["start_date"]
@@ -126,7 +132,7 @@ class Pipeline:
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
-                1.25,
+                0.8,
             )
 
             # Vessels
@@ -143,11 +149,71 @@ class Pipeline:
             port = config["port"].replace("_shared_pool_:", "")
 
             if port in ["sbmt", "new_bedford"] or self.enforce_feeders:
-                config["feeder"] = "_shared_pool_:example_feeder"
+                config["feeder"] = "_shared_pool_:example_heavy_feeder"
+                config["num_feeders"] = 2
+        
+        elif substructure == "jacket":
+            # Design Phases
+            config["design_phases"] += [
+                "MonopileDesign",
+                "ScourProtectionDesign",
+            ]
+
+            # Install Phases
+            config["install_phases"]["JacketInstallation"] = 0
+            
+            # config["install_phases"]["TurbineInstallation"] = 0
+            config["install_phases"]["TurbineInstallation"] = (
+                "JacketInstallation",
+                0.8,
+            )
+
+            # Vessels
+
+            config["wtiv"] = "_shared_pool_:example_wtiv"
+            config.update(
+                {
+                    "JacketInstallation": {
+                        "wtiv": "_shared_pool_:example_heavy_lift_vessel"
+                    }
+                }
+            )
+
+            port = config["port"].replace("_shared_pool_:", "")
+
+            if port in ["sbmt", "new_bedford"] or self.enforce_feeders:
+                config["feeder"] = "_shared_pool_:example_heavy_feeder"
                 config["num_feeders"] = 2
 
-        elif substructure == "jacket":
-            raise TypeError("Substructure type 'jacket' not supported.")
+        elif substructure == "semisub":
+
+            # Design Phases
+            config["design_phases"] += [
+                "SemiSubmersibleDesign",
+            ]
+
+            # Install Phases
+            # config["install_phases"]["MooringSystemInstallation"] = 0
+            # config["install_phases"]["MooredSubInstallation"] = ('MooringSystemInstallation', 0.5)
+            config["install_phases"]["MooredSubInstallation"] = 0
+
+            # Vessels
+            # config.update(
+            #    {
+            #        "MooringSystemInstallation": {
+            #            "mooring_install_vessel": "_shared_pool_:example_support_vessel"
+            #        }
+            #    }
+            # )
+
+            config.update(
+                {
+                    "MooredSubInstallation": {
+                        "ahts_vessel": "_shared_pool_:example_ahts_vessel",
+                        "towing_vessel": "_shared_pool_:example_towing_vessel",
+                    }
+                }
+            )
 
         elif substructure == "gbf":
             raise TypeError("Substructure type 'gbf' not supported.")
