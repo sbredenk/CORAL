@@ -2,7 +2,7 @@ from coral_imports import *
 
 
 def add_text_slide(prs, title, text, left=0, top=7.2, width=13.33, height=0.3, fontsize=14):
-    """Add text slide for scenarion description"""
+    """Add text slide for scenario description"""
     blank_slide_layout = prs.slide_layouts[1]
     slide = prs.slides.add_slide(blank_slide_layout)
     slide.shapes.title.text = title
@@ -17,7 +17,7 @@ def add_text_slide(prs, title, text, left=0, top=7.2, width=13.33, height=0.3, f
     for para_str in text[1:]:
         p = text_frame.add_paragraph()
         p.text = para_str
-        # p.level = 1
+
 
 
 
@@ -76,33 +76,45 @@ def full_gantt(prs, manager, df, sorted=False):
         df = df.drop(columns=['index'])
         df = df.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
 
-    fig = plt.figure(figsize=(8, len(df)/4), dpi=200)
+    fig = plt.figure(figsize=(8, 10), dpi=200) # LEN(DF)/4
     ax = fig.add_subplot(111)
 
     bar_color = []
     for i,row in df.iterrows():
-        if row['substructure'] == 'fixed':
-            bar_color.append("#FFD700")
+        if row['substructure'] == 'monopile':
+            bar_color.append("#F0E442")
+        elif row['substructure'] == 'gbf':
+            bar_color.append("#D55E00")
+        elif row['substructure'] == 'jacket':
+            bar_color.append("#CC79A7")
         else:
-            bar_color.append("#069AF3")
+            bar_color.append("#0072B2")
 
-    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Installation Time", color = bar_color)
-    df["Date Started"].plot(kind="barh", ax=ax, zorder=4, label="Delay", color="#E34234")
-    df["Date Initialized"].plot(kind="barh", color="w", ax=ax, zorder=4, label="__nolabel__")
+    matplotlib.rcParams.update({'hatch.linewidth': 3.0,
+                                'hatch.color': 'E8E9EB'})
+    
+    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
+    df["Date Started"].plot(kind="barh", color=bar_color, hatch = '//', ax=ax, zorder=4, label="Delay")
+    df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
-    df.plot(kind="scatter", x="Date Initialized", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker="d")
+    df.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
     
     ax.set_xlabel("")
     ax.set_ylabel("")
     _ = ax.set_yticklabels(df['name'])
 
-    ax.legend()
+    mono_install = matplotlib.patches.Patch(color='#F0E442', label='Monopile Project Installation')
+    gbf_install = matplotlib.patches.Patch(color='#D55E00', label='GBF Project Installation')
+    jacket_install = matplotlib.patches.Patch(color='#CC79A7', label='SBJ Installation')
+    semisub_install = matplotlib.patches.Patch(color='#0072B2', label='Semisub Installation')
+    # start = matplotlib.patches.Patch(color='k', marker = '>', label='Start Date')
+    ax.legend(handles=[mono_install, gbf_install, jacket_install, semisub_install])
 
     ax.set_xlim(manager._start - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
-        slide = add_to_pptx(prs,'Sorted Full Gantt')
+        slide = add_to_pptx(prs,'Sorted Full Gantt', width=5.25)
     else:
-        slide = add_to_pptx(prs,'Full Gantt')
+        slide = add_to_pptx(prs,'Full Gantt', width=4.25)
     plt.close(fig)
 
 def regional_gantt(prs, manager, df, region, region_name, sorted=False):
@@ -119,23 +131,35 @@ def regional_gantt(prs, manager, df, region, region_name, sorted=False):
     ax = fig.add_subplot(111)
 
     bar_color = []
-    for i,row in df.iterrows():
-        if row['substructure'] == 'fixed':
-            bar_color.append("#FFD700")
+    for _,row in df_region.iterrows():
+        if row['substructure'] == 'monopile':
+            bar_color.append("#F0E442")
+        elif row['substructure'] == 'gbf':
+            bar_color.append("#D55E00")
+        elif row['substructure'] == 'jacket':
+            bar_color.append("#CC79A7")
         else:
-            bar_color.append("#069AF3")
+            bar_color.append("#0072B2")
 
+    matplotlib.rcParams.update({'hatch.linewidth': 3.0,
+                                'hatch.color': 'E8E9EB'})
+    
     df_region["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
-    df_region["Date Started"].plot(kind="barh", color="#E34234", ax=ax, zorder=4, label="Delay")
+    df_region["Date Started"].plot(kind="barh", color=bar_color, hatch = '//', ax=ax, zorder=4, label="Delay")
     df_region["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
-    df_region.plot(kind="scatter", x="Date Initialized", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker="d")
+    df_region.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Start Date", marker="d")
 
     ax.set_xlabel("")
     ax.set_ylabel("")
     _ = ax.set_yticklabels(df_region['name'])
 
-    ax.legend()
+    mono = matplotlib.patches.Patch(color='#F0E442', label='Monopile Project Time')
+    gbf = matplotlib.patches.Patch(color='#D55E00', label='GBF Project Time')
+    jacket = matplotlib.patches.Patch(color='#CC79A7', label='SBJ Project Time')
+    semisub = matplotlib.patches.Patch(color='#0072B2', label='Semisub Project Time')
+    ax.legend(handles=[mono, gbf, jacket, semisub])
+
 
     ax.set_xlim(manager._start - dt.timedelta(days=30), df_region["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
@@ -149,7 +173,10 @@ def substructure_gantt(prs, manager, df, substructure, sorted=False):
     """ Gantt filtered by either fixed or floating projects. Sorted sorts by expected start date."""
 
     df = df.drop(columns=['index'])
-    df = df[df['substructure'] == substructure].reset_index(drop=True).reset_index()
+    if substructure == 'fixed':
+        df = df[df['depth'] < 200].reset_index(drop=True).reset_index()
+    else:
+        df = df[df['depth'] > 200].reset_index(drop=True).reset_index()
     if sorted:
         df = df.drop(columns=['index'])
         df = df.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
@@ -157,9 +184,23 @@ def substructure_gantt(prs, manager, df, substructure, sorted=False):
     fig = plt.figure(figsize=(8, len(df)/4), dpi=200)
     ax = fig.add_subplot(111)
 
-    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Installation Time", color="#B5B5B5")
-    df["Date Started"].plot(kind="barh", ax=ax, zorder=4, label="Delay", color="#E34234")
-    df["Date Initialized"].plot(kind="barh", color="w", ax=ax, zorder=4, label="__nolabel__")
+    bar_color = []
+    for _,row in df.iterrows():
+        if row['substructure'] == 'monopile':
+            bar_color.append("#F0E442")
+        elif row['substructure'] == 'gbf':
+            bar_color.append("#D55E00")
+        elif row['substructure'] == 'jacket':
+            bar_color.append("#CC79A7")
+        else:
+            bar_color.append("#0072B2")
+
+    matplotlib.rcParams.update({'hatch.linewidth': 3.0,
+                                'hatch.color': 'E8E9EB'})
+    
+    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
+    df["Date Started"].plot(kind="barh", color=bar_color, hatch = '//', ax=ax, zorder=4, label="Delay")
+    df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
     df.plot(kind="scatter", x="Date Initialized", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker="d")
 
@@ -194,15 +235,23 @@ def port_gantts(prs, manager, df, ports, sorted=False):
             df_port = df_port.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
 
         ax = fig.add_subplot(num_ports,1,i)
+    
         bar_color = []
-        for _,row in df_port.iterrows():
-            if row['substructure'] == 'fixed':
-                bar_color.append("#FFD700")
+        for _,row in df.iterrows():
+            if row['substructure'] == 'monopile':
+                bar_color.append("#F0E442")
+            elif row['substructure'] == 'gbf':
+                bar_color.append("#D55E00")
+            elif row['substructure'] == 'jacket':
+                bar_color.append("#CC79A7")
             else:
-                bar_color.append("#069AF3")
+                bar_color.append("#0072B2")
 
+        matplotlib.rcParams.update({'hatch.linewidth': 3.0,
+                                    'hatch.color': 'E8E9EB'})
+        
         df_port["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
-        df_port["Date Started"].plot(kind="barh", color="#E34234", ax=ax, zorder=4, label="Delay")
+        df_port["Date Started"].plot(kind="barh", color=bar_color, hatch = '//', ax=ax, zorder=4, label="Delay")
         df_port["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
         df_port.plot(kind="scatter", x="Date Initialized", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker="d")
@@ -226,53 +275,203 @@ def port_gantts(prs, manager, df, ports, sorted=False):
     plt.close(fig)
 
 
-def installed_cap(prs, dfs, desc):
-    dfs[0]['cod'] = dfs[0]['estimated_cod'].dt.year
-    df_cod = dfs[0].groupby(['cod']).capacity.sum().reset_index()
+def port_throughput(prs, manager, df, region=None):
+    if region:
+        df = df.drop(columns=['index'])
+        df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+
+    res = []
+    for _, project in df.iterrows():
+
+        if project["Date Finished"].year == project["Date Started"].year:
+            res.append((project["Date Finished"].year, project["port"], project["capacity"]))
+
+        else:
+
+            total = project["Date Finished"].date() - project["Date Started"].date()
+            for year in np.arange(project["Date Started"].year, project["Date Finished"].year + 1):
+                if year == project["Date Started"].year:
+                    perc = (dt.date(year + 1, 1, 1) - project["Date Started"].date()) / total
+
+                elif year == project["Date Finished"].year:
+                    perc = (project["Date Finished"].date() - dt.date(year, 1, 1)) / total
+
+                else:
+                    perc = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)) / total
+
+                res.append((year, project["port"], perc * project["capacity"]))
+
+    throughput = pd.DataFrame(res, columns=["year", "port", "capacity"]).pivot_table(
+        index=["year"],
+        columns=["port"],
+        aggfunc="sum",
+        fill_value=0.
+    )["capacity"]
+
+    fig = plt.figure(figsize=(6, 4), dpi=200)
+    ax = fig.add_subplot(111)
+
+    throughput.plot.bar(ax=ax, width=0.75)
+
+    ax.set_ylim(0, 2000)
+    ax.set_ylabel("Annual Capacity Throughput (MW)")
+    ax.set_xlabel("")
+    plt.xticks(rotation=0, fontsize=6)
+    plt.yticks(fontsize=6)
+
+    ax.legend(fontsize=6, ncol=5)
+
+    slide = add_to_pptx(prs,'Port Throughput')
+
+
+def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_costs):
+    yrs = np.arange(2023,2043)
+    dates = pd.to_datetime(yrs, format='%Y')
+    fig, axes = plt.subplots(2,1, figsize=(10,6), dpi=200, sharex=True)
+
+    us_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
+    total_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
+    foreign_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
+    for i in range(0,len(names)):
+        init_alloc = [allocs[i]['wtiv'][1][1], allocs[i]['wtiv'][0][1], allocs[i]['feeder'][1][1], allocs[i]['feeder'][1][1], allocs[i]['ahts_vessel'][1]]
+        vessel_investment = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
+        vessel_investment.iloc[0] = init_alloc
+
+        for vessel in vessel_types:
+            for vessel_type in futures[i]:
+                if vessel_type[1] == vessel:
+                    years = vessel_type[2]
+                    for year in years:
+                        vessel_investment.loc[[year],vessel] += 1
+            # vessel_investment[vessel] = vessel_investment[vessel] * vessel_costs[vessel]  # Just looking at # vessels rn
+        
+        us_vessels = ['example_feeder', 'example_heavy_feeder_1kit', 'example_ahts_vessel']
+        foreign_vessels = ['example_wtiv', 'example_heavy_lift_vessel']
+        vessel_investment.loc[:,'us_total'] = vessel_investment[us_vessels].sum(axis=1)
+        vessel_investment['us_total'] = vessel_investment['us_total'].cumsum() # / 1000 <- for $M to $B
+        vessel_investment.loc[:,'foreign_total'] = vessel_investment[foreign_vessels].sum(axis=1)
+        vessel_investment['foreign_total'] = vessel_investment['foreign_total'].cumsum() # / 1000 <- for $M to $B
+        vessel_investment.loc[:,'total'] = vessel_investment[vessel_types].sum(axis=1)
+        vessel_investment['total'] = vessel_investment['total'].cumsum() # / 1000 <- for $M to $B
+
+        total_investments[names[i]] = vessel_investment['total']
+        us_investments[names[i]] = vessel_investment['us_total']
+        foreign_investments[names[i]] = vessel_investment['foreign_total']
+    
+    total_investments['year'] = yrs
+    total_investments.set_index('year', inplace=True)
+    
+    us_investments['year'] = yrs
+    us_investments.set_index('year', inplace=True)
+
+    us_investments['year'] = yrs
+    us_investments.set_index('year', inplace=True)
+    us_investments.plot(ax=axes[0])
+
+    foreign_investments['year'] = yrs
+    foreign_investments.set_index('year', inplace=True)
+    foreign_investments.plot(ax=axes[1])
+    axes[0].yaxis.set_major_locator(tck.MaxNLocator(integer=True))
+    axes[0].set_ylabel('US (# vessels)')
+    axes[1].set_ylabel('Foreign (# vessels)')
+    plt.minorticks_off()
+    axes[0].set_xticks(yrs[::2])
+    # fig.suptitle('Vessel Investments')
+
+    slide = add_to_pptx(prs,'Vessel Investment')
+
+    return total_investments
+
+def installed_cap(prs, dfs, desc, region = None):
+
+    yrs = np.arange(2023,2043,1)
+    df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
+    df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
+
+    df = dfs[0]
+    if region:
+        df = df.drop(columns=['index'])
+        df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+
+    df['cod'] = df['estimated_cod'].dt.year
+    df_cod = df.groupby(['cod']).capacity.sum().reset_index()
     df_cod['sum'] = df_cod['capacity'].cumsum(axis=0) / 1000
 
-    fig = plt.figure(figsize=(8, 4), dpi=200)
+    fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(1,1,1)
 
-    df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax, label='Unconstrained Resources')
+    # df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax, label='Unconstrained Resources')
     i=0
+    width = 0.25
+
     for df in dfs:
         df['finished'] = df['Date Finished'].dt.year
+        if region:
+            df = df.drop(columns=['index'])
+            df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
         df_finished = df.groupby(['finished']).capacity.sum().reset_index()
-        df_finished['sum'] = df_finished['capacity'].cumsum(axis=0) / 1000
-        df_finished.plot(kind='line', x='finished', y='sum', ax=ax, label=desc[i])
+        df_finished['capacity'] = df_finished['capacity'] / 1000
+        df_finished['sum'] = df_finished['capacity'].cumsum(axis=0)
+
+        cap_mapping = dict(df_finished[['finished', 'capacity']].values)
+        df_cap[desc[i]] = df_cap.index.map(cap_mapping).fillna(0)
+
+        df_cum[desc[i]] = df_cap[desc[i]].cumsum(axis=0)
         i += 1
+
+    df_cum[desc].plot(linestyle = '-', ax=ax, use_index=False, label='cumulative')
+    df_cap[desc].plot(kind='bar', ax=ax, label='annual')
+    
     ax.set_xlabel("")
     ax.set_ylabel("Capacity (GW)")
     ax.get_yaxis().set_major_formatter(
         matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
-    ax.legend()
+    
+    annual_label = [s + ' annual' for s in desc]
+    cum_label = [s + ' cumulative' for s in desc]
+    labels = cum_label + annual_label
+    ax.legend(labels)
 
-    slide = add_to_pptx(prs,'Cummulative Installed Capacity')
+    slide = add_to_pptx(prs,'Installed Capacity')
 
-def run_plots(prs, manager, df):
+    return df_cum
+
+
+def cap_per_investment(prs, df_cum, df_investments):
+    fig = plt.figure(figsize=(10,4), dpi=200)
+    ax = fig.add_subplot(1,1,1)
+
+    df = df_cum / df_investments
+    
+    df.plot(ax=ax)
+    ax.set_ylabel('Capacity per Investment (MW/$)')
+    slide = add_to_pptx(prs, 'Capacity per Investment (MW/$)')
+
+
+def run_plots(prs, manager, df, ports):
     ne = ['MA','ME','CT','RI','NH','RI/CT']
     nynj = ['NY','NJ']
     mid = ['NC', 'MD', 'VA', 'DE']
 
-    ports = ['searsport', 'new_bedford', 'new_london', 'njwp', 'sbmt', 'tradepoint', 'portsmouth']
-    ne_ports = ['searsport','new_bedford','new_london']
     full_gantt(prs, manager, df)
     full_gantt(prs, manager, df, sorted=True)
 
     regional_gantt(prs, manager, df, ne, 'New England')
     regional_gantt(prs, manager, df, ne, 'New England', sorted=True)
 
-    regional_gantt(prs, manager, df, nynj, 'New York/New Jersey')
-    regional_gantt(prs, manager, df, nynj, 'New York/New Jersey', sorted=True)
+    port_throughput(prs,manager,df)
+    port_throughput(prs,manager,df,ne)
 
-    regional_gantt(prs, manager, df, mid, 'Midatlantic')
-    regional_gantt(prs, manager, df, mid, 'Midatlantic', sorted=True)
+    # regional_gantt(prs, manager, df, nynj, 'New York/New Jersey')
+    # regional_gantt(prs, manager, df, nynj, 'New York/New Jersey', sorted=True)
 
-    port_gantts(prs, manager, df, ports)
-    port_gantts(prs, manager, df, ports, sorted=True)
+    # regional_gantt(prs, manager, df, mid, 'Midatlantic')
+    # regional_gantt(prs, manager, df, mid, 'Midatlantic', sorted=True)
 
-    substructure_gantt(prs, manager, df, 'fixed')
-    substructure_gantt(prs, manager, df, 'fixed', sorted=True)
-    substructure_gantt(prs, manager, df, 'floating')
-    substructure_gantt(prs, manager, df, 'floating', sorted=True)
+    # port_gantts(prs, manager, df, ports)
+    # port_gantts(prs, manager, df, ports, sorted=True)
+
+    # substructure_gantt(prs, manager, df, 'fixed')
+    # substructure_gantt(prs, manager, df, 'fixed', sorted=True)
+    # substructure_gantt(prs, manager, df, 'floating')
+    # substructure_gantt(prs, manager, df, 'floating', sorted=True)

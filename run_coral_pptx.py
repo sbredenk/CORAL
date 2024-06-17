@@ -1,6 +1,7 @@
 from coral_imports import *
 from coral_plotting import *
 from coral_run_project import *
+import time
 
 # Create Powerpoint Deck
 prs = pptx.Presentation('analysis/results/template.pptx')
@@ -31,14 +32,16 @@ nynj = ['NY','NJ']
 mid = ['NC', 'MD', 'VA', 'DE']
 
 # List all ports
-ports = ['salem', 'searsport', 'new_bedford', 'new_london', 'njwp', 'sbmt', 'tradepoint', 'portsmouth']
+ports = ['salem', 'searsport', 'new_bedford', 'new_london', 'arthur_kill', 'njwp', 'sbmt', 'tradepoint', 'portsmouth']
 ne_ports = ['salem', 'searsport','new_bedford','new_london']
 
 # Vessel Names and Costs
-vessel_types = ['example_wtiv','example_heavy_lift_vessel','example_ahts_vessel']
+vessel_types = ['example_wtiv','example_heavy_lift_vessel', 'example_feeder', 'example_heavy_feeder_1kit', 'example_ahts_vessel']
 vessel_costs = {
     "example_wtiv": 615,
     "example_heavy_lift_vessel": 625,
+    "example_heavy_feeder_1kit": 250,
+    "example_feeder": 100,
     "example_ahts_vessel": 80
 }
 
@@ -63,6 +66,8 @@ for s in scenarios:
         scenario = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
     p = os.path.join(os.getcwd(), "analysis", "pipelines", "%s.csv" % scenario['pipeline'])
+
+    start_time = time.time()
     pipeline = Pipeline(p, base, base_float, enforce_feeders=True)
 
     description = scenario['description']
@@ -71,7 +76,9 @@ for s in scenarios:
     allocations = scenario['allocations']
     future_resources = scenario['future_resources']
 
-    manager, df = run_manager(pipeline, allocations, weather, library, future_resources)
+    coral_time = time.time()
+    manager, df = run_manager(pipeline, allocations, library, weather, future_resources)
+    print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)
     dfs.append(df)
@@ -80,8 +87,8 @@ for s in scenarios:
 
 
 df_cap = installed_cap(prs, dfs, scenarios, ne)
-df_investments = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
-cap_per_investment(prs, df_cap, df_investments)
+total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
+cap_per_investment(prs, df_cap, total_invest)
 
 # Save Powerpoint
 prs.save(savename)

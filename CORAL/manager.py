@@ -251,10 +251,8 @@ class GlobalManager:
             dates = [dates]
 
         for date in dates:
-
             if isinstance(date, dt.datetime):
                 delay = (date - self._start).days * 24
-
             else:
                 delay = (date - self._start.date()).days
 

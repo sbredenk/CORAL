@@ -42,7 +42,4 @@ design_phases:
 - ArraySystemDesign
 - ExportSystemDesign
 - OffshoreSubstationDesign
-install_phases:
-  ArrayCableInstallation: 0
-  ExportCableInstallation: 0   # Indexed by OSS Install
-  OffshoreSubstationInstallation: 0
+

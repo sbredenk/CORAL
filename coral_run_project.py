@@ -1,7 +1,7 @@
 from coral_imports import *
 
-def run_manager(pipeline, allocations, library, future_resources=None, sorted=False):
-    manager = GlobalManager(pipeline.configs, allocations, library_path=library)
+def run_manager(pipeline, allocations, library, weather=None, future_resources=None, sorted=False):
+    manager = GlobalManager(pipeline.configs, allocations, weather, library_path=library)
 
     if future_resources != None: 
         for i in future_resources:
@@ -15,6 +15,9 @@ def run_manager(pipeline, allocations, library, future_resources=None, sorted=Fa
 
     sub_map = pipeline.projects[["name", "substructure"]].set_index("name").to_dict()['substructure']
     df['substructure'] = [sub_map[name] for name in df['name']]
+    
+    depth_map = pipeline.projects[["name", "depth"]].set_index("name").to_dict()['depth']
+    df['depth'] = [depth_map[name] for name in df['name']]
 
     cod_map = pipeline.projects[["name", "estimated_cod"]].set_index("name").to_dict()['estimated_cod']
     df['estimated_cod'] = [cod_map[name] for name in df['name']]
@@ -28,9 +31,5 @@ def run_manager(pipeline, allocations, library, future_resources=None, sorted=Fa
 
     cap_map = pipeline.projects[["name", "capacity"]].set_index("name").to_dict()['capacity']
     df['capacity'] = [cap_map[name] for name in df['name']]
-
-    df = df.replace('semisub','floating')
-    df = df.replace('monopile','fixed')
-    df = df.replace('jacket', 'fixed')
 
     return manager, df

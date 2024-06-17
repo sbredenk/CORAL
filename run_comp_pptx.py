@@ -71,7 +71,7 @@ for s in scenarios:
     print(future_resources)
     
 
-    manager, df = run_manager(pipeline, allocations, weather, library, future_resources)
+    manager, df = run_manager(pipeline, allocations, library, weather, future_resources)
 
     all_alloc.append(allocations)
     all_future.append(future_resources)
