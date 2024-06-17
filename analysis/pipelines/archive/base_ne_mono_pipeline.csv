@@ -1,0 +1,27 @@
+﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,associated_port
+Vineyard Wind 1,MA,-70.3809493,41.02365044,50,800,13MW_generic,40,monopile,1/1/23 12:00 AM,2024,new_bedford
+Revolution Wind 1,RI/CT,-71.07607428,41.1159065,50,704,12MW_generic,40,monopile,1/1/24 12:00 AM,2025,new_london
+Maine Research Array,ME,-69.359846,43.393802,50,144,12MW_generic,800,semisub,1/1/28 12:00 AM,2029,searsport
+SouthCoast 1 Phase 1 (Mayflower Wind 1),MA,-70.50430003,40.64106695,50,804,15MW_generic,40,monopile,1/1/29 12:00 AM,2030,new_bedford
+SouthCoast 1 Phase 2 (Mayflower Wind 2),MA,-70.50430003,40.64106695,50,400,15MW_generic,40,monopile,1/1/29 12:00 AM,2030,new_bedford
+SouthCoast Residual,MA,-70.50430003,40.64106695,50,800,15MW_generic,40,monopile,1/1/29 12:00 AM,2030,new_bedford
+"New England Wind 1 (Park City Wind, Vineyard Wind South)",CT,-70.37381455,41.0237355,50,800,15MW_generic,40,monopile,1/1/30 12:00 AM,2031,salem
+"New England Wind 2 (Commonwealth Wind, Vineyard Wind South)",MA,-70.37381455,41.0237355,50,1232,15MW_generic,40,monopile,1/1/30 12:00 AM,2031,salem
+Bay State Wind a (Revolution Wind 2),RI,-70.82947169,40.98497498,50,880,15MW_generic,40,monopile,1/1/32 12:00 AM,2033,new_london
+Bay State Wind b,MA,-70.82947169,40.98497498,50,1120,15MW_generic,40,monopile,1/1/32 12:00 AM,2033,new_london
+Vineyard Northeast,MA,-70.16378033,40.6450013,50,2600,15MW_generic,40,monopile,1/1/34 12:00 AM,2035,new_bedford
+Hypothetical Gulf of Maine Draft WEA 12,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/34 12:00 AM,2035,searsport
+Hypothetical Gulf of Maine Draft WEA 8,NH,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/35 12:00 AM,2036,searsport
+Hypothetical Gulf of Maine Draft WEA 13,ME,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/35 12:00 AM,2036,salem
+Hypothetical Gulf of Maine Draft WEA 5,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/36 12:00 AM,2037,searsport
+Hypothetical NE Fixed 2,RI,-70.092382,40.67661,50,1500,15MW_generic,40,monopile,1/1/36 12:00 AM,2037,new_london
+Hypothetical NE Floating 2,CT,-70.092382,40.67661,50,1500,15MW_generic,800,semisub,1/1/37 12:00 AM,2038,salem
+Hypothetical Gulf of Maine Draft WEA 6,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/37 12:00 AM,2038,searsport
+Hypothetical Gulf of Maine Draft WEA 7,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/38 12:00 AM,2039,searsport
+Hypothetical NE Fixed 1,MA,-70.092382,40.67661,50,1500,15MW_generic,40,monopile,1/1/38 12:00 AM,2039,new_bedford
+Hypothetical Gulf of Maine Draft WEA 1,ME,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/39 12:00 AM,2040,searsport
+Hypothetical NE Floating 1,CT,-70.092382,40.67661,50,1800,15MW_generic,800,semisub,1/1/39 12:00 AM,2040,salem
+Hypothetical NE Floating 3,RI,-70.092382,40.67661,50,1500,15MW_generic,800,semisub,1/1/40 12:00 AM,2041,new_london
+Hypothetical Gulf of Maine Draft WEA 2,ME,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/41 12:00 AM,2042,searsport
+Hypothetical Gulf of Maine Draft WEA 3,ME,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/41 12:00 AM,2042,salem
+Hypothetical Gulf of Maine Draft WEA 4,NH,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/41 12:00 AM,2042,searsport

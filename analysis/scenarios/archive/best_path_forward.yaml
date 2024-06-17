@@ -1,0 +1,84 @@
+description:
+- 'Pipeline: Best Path Foward'
+- 'Vessel Pathway: Common'
+- 'Port Pathway: Common'
+pipeline: best_path_pipeline
+allocations:
+  ahts_vessel: !!python/tuple
+  - example_ahts_vessel
+  - 2
+  feeder: !!python/tuple
+  - example_heavy_feeder_1kit
+  - 100
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 100
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 3
+  - !!python/tuple
+    - example_wtiv
+    - 2
+  port:
+  - !!python/tuple
+    - new_london
+    - 1
+  - !!python/tuple
+    - new_bedford
+    - 1
+  - !!python/tuple
+    - sbmt
+    - 1
+  - !!python/tuple
+    - njwp
+    - 1
+  - !!python/tuple
+    - searsport
+    - 0
+  - !!python/tuple
+    - tradepoint
+    - 1
+  - !!python/tuple
+    - portsmouth
+    - 1
+  - !!python/tuple
+    - salem
+    - 0
+
+future_resources:
+- - wtiv
+  - example_wtiv
+  - - 2025-01-01
+    - 2025-01-01
+    - 2030-01-01
+- - wtiv
+  - example_heavy_lift_vessel
+  - - 2028-01-01
+    - 2030-01-01
+- - ahts_vessel
+  - example_ahts_vessel
+  - - 2025-01-01
+    - 2030-01-01
+    - 2035-01-01
+    - 2040-01-01
+- - port
+  - sbmt
+  - - 2027-01-01
+- - port
+  - njwp
+  - - 2025-01-01
+    - 2029-01-01
+- - port
+  - tradepoint
+  - - 2025-01-01
+- - port
+  - portsmouth
+  - - 2024-01-01
+- - port
+  - salem
+  - - 2026-01-01
+- - port
+  - searsport
+  - - 2030-01-01
+    - 2035-01-01
