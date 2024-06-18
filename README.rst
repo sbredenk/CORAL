@@ -47,18 +47,8 @@ Instructions
 
 4. Clone the repository:
    ``git clone https://github.com/NREL/CORAL.git``
-5. Navigate to the top level of the repository
-   (``<path-to-CORAL>/CORAL/``) and install ORBIT as an editable package
-   with following command.
 
-    .. code-block:: console
-
-       # Note the "." at the end
-       pip install -e .
-
-       # OR if you are you going to be contributing to the code or building documentation
-       pip install -e '.[dev]'
-6. Install ORBIT wherever you would like (in coral path works: ``<path-to-CORAL>/``) using the following command.
+5. Install ORBIT wherever you would like (in coral path works: ``<path-to-CORAL>/``) using the following command.
 	
 	pip install orbit-nrel
 	
