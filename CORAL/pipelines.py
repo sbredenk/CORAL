@@ -144,10 +144,10 @@ class Pipeline:
                         }
                     }
                 )
-            config["install_phases"]["ScourProtectionInstallation"] = (
-                "MonopileInstallation",
-                1.0,
-            )
+            # config["install_phases"]["ScourProtectionInstallation"] = (
+            #     "MonopileInstallation",
+            #     1.0,
+            # )
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
                 1.0,

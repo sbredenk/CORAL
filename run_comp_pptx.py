@@ -51,7 +51,6 @@ filename = args.filename
 savename = 'analysis/results/%s.pptx' % filename
 
 scenarios = args.scenarios
-# print(scenarios)
 
 dfs = []
 all_alloc = []

@@ -77,7 +77,7 @@ for s in scenarios:
     future_resources = scenario['future_resources']
 
     coral_time = time.time()
-    manager, df = run_manager(pipeline, allocations, library, weather, future_resources)
+    manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)

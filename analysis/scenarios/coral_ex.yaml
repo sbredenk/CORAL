@@ -2,7 +2,7 @@ description:
 - 'Pipeline: Best Path Foward'
 - 'Vessel Pathway: Common'
 - 'Port Pathway: Common'
-pipeline: best_path_pipeline
+pipeline: base_pipeline
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel

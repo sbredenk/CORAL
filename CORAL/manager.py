@@ -178,8 +178,8 @@ class GlobalManager:
         log = {"name": name, "Initialized": self.env.now}
 
         resources = self._get_shared_resources(config)
-
         request = MultiRequest(self.env, dict(resources), name)
+        
         resource_data = self.library.request(request)
         yield request.trigger
 

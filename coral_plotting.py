@@ -90,11 +90,19 @@ def full_gantt(prs, manager, df, sorted=False):
         else:
             bar_color.append("#0072B2")
 
-    matplotlib.rcParams.update({'hatch.linewidth': 3.0,
-                                'hatch.color': 'E8E9EB'})
+    delay_bar_color = []
+    for i,row in df.iterrows():
+        if row['substructure'] == 'monopile':
+            delay_bar_color.append("#F7F19D")
+        elif row['substructure'] == 'gbf':
+            delay_bar_color.append("#FFA65F")
+        elif row['substructure'] == 'jacket':
+            delay_bar_color.append("#E2B2CC")
+        else:
+            delay_bar_color.append("#77CEFF")
     
     df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
-    df["Date Started"].plot(kind="barh", color=bar_color, hatch = '//', ax=ax, zorder=4, label="Delay")
+    df["Date Started"].plot(kind="barh", color=delay_bar_color, ax=ax, zorder=4, label="Delay")
     df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
     df.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
@@ -103,12 +111,15 @@ def full_gantt(prs, manager, df, sorted=False):
     ax.set_ylabel("")
     _ = ax.set_yticklabels(df['name'])
 
-    mono_install = matplotlib.patches.Patch(color='#F0E442', label='Monopile Project Installation')
-    gbf_install = matplotlib.patches.Patch(color='#D55E00', label='GBF Project Installation')
+    mono_delay = matplotlib.patches.Patch(color='#F7F19D', label='Monopile Delay')
+    mono_install = matplotlib.patches.Patch(color='#F0E442', label='Monopile Installation')
+    gbf_delay = matplotlib.patches.Patch(color='#FFA65F', label='GBF Delay')
+    gbf_install = matplotlib.patches.Patch(color='#D55E00', label='GBF Installation')
+    jacket_delay = matplotlib.patches.Patch(color='#E2B2CC', label='SBJ Delay')
     jacket_install = matplotlib.patches.Patch(color='#CC79A7', label='SBJ Installation')
+    semisub_delay = matplotlib.patches.Patch(color='#77CEFF', label='Semisub Delay')
     semisub_install = matplotlib.patches.Patch(color='#0072B2', label='Semisub Installation')
-    # start = matplotlib.patches.Patch(color='k', marker = '>', label='Start Date')
-    ax.legend(handles=[mono_install, gbf_install, jacket_install, semisub_install])
+    ax.legend(handles=[mono_delay, mono_install, gbf_delay, gbf_install, jacket_delay, jacket_install, semisub_delay, semisub_install])
 
     ax.set_xlim(manager._start - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
@@ -376,7 +387,6 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
     axes[1].set_ylabel('Foreign (# vessels)')
     plt.minorticks_off()
     axes[0].set_xticks(yrs[::2])
-    # fig.suptitle('Vessel Investments')
 
     slide = add_to_pptx(prs,'Vessel Investment')
 
