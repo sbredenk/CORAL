@@ -188,6 +188,9 @@ class Pipeline:
             
         
         elif substructure == "jacket":
+
+            port = config["port"].replace("_shared_pool_:", "") 
+
             # Design Phases
             config["design_phases"] += [
                 "MonopileDesign",
@@ -212,20 +215,15 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
+                if port in ["new_bedford", "sbmt", "tradepoint"]:
+                    config["feeder"] = "_shared_pool_:example_feeder"
+                    config["num_feeders"] = 2
             else:
                 config["wtiv"] = "_shared_pool_:example_wtiv"
                 config["feeder"] = "_shared_pool_:example_feeder"
                 config["num_feeders"] = 2
 
-            if config["us_ffiv"]:
-                config.update(
-                    {
-                        "JacketInstallation": {
-                            "wtiv": "_shared_pool_:example_heavy_lift_vessel_us"
-                        }
-                    }
-                )
-            else:
+            if port in ["new_bedford", "sbmt", "tradepoint"]:
                 config.update(
                     {
                         "JacketInstallation": {
@@ -235,8 +233,16 @@ class Pipeline:
                         }
                     }
                 )
+            else:
+                config.update(
+                    {
+                        "JacketInstallation": {
+                            "wtiv": "_shared_pool_:example_heavy_lift_vessel",
+                        }
+                    }
+                )
 
-            port = config["port"].replace("_shared_pool_:", "")     
+                
 
         elif substructure == "gbf":
             # Design Phases
