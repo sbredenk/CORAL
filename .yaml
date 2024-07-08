@@ -1,0 +1,42 @@
+allocations:
+  ahts_vessel: !!python/tuple
+  - example_ahts_vessel
+  - 100
+  feeder: !!python/tuple
+  - example_heavy_feeder
+  - 100
+  port:
+  - !!python/tuple
+    - new_london
+    - 1
+  - !!python/tuple
+    - new_bedford
+    - 1
+  - !!python/tuple
+    - sbmt
+    - 0
+  - !!python/tuple
+    - njwp
+    - 0
+  - !!python/tuple
+    - searsport
+    - 1
+  - !!python/tuple
+    - tradepoint
+    - 0
+  - !!python/tuple
+    - portsmouth
+    - 0
+  - !!python/tuple
+    - salem
+    - 1
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 100
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 100
+  - !!python/tuple
+    - example_wtiv
+    - 100
