@@ -32,4 +32,7 @@ def run_manager(pipeline, allocations, library, weather=None, future_resources=N
     cap_map = pipeline.projects[["name", "capacity"]].set_index("name").to_dict()['capacity']
     df['capacity'] = [cap_map[name] for name in df['name']]
 
+    wtiv_map = pipeline.projects[["name", "us_wtiv"]].set_index("name").to_dict()['us_wtiv']
+    df['us_wtiv'] = [wtiv_map[name] for name in df['name']]
+
     return manager, df

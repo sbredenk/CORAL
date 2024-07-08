@@ -11,9 +11,7 @@ base = os.path.join(os.getcwd(), "analysis", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "analysis", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "analysis", "library")
 weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whales.csv")
-
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
-
 
 # set up yaml reading
 def tuple_constructor(loader, node):
@@ -86,9 +84,9 @@ for s in scenarios:
 
 
 
-df_cap = installed_cap(prs, dfs, scenarios, ne)
-total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
-cap_per_investment(prs, df_cap, total_invest)
+df_cap = installed_cap(prs, dfs, scenarios)
+# total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
+# cap_per_investment(prs, df_cap, total_invest)
 
 # Save Powerpoint
 prs.save(savename)

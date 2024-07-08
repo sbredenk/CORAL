@@ -55,7 +55,7 @@ class GlobalManager:
         allocations : dict
             Number of each library item that exists in the shared environment.
         """
-
+        
         self._logs = []
         self._projects = {}
         self._counter = Counter()
