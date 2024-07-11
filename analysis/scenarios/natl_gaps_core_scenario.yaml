@@ -1,6 +1,6 @@
 description:
 - '1 US WTIV starting with CVOW'
-pipeline: natl_gaps_1_us_wtiv_pipeline
+pipeline: natl_gaps_1us_wtiv_base_ports
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel

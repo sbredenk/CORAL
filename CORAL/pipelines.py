@@ -147,11 +147,11 @@ class Pipeline:
                 )
             # config["install_phases"]["ScourProtectionInstallation"] = (
             #     "MonopileInstallation",
-            #     .25,
+            #     1.0,
             # )
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
-                .25,
+                1.0,
             )
 
             # Vessels
@@ -209,7 +209,7 @@ class Pipeline:
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "JacketInstallation",
-                .25,
+                1.0,
             )
 
             # Vessels
@@ -272,7 +272,6 @@ class Pipeline:
                             "station_keeping_vessels": 2,
                         },
                         "substructure": {
-                            "takt_time": 200, #
                             "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
                         }
                     }
@@ -297,11 +296,7 @@ class Pipeline:
                     "MooredSubInstallation": {
                         "ahts_vessel": "_shared_pool_:example_ahts_vessel",
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
-                    },
-                    "substructure": {
-                            "takt_time": 200,
-                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
-                        }
+                    }
                 }
             )
 
