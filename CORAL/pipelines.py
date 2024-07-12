@@ -165,7 +165,7 @@ class Pipeline:
                 config["feeder"] = "_shared_pool_:example_feeder"
                 config["num_feeders"] = 2
 
-            if port in ["new_bedford", "sbmt", "tradepoint"]:
+            if port in ["new_bedford", "sbmt", "tradepoint"] or self.enforce_feeders:
                 config.update(
                     {
                         "MonopileInstallation": {
@@ -275,19 +275,10 @@ class Pipeline:
                             "station_keeping_vessels": 2,
                         },
                         "substructure": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
                             "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
                             "takt_time": 200
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-                            "takt_time": 200, #
-                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
->>>>>>> Stashed changes
+
                         }
                     }
                 }
@@ -313,26 +304,10 @@ class Pipeline:
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
                     },
                     "substructure": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
                         "takt_time": 200
                     }
-=======
-                            "takt_time": 200,
-                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
-                        }
->>>>>>> Stashed changes
-=======
-                            "takt_time": 200,
-                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
-                        }
->>>>>>> Stashed changes
-=======
-                            "takt_time": 200,
-                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
-                        }
->>>>>>> Stashed changes
+
                 }
             )
 
