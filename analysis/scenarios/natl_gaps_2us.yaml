@@ -1,6 +1,6 @@
 description:
 - '1 US WTIV starting with CVOW, then 1 in 2027'
-pipeline: natl_gaps_2us_wtiv_base_ports
+pipeline: natl_gaps_2_us_wtiv_pipeline
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel

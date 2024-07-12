@@ -9,7 +9,7 @@ prs = pptx.Presentation('analysis/results/template.pptx')
 base = os.path.join(os.getcwd(), "analysis", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "analysis", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "analysis", "library")
-weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whales.csv")
+weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED117yrs.csv")
 
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
 
@@ -67,7 +67,6 @@ for s in scenarios:
     slide = add_text_slide(prs, s, description)
     allocations = scenario['allocations']
     future_resources = scenario['future_resources']
-    print(future_resources)
     
 
     manager, df = run_manager(pipeline, allocations, library, weather, future_resources)
@@ -76,11 +75,13 @@ for s in scenarios:
     all_future.append(future_resources)
     dfs.append(df)
 
+    run_plots(prs,manager, df, ports)
 
 
+print(dfs[0])
 df_cap = installed_cap(prs, dfs, scenarios, ne)
-df_investments = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
-cap_per_investment(prs, df_cap, df_investments)
+# df_investments = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
+# cap_per_investment(prs, df_cap, df_investments)
 
 # Save Powerpoint
 prs.save(savename)

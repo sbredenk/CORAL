@@ -272,7 +272,8 @@ class Pipeline:
                             "station_keeping_vessels": 2,
                         },
                         "substructure": {
-                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
+                            "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
+                            "takt_time": 200
                         }
                     }
                 }
@@ -296,6 +297,9 @@ class Pipeline:
                     "MooredSubInstallation": {
                         "ahts_vessel": "_shared_pool_:example_ahts_vessel",
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
+                    },
+                    "substructure": {
+                        "takt_time": 200
                     }
                 }
             )

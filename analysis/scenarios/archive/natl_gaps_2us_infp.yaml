@@ -1,0 +1,97 @@
+description:
+- '1 US WTIV starting with CVOW, then 1 in 2027'
+pipeline: natl_gaps_2us_wtiv_base_ports
+allocations:
+  ahts_vessel: !!python/tuple
+  - example_ahts_vessel
+  - 2
+  feeder: 
+  - !!python/tuple
+    - example_heavy_feeder_1kit
+    - 6
+  - !!python/tuple
+    - example_feeder
+    - 4
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 100
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 3
+  - !!python/tuple
+    - example_wtiv
+    - 2
+  - !!python/tuple
+    - example_wtiv_us
+    - 1
+  port:
+  - !!python/tuple
+    - new_london
+    - 100
+  - !!python/tuple
+    - new_bedford
+    - 100
+  - !!python/tuple
+    - sbmt
+    - 100
+  - !!python/tuple
+    - njwp
+    - 100
+  - !!python/tuple
+    - searsport
+    - 100
+  - !!python/tuple
+    - tradepoint
+    - 100
+  - !!python/tuple
+    - portsmouth
+    - 100
+  - !!python/tuple
+    - salem
+    - 100
+  - !!python/tuple
+    - arthur_kill
+    - 100
+
+future_resources:
+- - wtiv
+  - example_wtiv_us
+  - - 2027-01-01
+- - wtiv
+  - example_heavy_lift_vessel
+  - - 2027-01-01
+- - port
+  - new_bedford
+  - - 2035-01-01
+- - port
+  - new_bedford
+  - - 2035-01-01
+- - port
+  - arthur_kill
+  - - 2027-01-01
+- - port
+  - sbmt
+  - - 2027-01-01
+    - 2035-01-01
+- - port
+  - njwp
+  - - 2025-01-01
+    - 2029-01-01
+    - 2035-01-01
+- - port
+  - tradepoint
+  - - 2025-01-01
+    - 2035-01-01
+- - port
+  - portsmouth
+  - - 2024-01-01
+    - 2024-01-01
+    - 2035-01-01
+- - port
+  - salem
+  - - 2026-01-01
+- - port
+  - searsport
+  - - 2030-01-01
+    - 2035-01-01
