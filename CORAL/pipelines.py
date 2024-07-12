@@ -276,9 +276,12 @@ class Pipeline:
                         },
                         "substructure": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                             "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
                             "takt_time": 200
 =======
+=======
+>>>>>>> Stashed changes
                             "takt_time": 200, #
                             "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
 >>>>>>> Stashed changes
@@ -308,8 +311,14 @@ class Pipeline:
                     },
                     "substructure": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         "takt_time": 200
                     }
+=======
+                            "takt_time": 200,
+                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
+                        }
+>>>>>>> Stashed changes
 =======
                             "takt_time": 200,
                             "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
