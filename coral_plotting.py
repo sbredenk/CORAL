@@ -390,6 +390,7 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
 def installed_cap(prs, dfs, desc, region = None):
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     # end = 2025
     # for df in dfs:
     #     print(df['Date Finished'].iloc[0].year)
@@ -397,6 +398,8 @@ def installed_cap(prs, dfs, desc, region = None):
     #         end = df['Date Finished'].iloc[-1].year
     yrs = np.arange(2023,2050,1)
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     end = 2100
