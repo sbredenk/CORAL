@@ -147,11 +147,11 @@ class Pipeline:
                 )
             # config["install_phases"]["ScourProtectionInstallation"] = (
             #     "MonopileInstallation",
-            #     1.0,
+            #     .25,
             # )
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
-                1.0,
+                .25,
             )
 
             # Vessels
@@ -180,6 +180,8 @@ class Pipeline:
                     {
                         "MonopileInstallation": {
                             "wtiv": "_shared_pool_:example_heavy_lift_vessel",
+                        
+                            
                         }
                     }
                 )
@@ -209,7 +211,7 @@ class Pipeline:
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "JacketInstallation",
-                1.0,
+                .25,
             )
 
             # Vessels
@@ -238,6 +240,7 @@ class Pipeline:
                     {
                         "JacketInstallation": {
                             "wtiv": "_shared_pool_:example_heavy_lift_vessel",
+                            
                         }
                     }
                 )
@@ -272,8 +275,13 @@ class Pipeline:
                             "station_keeping_vessels": 2,
                         },
                         "substructure": {
+<<<<<<< Updated upstream
                             "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
                             "takt_time": 200
+=======
+                            "takt_time": 200, #
+                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
+>>>>>>> Stashed changes
                         }
                     }
                 }
@@ -299,8 +307,14 @@ class Pipeline:
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
                     },
                     "substructure": {
+<<<<<<< Updated upstream
                         "takt_time": 200
                     }
+=======
+                            "takt_time": 200,
+                            "unit_cost": 0 # placeholder, needed for ORBIT but irrelevant for CORAL
+                        }
+>>>>>>> Stashed changes
                 }
             )
 

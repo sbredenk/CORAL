@@ -10,7 +10,7 @@ prs = pptx.Presentation('analysis/results/template.pptx')
 base = os.path.join(os.getcwd(), "analysis", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "analysis", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "analysis", "library")
-weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whales.csv")
+weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED.csv")
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
 
 # set up yaml reading
@@ -76,6 +76,7 @@ for s in scenarios:
 
     coral_time = time.time()
     manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
+    #manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)
@@ -85,12 +86,38 @@ for s in scenarios:
 
 
 df_cap = installed_cap(prs, dfs, scenarios)
-# total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
-# cap_per_investment(prs, df_cap, total_invest)
+total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
+cap_per_investment(prs, df_cap, total_invest)
+
+
+
 
 # Save Powerpoint
 prs.save(savename)
 print(f'\nresults saved to:\n{savename}')
 
+
+""" df2 = pd.DataFrame(dfs)
+writer= pd.ExcelWriter('analysis/results/4wtivs', engine='xlsxwriter')
+df2.to_excel(writer, index=False)
+writer.save()
+pd.set_option('display.max_rows', 1000)
+pd.set_option('display.max_columns', 1000)
+print(dfs) """
+
+""" df = pd.DataFrame(manager.logs).iloc[::-1]
+df = df.reset_index(drop=True).reset_index()
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+df['Difference'] = df['Finished']-df['Started']
+average_difference = (df['Difference'].mean()/8760) """
+
+#df.to_excel('analysis/results/CalibratedProcessTimes25OverlapUnconstrained.xlsx', index=False)
+
+print(df)
+#print(average_difference)
+
 ### Open it
+
 sp.run(f'"{savename}"', shell=True)

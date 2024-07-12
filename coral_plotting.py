@@ -331,7 +331,7 @@ def port_throughput(prs, manager, df, region=None):
 
 
 def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_costs):
-    yrs = np.arange(2023,2043)
+    yrs = np.arange(2023,2060)
     dates = pd.to_datetime(yrs, format='%Y')
     fig, axes = plt.subplots(2,1, figsize=(10,6), dpi=200, sharex=True)
 
@@ -388,12 +388,21 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
     return total_investments
 
 def installed_cap(prs, dfs, desc, region = None):
+<<<<<<< Updated upstream
     # end = 2025
     # for df in dfs:
     #     print(df['Date Finished'].iloc[0].year)
     #     if df['Date Finished'].iloc[0].year > end:
     #         end = df['Date Finished'].iloc[-1].year
     yrs = np.arange(2023,2050,1)
+=======
+    end = 2100
+    for df in dfs:
+        print(df['Date Finished'].iloc[0].year)
+        if df['Date Finished'].iloc[0].year > end:
+            end = df['Date Finished'].iloc[-1].year
+    yrs = np.arange(2023,end,1)
+>>>>>>> Stashed changes
     df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
 
@@ -440,7 +449,8 @@ def installed_cap(prs, dfs, desc, region = None):
     annual_label = [s + ' annual' for s in desc]
     cum_label = [s + ' cumulative' for s in desc]
     labels = cum_label + annual_label
-    ax.legend(labels)
+    #ax.legend(labels)
+    ax.legend(labels, prop={'size': 7})
 
     slide = add_to_pptx(prs,'Installed Capacity')
 
