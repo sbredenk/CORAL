@@ -64,10 +64,7 @@ future_resources:
   - - 2030-01-01
     - 2033-01-01
 - - port
-  - new_bedford
-  - - 2035-01-01
-- - port
-  - new_bedford
+  - new_london
   - - 2035-01-01
 - - port
   - arthur_kill
@@ -80,7 +77,6 @@ future_resources:
   - njwp
   - - 2025-01-01
     - 2029-01-01
-    - 2035-01-01
 - - port
   - tradepoint
   - - 2025-01-01
@@ -89,7 +85,6 @@ future_resources:
   - portsmouth
   - - 2024-01-01
     - 2024-01-01
-    - 2035-01-01
 - - port
   - salem
   - - 2026-01-01
