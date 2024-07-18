@@ -1,5 +1,5 @@
 ﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,associated_port,us_wtiv
-South Fork,NY,-71.07590392,41.11050519,50,132,11MW_generic,40,monopile,1/1/2023 0:00,2024,new_london,FALSE
+South Fork,NY,-71.07590392,41.11050519,50,132,11MW_generic,40,monopile,1/1/2023 0:00,2024,new_london_1,FALSE
 Vineyard Wind 1,MA,-70.3809493,41.02365044,50,800,13MW_generic,40,monopile,1/1/2023 0:00,2024,new_bedford,FALSE
 Revolution Wind 1,RI/CT,-71.07607428,41.1159065,50,704,12MW_generic,40,monopile,1/1/2024 0:00,2025,new_london_1,FALSE
 Atlantic Shores Offshore Wind South 1,NJ,-73.99422436,39.31937248,50,1510,15MW_generic,40,monopile,1/1/2026 0:00,2027,njwp_1,FALSE
@@ -33,7 +33,7 @@ Excelsior Wind,NY,-73.11065926,40.20300636,50,1314,15MW_generic,40,monopile,1/1/
 Hypothetical Central Atlantic Draft WEA 7,VA,-73.650827,37.555451,50,1566,15MW_generic,800,semisub,1/1/2033 0:00,2034,portsmouth_1,FALSE
 Kitty Hawk South,NC,-75.02671099,36.23848619,50,2465,15MW_generic,40,monopile,1/1/2033 0:00,2034,portsmouth_2,TRUE
 Bluepoint Wind,NY,-72.78092681,39.93770722,50,1158,15MW_generic,40,monopile,1/1/2034 0:00,2035,njwp_1,FALSE
-Hypothetical Central Atlantic WEA 1,MD,-75.024437,36.925349,50,927,15MW_generic,40,monopile,1/1/2034 0:00,2035,tradepoint,TRUE
+Hypothetical Central Atlantic WEA 1,MD,-75.024437,36.925349,50,927,15MW_generic,40,monopile,1/1/2034 0:00,2035,tradepoint_1,TRUE
 Hypothetical Central Atlantic WEA 4,NC,-75.120567,36.512551,50,1607,15MW_generic,40,monopile,1/1/2034 0:00,2035,portsmouth_1,TRUE
 Ocean Wind 1,NJ,-74.28953405,39.02418816,50,1100,15MW_generic,40,monopile,1/1/2034 0:00,2035,njwp_2,FALSE
 TotalEnergies,NC,-78.00283544,33.43107384,50,889,15MW_generic,40,monopile,1/1/2034 0:00,2035,portsmouth_2,FALSE

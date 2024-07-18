@@ -13,9 +13,9 @@ storage_specs:
   max_deck_load: 15       # t/m^2
   max_deck_space: 4000    # m^2
 transport_specs:
-  max_waveheight: 3       # m
-  max_windspeed: 20       # m/s
-  transit_speed: 10       # km/h
+  max_waveheight: 1.5       # m
+  max_windspeed: 15       # m/s
+  transit_speed: 18.5       # km/h
 vessel_specs:
   day_rate: 180000        # USD/day
   mobilization_days: 7    # days

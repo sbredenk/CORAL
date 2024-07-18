@@ -290,7 +290,7 @@ def port_throughput(prs, manager, df, region=None):
     for _, project in df.iterrows():
 
         if project["Date Finished"].year == project["Date Started"].year:
-            res.append((project["Date Finished"].year, project["port"], project["capacity"]))
+            res.append((project["Date Finished"].year, project["associated_port"], project["capacity"]))
 
         else:
 
@@ -305,11 +305,11 @@ def port_throughput(prs, manager, df, region=None):
                 else:
                     perc = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)) / total
 
-                res.append((year, project["port"], perc * project["capacity"]))
+                res.append((year, project["associated_port"], perc * project["capacity"]))
 
-    throughput = pd.DataFrame(res, columns=["year", "port", "capacity"]).pivot_table(
+    throughput = pd.DataFrame(res, columns=["year", ["associated_port"], "capacity"]).pivot_table(
         index=["year"],
-        columns=["port"],
+        columns=["associated_port"],
         aggfunc="sum",
         fill_value=0.
     )["capacity"]

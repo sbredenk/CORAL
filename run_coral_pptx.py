@@ -30,7 +30,7 @@ nynj = ['NY','NJ']
 mid = ['NC', 'MD', 'VA', 'DE']
 
 # List all ports
-ports = ['salem', 'searsport', 'new_bedford', 'new_london', 'arthur_kill', 'njwp', 'sbmt', 'tradepoint', 'portsmouth']
+ports = ['salem', 'searsport_1', 'searsport_2', 'new_bedford', 'new_london_1', 'new_london_2', 'arthur_kill', 'njwp_1', 'njwp_2', 'sbmt', 'tradepoint_1', 'tradepoint_2', 'portsmouth_1', 'portsmouth_2']
 ne_ports = ['salem', 'searsport','new_bedford','new_london']
 
 # Vessel Names and Costs
