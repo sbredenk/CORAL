@@ -1,5 +1,5 @@
 description:
-- '1 US WTIV starting with CVOW, then 1 in 2027, 2030'
+- '1 US WTIV starting with CVOW, then 1 in 2030, 2033'
 pipeline: natl_gaps_3_us_wtiv_pipeline
 allocations:
   ahts_vessel: !!python/tuple
@@ -57,12 +57,12 @@ allocations:
 future_resources:
 - - wtiv
   - example_wtiv_us
-  - - 2027-01-01
-    - 2030-01-01
+  - - 2030-01-01
+    - 2033-01-01
 - - wtiv
   - example_heavy_lift_vessel
-  - - 2027-01-01
-    - 2030-01-01
+  - - 2030-01-01
+    - 2033-01-01
 - - port
   - new_bedford
   - - 2035-01-01

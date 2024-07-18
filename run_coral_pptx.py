@@ -86,8 +86,8 @@ for s in scenarios:
 
 
 df_cap = installed_cap(prs, dfs, scenarios)
-total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
-cap_per_investment(prs, df_cap, total_invest)
+# total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
+# cap_per_investment(prs, df_cap, total_invest)
 
 
 

@@ -9,7 +9,7 @@ prs = pptx.Presentation('analysis/results/template.pptx')
 base = os.path.join(os.getcwd(), "analysis", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "analysis", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "analysis", "library")
-weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED117yrs.csv")
+weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED.csv")
 
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
 

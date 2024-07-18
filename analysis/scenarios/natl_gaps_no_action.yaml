@@ -56,7 +56,7 @@ allocations:
 
 future_resources:
 - - port
-  - new_bedford
+  - new_london
   - - 2035-01-01
 - - port
   - arthur_kill

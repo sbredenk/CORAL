@@ -322,7 +322,7 @@ def port_throughput(prs, manager, df, region=None):
     ax.set_ylim(0, 2000)
     ax.set_ylabel("Annual Capacity Throughput (MW)")
     ax.set_xlabel("")
-    plt.xticks(rotation=0, fontsize=6)
+    plt.xticks(rotation=90, fontsize=6)
     plt.yticks(fontsize=6)
 
     ax.legend(fontsize=6, ncol=5)
@@ -388,18 +388,7 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
     return total_investments
 
 def installed_cap(prs, dfs, desc, region = None):
-    # end = 2025
-    # for df in dfs:
-    #     print(df['Date Finished'].iloc[0].year)
-    #     if df['Date Finished'].iloc[0].year > end:
-    #         end = df['Date Finished'].iloc[-1].year
-    yrs = np.arange(2023,2050,1)
-    end = 2100
-    for df in dfs:
-        print(df['Date Finished'].iloc[0].year)
-        if df['Date Finished'].iloc[0].year > end:
-            end = df['Date Finished'].iloc[-1].year
-    yrs = np.arange(2023,end,1)
+    yrs = np.arange(2023,2060,1)
     df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
 
@@ -477,7 +466,9 @@ def run_plots(prs, manager, df, ports):
     # regional_gantt(prs, manager, df, ne, 'New England', sorted=True)
 
     port_throughput(prs,manager,df)
-    # port_throughput(prs,manager,df,ne)
+    port_throughput(prs,manager,df,ne)
+    port_throughput(prs,manager,df,nynj)
+    port_throughput(prs,manager,df,mid)
 
     # regional_gantt(prs, manager, df, nynj, 'New York/New Jersey')
     # regional_gantt(prs, manager, df, nynj, 'New York/New Jersey', sorted=True)

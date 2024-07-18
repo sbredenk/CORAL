@@ -13,26 +13,11 @@ def run_manager(pipeline, allocations, library, weather=None, future_resources=N
     df = pd.DataFrame(manager.logs).iloc[::-1]
     df = df.reset_index(drop=True).reset_index()
 
-    sub_map = pipeline.projects[["name", "substructure"]].set_index("name").to_dict()['substructure']
-    df['substructure'] = [sub_map[name] for name in df['name']]
-    
-    depth_map = pipeline.projects[["name", "depth"]].set_index("name").to_dict()['depth']
-    df['depth'] = [depth_map[name] for name in df['name']]
+    df_cols = ['substructure','depth', 'estimated_cod', 'location','associated_port', 'capacity','us_wtiv']
 
-    cod_map = pipeline.projects[["name", "estimated_cod"]].set_index("name").to_dict()['estimated_cod']
-    df['estimated_cod'] = [cod_map[name] for name in df['name']]
-    df['estimated_cod'] = pd.to_datetime(df['estimated_cod'], format='%Y')
+    for col in df_cols:
+        map = pipeline.projects[["name", col]].set_index("name").to_dict()[col]
+        df[col] = [map[name] for name in df['name']]
 
-    state_map = pipeline.projects[["name", "location"]].set_index("name").to_dict()['location']
-    df['offtake_state'] = [state_map[name] for name in df['name']]
-
-    port_map = pipeline.projects[["name", "associated_port"]].set_index("name").to_dict()['associated_port']
-    df['port'] = [port_map[name] for name in df['name']]
-
-    cap_map = pipeline.projects[["name", "capacity"]].set_index("name").to_dict()['capacity']
-    df['capacity'] = [cap_map[name] for name in df['name']]
-
-    wtiv_map = pipeline.projects[["name", "us_wtiv"]].set_index("name").to_dict()['us_wtiv']
-    df['us_wtiv'] = [wtiv_map[name] for name in df['name']]
 
     return manager, df
