@@ -13,11 +13,15 @@ def run_manager(pipeline, allocations, library, weather=None, future_resources=N
     df = pd.DataFrame(manager.logs).iloc[::-1]
     df = df.reset_index(drop=True).reset_index()
 
-    df_cols = ['substructure','depth', 'estimated_cod', 'location','associated_port', 'capacity','us_wtiv']
+    df_cols = ['substructure','depth', 'location','associated_port', 'capacity','us_wtiv']
 
     for col in df_cols:
         map = pipeline.projects[["name", col]].set_index("name").to_dict()[col]
         df[col] = [map[name] for name in df['name']]
+    
+    cod_map = pipeline.projects[["name", "estimated_cod"]].set_index("name").to_dict()['estimated_cod']
+    df['estimated_cod'] = [cod_map[name] for name in df['name']]
+    df['estimated_cod'] = pd.to_datetime(df['estimated_cod'], format='%Y')
 
 
     return manager, df

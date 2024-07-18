@@ -196,7 +196,7 @@ def substructure_gantt(prs, manager, df, substructure, sorted=False):
         if row['us_wtiv']:
             bar_color.append("#F0E442")
         else:
-            if row['port'] in ["new_bedford", "sbmt", "tradepoint"]:
+            if row['associated_port'] in ["new_bedford", "sbmt", "tradepoint"]:
                 bar_color.append("#50C878")
             else:
                 bar_color.append("#0072B2")
@@ -284,8 +284,7 @@ def port_gantts(prs, manager, df, ports, sorted=False):
 def port_throughput(prs, manager, df, region=None):
     if region:
         df = df.drop(columns=['index'])
-        df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
-
+        df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
     res = []
     for _, project in df.iterrows():
 
@@ -307,19 +306,37 @@ def port_throughput(prs, manager, df, region=None):
 
                 res.append((year, project["associated_port"], perc * project["capacity"]))
 
-    throughput = pd.DataFrame(res, columns=["year", ["associated_port"], "capacity"]).pivot_table(
+    throughput = pd.DataFrame(res, columns=["year", "associated_port", "capacity"]).pivot_table(
         index=["year"],
         columns=["associated_port"],
         aggfunc="sum",
         fill_value=0.
     )["capacity"]
 
+
+    index = np.arange(throughput.index.min(),throughput.index.max()+1)
+    throughput = throughput.reindex(index, fill_value=0)
+    # throughput = throughput.drop(columns=['associated_port'])
+
     fig = plt.figure(figsize=(6, 4), dpi=200)
     ax = fig.add_subplot(111)
-
     throughput.plot.bar(ax=ax, width=0.75)
+    ax.axhline(y=700, color='k', linestyle='--', linewidth=0.8)
+    ax.axhline(y=1000, color='k', linestyle='--', linewidth=0.8)
 
-    ax.set_ylim(0, 2000)
+    # mask = (throughput.max(axis=1) >= 700) & (throughput.max(axis=1) <= 1000)
+    # ax.fill_between(throughput.index, 1000, 700, where=mask, interpolate=True, alpha=0.8, color='#E6E6FA')
+
+    # Create step plot for shading
+    y1 = np.ones(len(throughput.index))*1000
+    y2 = np.ones(len(throughput.index))*700 
+    # ax.step(throughput.index, [700] * len(throughput), where='mid', linestyle='-', color='none')  # Bottom line
+
+    # Fill between the lines
+    # mask = (throughput.max(axis=1) >= 700) & (throughput.max(axis=1) <= 1000)
+    ax.axhspan(700, 1000, alpha=0.8, zorder=0, color = '#E6E6FA')
+
+    ax.set_ylim(0, 2500)
     ax.set_ylabel("Annual Capacity Throughput (MW)")
     ax.set_xlabel("")
     plt.xticks(rotation=90, fontsize=6)
@@ -388,7 +405,7 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
     return total_investments
 
 def installed_cap(prs, dfs, desc, region = None):
-    yrs = np.arange(2023,2060,1)
+    yrs = np.arange(2023,2061,1)
     df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
 
