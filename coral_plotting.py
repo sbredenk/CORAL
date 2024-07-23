@@ -405,7 +405,7 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
     return total_investments
 
 def installed_cap(prs, dfs, desc, region = None):
-    yrs = np.arange(2023,2061,1)
+    yrs = np.arange(2023,2051,1)
     df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
 
@@ -442,8 +442,8 @@ def installed_cap(prs, dfs, desc, region = None):
         df_cum[desc[i]] = df_cap[desc[i]].cumsum(axis=0)
         i += 1
     
-    df_cum[desc].plot(linestyle = '-', ax=ax, use_index=False, label='cumulative')
-    df_cap[desc].plot(kind='bar', ax=ax, label='annual')
+    df_cum[desc].plot(linestyle = '-', ax=ax, label='cumulative')
+    # df_cap[desc].plot(kind='bar', ax=ax, label='annual')
     ax.set_xlabel("")
     ax.set_ylabel("Capacity (GW)")
     ax.get_yaxis().set_major_formatter(
@@ -451,7 +451,7 @@ def installed_cap(prs, dfs, desc, region = None):
     
     annual_label = [s + ' annual' for s in desc]
     cum_label = [s + ' cumulative' for s in desc]
-    labels = cum_label + annual_label
+    labels = cum_label
     #ax.legend(labels)
     ax.legend(labels, prop={'size': 7})
 
