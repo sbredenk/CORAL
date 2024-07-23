@@ -26,6 +26,8 @@ class Pipeline:
         float_base_config,
         regional_ports=False,
         enforce_feeders=False,
+        ffiv_feeders=False
+        
     ):
         """
         Creates an instance of `Pipeline`.
@@ -48,6 +50,8 @@ class Pipeline:
         self.base_float = load_config(float_base_config)
         self.regional_ports = regional_ports
         self.enforce_feeders = enforce_feeders
+        self.ffiv_feeders = ffiv_feeders
+
 
         self.configs = self.build_configs()
 
@@ -151,7 +155,7 @@ class Pipeline:
             # )
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
-                .25,
+                1.0,
             )
 
             # Vessels
@@ -165,7 +169,7 @@ class Pipeline:
                 config["feeder"] = "_shared_pool_:example_feeder"
                 config["num_feeders"] = 2
 
-            if port in ["new_bedford", "sbmt", "tradepoint"] or self.enforce_feeders:
+            if port in ["new_bedford", "sbmt", "tradepoint"] or self.ffiv_feeders:
                 config.update(
                     {
                         "MonopileInstallation": {
@@ -211,7 +215,7 @@ class Pipeline:
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "JacketInstallation",
-                .25,
+                1.0,
             )
 
             # Vessels
@@ -225,7 +229,7 @@ class Pipeline:
                 config["feeder"] = "_shared_pool_:example_feeder"
                 config["num_feeders"] = 2
 
-            if port in ["new_bedford", "sbmt", "tradepoint"]:
+            if port in ["new_bedford", "sbmt", "tradepoint"] or self.ffiv_feeders:
                 config.update(
                     {
                         "JacketInstallation": {
