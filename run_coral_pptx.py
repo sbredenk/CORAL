@@ -10,7 +10,7 @@ prs = pptx.Presentation('analysis/results/template.pptx')
 base = os.path.join(os.getcwd(), "analysis", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "analysis", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "analysis", "library")
-weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED.csv")
+weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whales.csv")
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
 
 # set up yaml reading
@@ -50,7 +50,10 @@ parser.add_argument('scenarios', nargs='+')
 args = parser.parse_args()
 
 filename = args.filename
-savename = 'analysis/results/%s.pptx' % filename
+results_fp = 'analysis/results/%s' % filename
+savename = os.path.join(results_fp, '%s.pptx' % filename)
+
+os.makedirs(results_fp)
 
 scenarios = args.scenarios
 # print(scenarios)
@@ -59,7 +62,10 @@ dfs = []
 all_alloc = []
 all_future = []
 
+
+
 for s in scenarios:
+
     with open('analysis/scenarios/%s.yaml' % s) as f:
         scenario = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
@@ -75,13 +81,16 @@ for s in scenarios:
     future_resources = scenario['future_resources']
 
     coral_time = time.time()
-    manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
-    # manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources)
+    # manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
+    manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)
     dfs.append(df)
     run_plots(prs, manager, df, ne_ports)
+
+    df.to_csv(os.path.join(results_fp, '%s.csv' % s))
+
 
 
 
