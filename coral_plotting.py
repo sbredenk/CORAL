@@ -66,7 +66,7 @@ def add_textbox(
     font.size = Pt(fontsize)
     return slide
 
-def full_gantt(prs, manager, df, sorted=False):
+def full_gantt(prs, df, sorted=False):
     """Gantt chart of full pipeline. Sorted sorts by expected start date."""
     if sorted:
         df = df.drop(columns=['index'])
@@ -117,14 +117,14 @@ def full_gantt(prs, manager, df, sorted=False):
     semisub_install = matplotlib.patches.Patch(color='#0072B2', label='Semisub Installation')
     ax.legend(handles=[mono_delay, mono_install, gbf_delay, gbf_install, jacket_delay, jacket_install, semisub_delay, semisub_install])
 
-    ax.set_xlim(manager._start - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
+    ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
         slide = add_to_pptx(prs,'Sorted Full Gantt', width=5.25)
     else:
         slide = add_to_pptx(prs,'Full Gantt', width=4.25)
     plt.close(fig)
 
-def regional_gantt(prs, manager, df, region, region_name, sorted=False):
+def regional_gantt(prs, df, region, region_name, sorted=False):
     """Gantt chcart of select region pipeline. Region determined by offtake states in region list. 
        Sorted sorts by expected start date."""
     df = df.drop(columns=['index'])
@@ -168,7 +168,7 @@ def regional_gantt(prs, manager, df, region, region_name, sorted=False):
     ax.legend(handles=[mono, gbf, jacket, semisub])
 
 
-    ax.set_xlim(manager._start - dt.timedelta(days=30), df_region["Date Finished"].max() + dt.timedelta(days=30))
+    ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df_region["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
         slide = add_to_pptx(prs,'Sorted %s Gantt' % region_name)
     else:
@@ -176,7 +176,7 @@ def regional_gantt(prs, manager, df, region, region_name, sorted=False):
     plt.close(fig)
 
 
-def substructure_gantt(prs, manager, df, substructure, sorted=False):
+def substructure_gantt(prs, df, substructure, sorted=False):
     """ Gantt filtered by either fixed or floating projects. Sorted sorts by expected start date."""
 
     df = df.drop(columns=['index'])
@@ -216,7 +216,7 @@ def substructure_gantt(prs, manager, df, substructure, sorted=False):
 
     ax.legend()
 
-    ax.set_xlim(manager._start - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
+    ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
         slide = add_to_pptx(prs,'Sorted %s Gantt' % substructure.capitalize())
     else:
@@ -224,7 +224,7 @@ def substructure_gantt(prs, manager, df, substructure, sorted=False):
     plt.close(fig)
 
 
-def port_gantts(prs, manager, df, ports, sorted=False):
+def port_gantts(prs, df, ports, sorted=False):
     """Gantt chart of specific ports. Creates subplot for each port in ports list. Sorted sorts by expected start date."""
     i = 1
     ports_in_pipeline = df['port'].nunique()
@@ -269,7 +269,7 @@ def port_gantts(prs, manager, df, ports, sorted=False):
 
         ax.legend()
 
-        ax.set_xlim(manager._start - dt.timedelta(days=30), df_port["Date Finished"].max() + dt.timedelta(days=30))
+        ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df_port["Date Finished"].max() + dt.timedelta(days=30))
 
         i += 1
 
@@ -281,7 +281,7 @@ def port_gantts(prs, manager, df, ports, sorted=False):
     plt.close(fig)
 
 
-def port_throughput(prs, manager, df, region=None):
+def port_throughput(prs, df, region=None):
     if region:
         df = df.drop(columns=['index'])
         df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
@@ -471,32 +471,32 @@ def cap_per_investment(prs, df_cum, df_investments):
     slide = add_to_pptx(prs, 'Capacity per Investment (MW/$)')
 
 
-def run_plots(prs, manager, df, ports):
+def run_plots(prs, df, ports):
     ne = ['MA','ME','CT','RI','NH','RI/CT']
     nynj = ['NY','NJ']
     mid = ['NC', 'MD', 'VA', 'DE']
 
-    full_gantt(prs, manager, df)
-    full_gantt(prs, manager, df, sorted=True)
+    full_gantt(prs, df)
+    full_gantt(prs, df, sorted=True)
 
-    # regional_gantt(prs, manager, df, ne, 'New England')
-    # regional_gantt(prs, manager, df, ne, 'New England', sorted=True)
+    # regional_gantt(prs,, df, ne, 'New England')
+    # regional_gantt(prs,, df, ne, 'New England', sorted=True)
 
-    port_throughput(prs,manager,df)
-    port_throughput(prs,manager,df,ne)
-    port_throughput(prs,manager,df,nynj)
-    port_throughput(prs,manager,df,mid)
+    port_throughput(prs,df)
+    port_throughput(prs,df,ne)
+    port_throughput(prs,df,nynj)
+    port_throughput(prs,df,mid)
 
-    # regional_gantt(prs, manager, df, nynj, 'New York/New Jersey')
-    # regional_gantt(prs, manager, df, nynj, 'New York/New Jersey', sorted=True)
+    # regional_gantt(prs, df, nynj, 'New York/New Jersey')
+    # regional_gantt(prs, df, nynj, 'New York/New Jersey', sorted=True)
 
-    # regional_gantt(prs, manager, df, mid, 'Midatlantic')
-    # regional_gantt(prs, manager, df, mid, 'Midatlantic', sorted=True)
+    # regional_gantt(prs, df, mid, 'Midatlantic')
+    # regional_gantt(prs, df, mid, 'Midatlantic', sorted=True)
 
-    # port_gantts(prs, manager, df, ports)
-    # port_gantts(prs, manager, df, ports, sorted=True)
+    # port_gantts(prs, df, ports)
+    # port_gantts(prs, df, ports, sorted=True)
 
-    substructure_gantt(prs, manager, df, 'fixed')
-    substructure_gantt(prs, manager, df, 'fixed', sorted=True)
-    # substructure_gantt(prs, manager, df, 'floating')
-    # substructure_gantt(prs, manager, df, 'floating', sorted=True)
+    substructure_gantt(prs, df, 'fixed')
+    substructure_gantt(prs, df, 'fixed', sorted=True)
+    # substructure_gantt(prs, df, 'floating')
+    # substructure_gantt(prs, df, 'floating', sorted=True)

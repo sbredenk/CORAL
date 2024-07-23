@@ -23,5 +23,4 @@ def run_manager(pipeline, allocations, library, weather=None, future_resources=N
     df['estimated_cod'] = [cod_map[name] for name in df['name']]
     df['estimated_cod'] = pd.to_datetime(df['estimated_cod'], format='%Y')
 
-
     return manager, df
