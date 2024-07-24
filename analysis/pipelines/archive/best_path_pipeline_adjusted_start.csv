@@ -1,0 +1,138 @@
+﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,associated_port,us_wtiv
+South Fork ,NY,-71.07590392,41.11050519,50,132,11MW_generic,40,monopile,1/1/2023 0:00,2024,new_london,FALSE
+Vineyard Wind 1 1,MA,-70.3809493,41.02365044,50,400,13MW_generic,40,monopile,1/1/2023 0:00,2024,new_bedford,FALSE
+Vineyard Wind 1 2,MA,-70.3809493,41.02365044,50,400,13MW_generic,40,monopile,1/1/2024 0:00,2025,new_bedford,FALSE
+Revolution Wind 1 1,RI/CT,-71.07607428,41.1159065,50,350,12MW_generic,40,monopile,1/1/2023 0:00,2025,new_london,FALSE
+Revolution Wind 1 2,RI/CT,-71.07607428,41.1159065,50,354,12MW_generic,40,monopile,1/1/2024 0:00,2025,new_london,FALSE
+Atlantic Shores Offshore Wind South 1 1,NJ,-73.99422436,39.31937248,50,503,15MW_generic,40,monopile,1/1/2025 0:00,2027,njwp,FALSE
+Atlantic Shores Offshore Wind South 1 2,NJ,-73.99422436,39.31937248,50,1006,15MW_generic,40,monopile,1/1/2026 0:00,2027,njwp,FALSE
+CVOW-C 1,VA,-75.45761394,36.84342509,50,1034,15MW_generic,40,monopile,1/1/2024 0:00,2027,portsmouth,TRUE
+CVOW-C 2,VA,-75.45761394,36.84342509,50,1034,15MW_generic,40,monopile,1/1/2025 0:00,2027,portsmouth,TRUE
+CVOW-C 3,VA,-75.45761394,36.84342509,50,519,15MW_generic,40,monopile,1/1/2026 0:00,2027,portsmouth,TRUE
+MarWin,MD,-74.75306642,38.27179677,50,248,15MW_generic,40,monopile,1/1/2026 0:00,2027,tradepoint,FALSE
+Empire Wind 1 1,NY,-73.22227313,40.24801683,50,408,15MW_generic,40,monopile,1/1/2026 0:00,2028,sbmt,FALSE
+Empire Wind 1 2,NY,-73.22227313,40.24801683,50,408,15MW_generic,40,monopile,1/1/2027 0:00,2028,sbmt,FALSE
+Momentum Wind 1,MD,-74.75306642,38.27179677,50,404,15MW_generic,40,monopile,1/1/2026 0:00,2028,tradepoint,FALSE
+Momentum Wind 2,MD,-74.75306642,38.27179677,50,405,15MW_generic,40,monopile,1/1/2027 0:00,2028,tradepoint,FALSE
+Sunrise Wind 1,NY,-70.82962083,40.99037717,50,462,11MW_generic,40,monopile,1/1/2027 0:00,2029,new_london,TRUE
+Sunrise Wind 2,NY,-70.82962083,40.99037717,50,462,11MW_generic,40,monopile,1/1/2028 0:00,2029,new_london,TRUE
+Maine Research Array,ME,-69.359846,43.393802,50,144,12MW_generic,800,semisub,1/1/2028 0:00,2029,searsport,FALSE
+Kitty Hawk North 1,VA,-75.02671099,36.23848619,50,517,15MW_generic,40,monopile,1/1/2028 0:00,2030,portsmouth,FALSE
+Kitty Hawk North 2,VA,-75.02671099,36.23848619,50,518,15MW_generic,40,monopile,1/1/2029 0:00,2030,portsmouth,FALSE
+MarWin Residual,MD,-74.75306642,38.27179677,50,600,15MW_generic,40,monopile,1/1/2029 0:00,2030,tradepoint,FALSE
+SouthCoast 1 Phase 1 (Mayflower Wind 1) 1,MA,-70.50430003,40.64106695,50,402,15MW_generic,40,jacket,1/1/2028 0:00,2030,new_bedford,FALSE
+SouthCoast 1 Phase 1 (Mayflower Wind 1) 2,MA,-70.50430003,40.64106695,50,402,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
+SouthCoast 1 Phase 2 (Mayflower Wind 2) ,MA,-70.50430003,40.64106695,50,400,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
+SouthCoast Residual 1,MA,-70.50430003,40.64106695,50,400,15MW_generic,40,jacket,1/1/2028 0:00,2030,new_bedford,FALSE
+SouthCoast Residual 2,MA,-70.50430003,40.64106695,50,400,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
+Attentive Energy One 1,NY,-73.07013631,39.64017504,50,468,15MW_generic,40,monopile,1/1/2028 0:00,2031,sbmt,TRUE
+Attentive Energy One 2,NY,-73.07013631,39.64017504,50,468,15MW_generic,40,monopile,1/1/2029 0:00,2031,sbmt,TRUE
+Attentive Energy One 3,NY,-73.07013631,39.64017504,50,468,15MW_generic,40,monopile,1/1/2030 0:00,2031,sbmt,TRUE
+Attentive Energy Two 1,NJ,-73.07013631,39.64017504,50,671,15MW_generic,40,monopile,1/1/2029 0:00,2031,njwp,FALSE
+Attentive Energy Two 2,NJ,-73.07013631,39.64017504,50,671,15MW_generic,40,monopile,1/1/2030 0:00,2031,njwp,FALSE
+Community Offshore Wind 1 1,NY,-73.35380267,39.47155514,50,438,15MW_generic,40,monopile,1/1/2028 0:00,2031,arthur_kill,FALSE
+Community Offshore Wind 1 2,NY,-73.35380267,39.47155514,50,438,15MW_generic,40,monopile,1/1/2029 0:00,2031,arthur_kill,FALSE
+Community Offshore Wind 1 3,NY,-73.35380267,39.47155514,50,438,15MW_generic,40,monopile,1/1/2030 0:00,2031,arthur_kill,FALSE
+"New England Wind 1 (Park City Wind, Vineyard Wind South) 1",CT,-70.37381455,41.0237355,50,400,15MW_generic,40,gbf,1/1/2029 0:00,2031,salem,FALSE
+"New England Wind 1 (Park City Wind, Vineyard Wind South) 2",CT,-70.37381455,41.0237355,50,400,15MW_generic,40,gbf,1/1/2030 0:00,2031,salem,FALSE
+"New England Wind 2 (Commonwealth Wind, Vineyard Wind South) 1",MA,-70.37381455,41.0237355,50,616,15MW_generic,40,gbf,1/1/2030 0:00,2032,salem,FALSE
+"New England Wind 2 (Commonwealth Wind, Vineyard Wind South) 2",MA,-70.37381455,41.0237355,50,616,15MW_generic,40,gbf,1/1/2031 0:00,2032,salem,FALSE
+Atlantic Shores Offshore Wind North,NJ,-73.99414711,39.32477804,50,1182,15MW_generic,40,monopile,1/1/2031 0:00,2032,njwp,TRUE
+Atlantic Shores Offshore Wind South 2 1,NJ,-73.99422436,39.31937248,50,750,15MW_generic,40,monopile,1/1/2030 0:00,2032,njwp,FALSE
+Atlantic Shores Offshore Wind South 2 2,NJ,-73.99422436,39.31937248,50,750,15MW_generic,40,monopile,1/1/2031 0:00,2032,njwp,FALSE
+Beacon Wind 1 1,NY,-70.67561391,40.68194716,50,615,15MW_generic,40,monopile,1/1/2030 0:00,2032,sbmt,FALSE
+Beacon Wind 1 2,NY,-70.67561391,40.68194716,50,615,15MW_generic,40,monopile,1/1/2031 0:00,2032,sbmt,FALSE
+Beacon Wind 2 1,NY,-70.67561391,40.68194716,50,600,15MW_generic,40,monopile,1/1/2030 0:00,2032,sbmt,FALSE
+Beacon Wind 2 2,NY,-70.67561391,40.68194716,50,600,15MW_generic,40,monopile,1/1/2031 0:00,2032,sbmt,FALSE
+Duke Energy/Cinergy,NC,-77.81247426,33.39308136,50,893,15MW_generic,40,monopile,1/1/2031 0:00,2032,portsmouth,FALSE
+Leading Light Wind 1,NJ,-73.526616,39.2143787,50,600,15MW_generic,40,monopile,1/1/2028 0:00,2032,arthur_kill,FALSE
+Leading Light Wind 2,NJ,-73.526616,39.2143787,50,600,15MW_generic,40,monopile,1/1/2029 0:00,2032,arthur_kill,FALSE
+Leading Light Wind 3,NJ,-73.526616,39.2143787,50,600,15MW_generic,40,monopile,1/1/2030 0:00,2032,arthur_kill,FALSE
+Leading Light Wind 4,NJ,-73.526616,39.2143787,50,600,15MW_generic,40,monopile,1/1/2031 0:00,2032,arthur_kill,FALSE
+Skipjack 1,MD,-74.64204139,38.53106333,50,120,12MW_generic,40,monopile,1/1/2031 0:00,2032,tradepoint,FALSE
+Skipjack 2 1,MD,-74.64204139,38.53106333,50,423,15MW_generic,40,monopile,1/1/2031 0:00,2033,tradepoint,FALSE
+Skipjack 2 2,MD,-74.64204139,38.53106333,50,423,15MW_generic,40,monopile,1/1/2032 0:00,2033,tradepoint,FALSE
+Bay State Wind a (Revolution Wind 2) 1,RI,-70.82947169,40.98497498,50,440,15MW_generic,40,gbf,1/1/2031 0:00,2033,new_london,TRUE
+Bay State Wind a (Revolution Wind 2) 2,RI,-70.82947169,40.98497498,50,440,15MW_generic,40,gbf,1/1/2032 0:00,2033,new_london,TRUE
+Bay State Wind b 1,MA,-70.82947169,40.98497498,50,560,15MW_generic,40,gbf,1/1/2031 0:00,2033,new_london,FALSE
+Bay State Wind b 2,MA,-70.82947169,40.98497498,50,560,15MW_generic,40,gbf,1/1/2032 0:00,2033,new_london,FALSE
+Excelsior Wind 1,NY,-73.11065926,40.20300636,50,438,15MW_generic,40,monopile,1/1/2030 0:00,2033,sbmt,FALSE
+Excelsior Wind 2,NY,-73.11065926,40.20300636,50,438,15MW_generic,40,monopile,1/1/2031 0:00,2033,sbmt,FALSE
+Excelsior Wind 3,NY,-73.11065926,40.20300636,50,438,15MW_generic,40,monopile,1/1/2032 0:00,2033,sbmt,FALSE
+Hypothetical Central Atlantic Draft WEA 7 1,VA,-73.650827,37.555451,50,783,15MW_generic,800,semisub,1/1/2032 0:00,2034,portsmouth,FALSE
+Hypothetical Central Atlantic Draft WEA 7 2,VA,-73.650827,37.555451,50,783,15MW_generic,800,semisub,1/1/2033 0:00,2034,portsmouth,FALSE
+Kitty Hawk South 1,NC,-75.02671099,36.23848619,50,1232,15MW_generic,40,monopile,1/1/2032 0:00,2034,portsmouth,TRUE
+Kitty Hawk South 2,NC,-75.02671099,36.23848619,50,1233,15MW_generic,40,monopile,1/1/2033 0:00,2034,portsmouth,TRUE
+Bluepoint Wind 1,NY,-72.78092681,39.93770722,50,1158,15MW_generic,40,monopile,1/1/2034 0:00,2035,njwp,FALSE
+Hypothetical Central Atlantic WEA 1 1,MD,-75.024437,36.925349,50,463,15MW_generic,40,monopile,1/1/2033 0:00,2035,tradepoint,TRUE
+Hypothetical Central Atlantic WEA 1 2,MD,-75.024437,36.925349,50,464,15MW_generic,40,monopile,1/1/2034 0:00,2035,tradepoint,TRUE
+Hypothetical Central Atlantic WEA 4 1,NC,-75.120567,36.512551,50,803,15MW_generic,40,monopile,1/1/2033 0:00,2035,portsmouth,FALSE
+Hypothetical Central Atlantic WEA 4 2,NC,-75.120567,36.512551,50,804,15MW_generic,40,monopile,1/1/2034 0:00,2035,portsmouth,FALSE
+Ocean Wind 1 1,NJ,-74.28953405,39.02418816,50,550,15MW_generic,40,monopile,1/1/2033 0:00,2035,arthur_kill,FALSE
+Ocean Wind 1 2,NJ,-74.28953405,39.02418816,50,550,15MW_generic,40,monopile,1/1/2034 0:00,2035,arthur_kill,FALSE
+TotalEnergies 1,NC,-78.00283544,33.43107384,50,889,15MW_generic,40,monopile,1/1/2034 0:00,2035,portsmouth,FALSE
+Vineyard Northeast 1,MA,-70.16378033,40.6450013,50,520,15MW_generic,40,jacket,1/1/2030 0:00,2035,new_bedford,FALSE
+Vineyard Northeast 2,MA,-70.16378033,40.6450013,50,520,15MW_generic,40,jacket,1/1/2031 0:00,2035,new_bedford,FALSE
+Vineyard Northeast 3,MA,-70.16378033,40.6450013,50,520,15MW_generic,40,jacket,1/1/2032 0:00,2035,new_bedford,FALSE
+Vineyard Northeast 4,MA,-70.16378033,40.6450013,50,520,15MW_generic,40,jacket,1/1/2033 0:00,2035,new_bedford,FALSE
+Vineyard Northeast 5,MA,-70.16378033,40.6450013,50,520,15MW_generic,40,jacket,1/1/2034 0:00,2035,new_bedford,FALSE
+Hypothetical Gulf of Maine Draft WEA 12 1,MA,-69.21235,42.246805,50,474,15MW_generic,800,semisub,1/1/2032 0:00,2035,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 12 2,MA,-69.21235,42.246805,50,474,15MW_generic,800,semisub,1/1/2033 0:00,2035,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 12 3,MA,-69.21235,42.246805,50,475,15MW_generic,800,semisub,1/1/2034 0:00,2035,searsport,FALSE
+Empire Wind 2,NY,-73.22227313,40.24801683,50,1260,15MW_generic,40,monopile,1/1/2035 0:00,2036,sbmt,TRUE
+Garden State Offshore Energy I 1,NJ,-74.75173526,38.66111942,50,540,15MW_generic,40,monopile,1/1/2034 0:00,2036,arthur_kill,FALSE
+Garden State Offshore Energy I 2,NJ,-74.75173526,38.66111942,50,540,15MW_generic,40,monopile,1/1/2035 0:00,2036,arthur_kill,FALSE
+Hypothetical Central Atlantic WEA  2,VA,-75.024437,36.925349,50,927,15MW_generic,40,monopile,1/1/2035 0:00,2036,portsmouth,FALSE
+Hypothetical Gulf of Maine Draft WEA 8 1,NH,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2034 0:00,2036,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 8 2,NH,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2035 0:00,2036,searsport,FALSE
+Ocean Wind 2,NJ,-74.28958819,39.01878197,50,1148,15MW_generic,40,monopile,1/1/2035 0:00,2036,njwp,FALSE
+Hypothetical Gulf of Maine Draft WEA 13 1,ME,-68.521338,42.976654,50,474,15MW_generic,800,semisub,1/1/2033 0:00,2036,salem,FALSE
+Hypothetical Gulf of Maine Draft WEA 13 2,ME,-68.521338,42.976654,50,474,15MW_generic,800,semisub,1/1/2034 0:00,2036,salem,FALSE
+Hypothetical Gulf of Maine Draft WEA 13 3,ME,-68.521338,42.976654,50,475,15MW_generic,800,semisub,1/1/2035 0:00,2036,salem,FALSE
+Hypothetical Central Atlantic WEA 5,MD,-74.70664,38.035256,50,713,15MW_generic,40,monopile,1/1/2036 0:00,2037,tradepoint,TRUE
+Hypothetical Gulf of Maine Draft WEA 5 1,MA,-69.21235,42.246805,50,712,15MW_generic,800,semisub,1/1/2035 0:00,2037,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 5 2,MA,-69.21235,42.246805,50,712,15MW_generic,800,semisub,1/1/2036 0:00,2037,searsport,FALSE
+Hypothetical NE Fixed 2 1,RI,-70.092382,40.67661,50,500,15MW_generic,40,jacket,1/1/2034 0:00,2037,new_london,FALSE
+Hypothetical NE Fixed 2 2,RI,-70.092382,40.67661,50,500,15MW_generic,40,jacket,1/1/2035 0:00,2037,new_london,FALSE
+Hypothetical NE Fixed 2 3,RI,-70.092382,40.67661,50,500,15MW_generic,40,jacket,1/1/2036 0:00,2037,new_london,FALSE
+Hypothetical NE Floating 2 1,CT,-70.092382,40.67661,50,500,15MW_generic,800,semisub,1/1/2035 0:00,2038,salem,FALSE
+Hypothetical NE Floating 2 2,CT,-70.092382,40.67661,50,500,15MW_generic,800,semisub,1/1/2036 0:00,2038,salem,FALSE
+Hypothetical NE Floating 2 3,CT,-70.092382,40.67661,50,500,15MW_generic,800,semisub,1/1/2037 0:00,2038,salem,FALSE
+Atlantic Shores Offshore Wind Bight,NY,-73.58045588,39.30154735,50,1284,15MW_generic,40,monopile,1/1/2037 0:00,2038,njwp,FALSE
+Hypothetical Gulf of Maine Draft WEA 6 1,MA,-69.21235,42.246805,50,712,15MW_generic,800,semisub,1/1/2036 0:00,2038,searsport,TRUE
+Hypothetical Gulf of Maine Draft WEA 6 2,MA,-69.21235,42.246805,50,712,15MW_generic,800,semisub,1/1/2037 0:00,2038,searsport,TRUE
+Hypothetical Central Atlantic WEA 3 1,MD,-75.120567,36.512551,50,803,15MW_generic,40,monopile,1/1/2037 0:00,2039,tradepoint,FALSE
+Hypothetical Central Atlantic WEA 3 2,MD,-75.120567,36.512551,50,804,15MW_generic,40,monopile,1/1/2038 0:00,2039,tradepoint,FALSE
+Hypothetical Central Atlantic Draft WEA 5 1,MD,-73.650827,37.555451,50,714,15MW_generic,800,semisub,1/1/2037 0:00,2039,tradepoint,FALSE
+Hypothetical Central Atlantic Draft WEA 5 2,MD,-73.650827,37.555451,50,714,15MW_generic,800,semisub,1/1/2038 0:00,2039,tradepoint,FALSE
+Hypothetical Central Atlantic Draft WEA 8,NC,-75.120567,36.512551,50,1273,15MW_generic,40,monopile,1/1/2038 0:00,2039,portsmouth,FALSE
+Hypothetical Central Atlantic WEA 6,MD,-74.70664,38.035256,50,713,15MW_generic,40,monopile,1/1/2038 0:00,2039,tradepoint,FALSE
+Hypothetical Gulf of Maine Draft WEA 7 1,MA,-69.21235,42.246805,50,712,15MW_generic,800,semisub,1/1/2037 0:00,2039,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 7 2,MA,-69.21235,42.246805,50,712,15MW_generic,800,semisub,1/1/2038 0:00,2039,searsport,FALSE
+Hypothetical NE Fixed 1 1,MA,-70.092382,40.67661,50,750,15MW_generic,40,gbf,1/1/2037 0:00,2039,new_bedford,FALSE
+Hypothetical NE Fixed 1 2,MA,-70.092382,40.67661,50,750,15MW_generic,40,gbf,1/1/2038 0:00,2039,new_bedford,FALSE
+Hypothetical NY Bight Fixed 1 1,NY,-72.961754,40.211015,50,750,15MW_generic,40,monopile,1/1/2037 0:00,2039,sbmt,FALSE
+Hypothetical NY Bight Fixed 1 2,NY,-72.961754,40.211015,50,750,15MW_generic,40,monopile,1/1/2038 0:00,2039,sbmt,FALSE
+Hypothetical NY Bight Fixed 2,NJ,-72.961754,40.211015,50,1500,15MW_generic,40,monopile,1/1/2039 0:00,2040,njwp,FALSE
+Hypothetical Central Atlantic Draft WEA 2,DE,-75.120567,36.512551,50,1273,15MW_generic,40,monopile,1/1/2039 0:00,2040,tradepoint,FALSE
+Hypothetical Central Atlantic Draft WEA 4,MD,-75.120567,36.512551,50,1273,15MW_generic,40,monopile,1/1/2039 0:00,2040,tradepoint,TRUE
+Hypothetical Central Atlantic Draft WEA 3,NC,-73.650827,37.555451,50,1428,15MW_generic,800,semisub,1/1/2039 0:00,2040,portsmouth,FALSE
+Hypothetical Gulf of Maine Draft WEA 1 1,ME,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2038 0:00,2040,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 1 2,ME,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2039 0:00,2040,searsport,FALSE
+Hypothetical NE Floating 1 1,CT,-70.092382,40.67661,50,600,15MW_generic,800,semisub,1/1/2037 0:00,2040,salem,FALSE
+Hypothetical NE Floating 1 2,CT,-70.092382,40.67661,50,600,15MW_generic,800,semisub,1/1/2038 0:00,2040,salem,FALSE
+Hypothetical NE Floating 1 3,CT,-70.092382,40.67661,50,600,15MW_generic,800,semisub,1/1/2039 0:00,2040,salem,FALSE
+Hypothetical NE Floating 3 1,RI,-70.092382,40.67661,50,500,15MW_generic,800,semisub,1/1/2038 0:00,2041,new_london,FALSE
+Hypothetical NE Floating 3 2,RI,-70.092382,40.67661,50,500,15MW_generic,800,semisub,1/1/2039 0:00,2041,new_london,FALSE
+Hypothetical NE Floating 3 3,RI,-70.092382,40.67661,50,500,15MW_generic,800,semisub,1/1/2040 0:00,2041,new_london,FALSE
+Hypothetical Central Atlantic Draft WEA 6 1,MD,-73.650827,37.555451,50,714,15MW_generic,800,semisub,1/1/2039 0:00,2041,tradepoint,FALSE
+Hypothetical Central Atlantic Draft WEA 6 2,MD,-73.650827,37.555451,50,714,15MW_generic,800,semisub,1/1/2040 0:00,2041,tradepoint,FALSE
+Hypothetical NY Bight Floating 1 1,NY,-72.961754,40.211015,50,900,15MW_generic,800,semisub,1/1/2039 0:00,2041,sbmt,FALSE
+Hypothetical NY Bight Floating 1 2,NY,-72.961754,40.211015,50,900,15MW_generic,800,semisub,1/1/2040 0:00,2041,sbmt,FALSE
+Hypothetical Gulf of Maine Draft WEA 2 1,ME,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2040 0:00,2042,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 2 2,ME,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2041 0:00,2042,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 3 1,ME,-68.521338,42.976654,50,474,15MW_generic,800,semisub,1/1/2039 0:00,2042,salem,FALSE
+Hypothetical Gulf of Maine Draft WEA 3 2,ME,-68.521338,42.976654,50,474,15MW_generic,800,semisub,1/1/2040 0:00,2042,salem,FALSE
+Hypothetical Gulf of Maine Draft WEA 3 3,ME,-68.521338,42.976654,50,475,15MW_generic,800,semisub,1/1/2041 0:00,2042,salem,FALSE
+Hypothetical Gulf of Maine Draft WEA 4 1,NH,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2040 0:00,2042,searsport,FALSE
+Hypothetical Gulf of Maine Draft WEA 4 2,NH,-68.521338,42.976654,50,712,15MW_generic,800,semisub,1/1/2041 0:00,2042,searsport,FALSE

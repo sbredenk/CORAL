@@ -10,7 +10,11 @@ import yaml
 from simpy import Resource
 from ORBIT.core.library import loader, default_library
 
-CATEGORY_MAP = {"wtiv": "vessels", "feeder": "vessels", "port": "ports"}
+CATEGORY_MAP = {"wtiv": "vessels", 
+                "feeder": "vessels", 
+                "port": "ports",
+                "ahts_vessel": "vessels",
+                "towing_vessel": "vessels"}
 
 
 class SharedLibrary:
@@ -113,13 +117,15 @@ class SharedLibrary:
         """
         Check unprocessed requests for any projects that can start. This method
         is called as shared resources are released from completed projects.
+        k = vessel class
+        v = vessel name
+        (ex. k = wtiv, v = example_wtiv)
         """
 
         for request in self.unprocessed_requests:
             proceed = True
 
             for k, v in request.resources.items():
-
                 k = k.split(".")[-1]
                 if self.resources[k][v].capacity == self.resources[k][v].count:
                     proceed = False
@@ -148,6 +154,7 @@ class SharedLibrary:
         out = {"time": self.env.now}
 
         for cat, d in self.resources.items():
+
             for name, resource in d.items():
                 out[f"{cat}:{name}"] = resource.capacity - resource.count
 

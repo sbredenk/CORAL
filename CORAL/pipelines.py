@@ -9,7 +9,11 @@ from copy import deepcopy
 
 import numpy as np
 import pandas as pd
+from geopy import distance
 from ORBIT import load_config
+import os
+import yaml
+import time
 
 
 class Pipeline:
@@ -18,9 +22,12 @@ class Pipeline:
     def __init__(
         self,
         projects_fp,
-        base_config,
-        regional_ports=True,
+        fixed_base_config,
+        float_base_config,
+        regional_ports=False,
         enforce_feeders=False,
+        ffiv_feeders=False
+        
     ):
         """
         Creates an instance of `Pipeline`.
@@ -39,11 +46,15 @@ class Pipeline:
 
         self.projects = pd.read_csv(projects_fp, parse_dates=["start_date"])
         self.append_num_turbines()
-        self.base = load_config(base_config)
+        self.base_fixed = load_config(fixed_base_config)
+        self.base_float = load_config(float_base_config)
         self.regional_ports = regional_ports
         self.enforce_feeders = enforce_feeders
+        self.ffiv_feeders = ffiv_feeders
+
 
         self.configs = self.build_configs()
+
 
     def append_num_turbines(self):
         """
@@ -68,16 +79,28 @@ class Pipeline:
         configs = []
         for _, data in self.projects.iterrows():
 
-            config = deepcopy(self.base)
+            if data["substructure"] == "semisub":
+                config = deepcopy(self.base_float)
+            else:
+                config = deepcopy(self.base_fixed)
+
             config["project_name"] = data["name"]
-            config["project_coords"] = (data["lat"], data["lon"])
             config["project_start"] = data["start_date"]
 
             config["turbine"] = data["turbine"]
             config["plant"]["num_turbines"] = data["num_turbines"]
 
             config["site"]["depth"] = data["depth"]
-            config["site"]["distance_to_landfall"] = data["distance_to_shore"]
+
+            config["project_coords"] = (data["lat"], data["lon"])
+            _calc_dist = self.calculate_port_distance(config, data["associated_port"])
+            config["site"]["distance"] = data.get("distance_to_port", _calc_dist)
+
+            config["distance_to_landfall"] = data["distance_to_shore"]
+
+            config["us_wtiv"] = data.get("us_wtiv",False)
+            config["us_ffiv"] = data.get("us_ffiv", False)
+
 
             if self.regional_ports:
                 config["port"] = ":".join(
@@ -108,7 +131,8 @@ class Pipeline:
         substructure : str
             Substructure type
         """
-
+        port = config["port"].replace("_shared_pool_:", "")
+        
         if substructure == "monopile":
 
             # Design Phases
@@ -118,41 +142,184 @@ class Pipeline:
             ]
 
             # Install Phases
-            config["install_phases"]["MonopileInstallation"] = 0
-            config["install_phases"]["ScourProtectionInstallation"] = (
+            config.update(
+                    {
+                        "install_phases": {
+                            "MonopileInstallation": 0
+                        }
+                    }
+                )
+            # config["install_phases"]["ScourProtectionInstallation"] = (
+            #     "MonopileInstallation",
+            #     .25,
+            # )
+            config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
                 1.0,
             )
+
+            # Vessels
+            if config["us_wtiv"]:
+                config["wtiv"] = "_shared_pool_:example_wtiv_us"
+                if port in ["new_bedford"]:
+                    config["feeder"] = "_shared_pool_:example_feeder"
+                    config["num_feeders"] = 2
+            else:
+                config["wtiv"] = "_shared_pool_:example_wtiv"
+                config["feeder"] = "_shared_pool_:example_feeder"
+                config["num_feeders"] = 2
+
+            if port in ["new_bedford", "sbmt", "tradepoint"] or self.ffiv_feeders:
+                config.update(
+                    {
+                        "MonopileInstallation": {
+                            "wtiv": "_shared_pool_:example_heavy_lift_vessel",
+                            "feeder": "_shared_pool_:example_heavy_feeder_1kit",
+                            "num_feeders": 2
+                        }
+                    }
+                )
+            else:
+                config.update(
+                    {
+                        "MonopileInstallation": {
+                            "wtiv": "_shared_pool_:example_heavy_lift_vessel",
+                        
+                            
+                        }
+                    }
+                )
+                
+
+            
+        
+        elif substructure == "jacket":
+
+            port = config["port"].replace("_shared_pool_:", "") 
+
+            # Design Phases
+            config["design_phases"] += [
+                "MonopileDesign",
+                "ScourProtectionDesign",
+            ]
+
+            # Install Phases
+            config.update(
+                    {
+                        "install_phases": {
+                            "JacketInstallation": 0
+                        }
+                    }
+                )
+            
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
-                "MonopileInstallation",
-                1.25,
+                "JacketInstallation",
+                1.0,
             )
 
             # Vessels
+            if config["us_wtiv"]:
+                config["wtiv"] = "_shared_pool_:example_wtiv_us"
+                if port in ["new_bedford"]:
+                    config["feeder"] = "_shared_pool_:example_feeder"
+                    config["num_feeders"] = 2
+            else:
+                config["wtiv"] = "_shared_pool_:example_wtiv"
+                config["feeder"] = "_shared_pool_:example_feeder"
+                config["num_feeders"] = 2
 
-            config["wtiv"] = "_shared_pool_:example_wtiv"
+            if port in ["new_bedford", "sbmt", "tradepoint"] or self.ffiv_feeders:
+                config.update(
+                    {
+                        "JacketInstallation": {
+                            "wtiv": "_shared_pool_:example_heavy_lift_vessel", 
+                            "feeder": "_shared_pool_:example_heavy_feeder_1kit", 
+                            "num_feeders": 2
+                        }
+                    }
+                )
+            else:
+                config.update(
+                    {
+                        "JacketInstallation": {
+                            "wtiv": "_shared_pool_:example_heavy_lift_vessel",
+                            
+                        }
+                    }
+                )
+
+                
+
+        elif substructure == "gbf":
+            # Design Phases
+            config["design_phases"] += [
+                "MonopileDesign",
+                "ScourProtectionDesign",
+            ]
+
+            # Install Phases
+            config.update(
+                    {
+                        "install_phases": {
+                            "GravityBasedInstallation": 0
+                        }
+                    }
+                )
+            
+
+            # Vessels
             config.update(
                 {
-                    "MonopileInstallation": {
-                        "wtiv": "_shared_pool_:example_heavy_lift_vessel"
+                    "GravityBasedInstallation": {
+                        "ahts_vessel": "_shared_pool_:example_ahts_vessel",
+                        "towing_vessel": "_shared_pool_:example_towing_vessel",
+                        "towing_vessel_groups": {
+                            "towing_vessels": 2,
+                            "station_keeping_vessels": 2,
+                        },
+                        "substructure": {
+                            "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
+                        }
                     }
                 }
             )
 
             port = config["port"].replace("_shared_pool_:", "")
+        
+        elif substructure == "semisub":
 
-            if port in ["sbmt", "new_bedford"] or self.enforce_feeders:
-                config["feeder"] = "_shared_pool_:example_feeder"
-                config["num_feeders"] = 2
+            # Design Phases
+            config["design_phases"] += [
+                "SemiSubmersibleDesign",
+            ]
 
-        elif substructure == "jacket":
-            raise TypeError("Substructure type 'jacket' not supported.")
+            # Install Phases
+            config["install_phases"]["MooredSubInstallation"] = 0
 
-        elif substructure == "gbf":
-            raise TypeError("Substructure type 'gbf' not supported.")
+            # Vessels
+            config.update(
+                {
+                    "MooredSubInstallation": {
+                        "ahts_vessel": "_shared_pool_:example_ahts_vessel",
+                        "towing_vessel": "_shared_pool_:example_towing_vessel",
+                    },
+                }
+            )
 
         else:
             raise TypeError(f"Substructure '{substructure}' not supported.")
 
         return config
+
+    
+    def calculate_port_distance(self, config, port_name):
+        
+        port_path = os.path.join(os.getcwd(), "analysis", "library", "ports", "%s.yaml" % port_name)
+        with open(port_path, 'r') as stream:
+            port_data = yaml.safe_load(stream)
+        port_coords = (port_data["lat"], port_data["lon"])
+        dist = distance.distance(config["project_coords"], port_coords).km
+
+        return(dist)
+

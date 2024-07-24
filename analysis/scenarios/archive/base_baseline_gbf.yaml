@@ -1,0 +1,76 @@
+description:
+- 'Pipeline: Baseline - GBF'
+- 'Vessel Pathway: Base'
+- 'Port Pathway: Base'
+pipeline: base_pipeline_gbf
+allocations:
+  ahts_vessel: !!python/tuple
+  - example_ahts_vessel
+  - 2
+  feeder: !!python/tuple
+  - example_heavy_feeder
+  - 8
+  port:
+  - !!python/tuple
+    - new_london
+    - 1
+  - !!python/tuple
+    - new_bedford
+    - 1
+  - !!python/tuple
+    - sbmt
+    - 0
+  - !!python/tuple
+    - njwp
+    - 0
+  - !!python/tuple
+    - searsport
+    - 0
+  - !!python/tuple
+    - tradepoint
+    - 0
+  - !!python/tuple
+    - portsmouth
+    - 0
+  - !!python/tuple
+    - salem
+    - 1
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 2
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 3
+  - !!python/tuple
+    - example_wtiv
+    - 2
+future_resources:
+- - wtiv
+  - example_wtiv
+  - - 2025-01-01
+    - 2025-01-01
+    - 2025-01-01
+    - 2026-01-01
+- - feeder
+  - example_heavy_feeder
+  - - 2025-01-01
+    - 2025-01-01
+    - 2025-01-01
+    - 2025-01-01
+- - port
+  - sbmt
+  - - 2027-01-01
+- - port
+  - njwp
+  - - 2025-01-01
+    - 2029-01-01
+- - port
+  - tradepoint
+  - - 2025-01-01
+- - port
+  - portsmouth
+  - - 2024-01-01
+- - port
+  - searsport
+  - - 2026-01-01

@@ -55,7 +55,7 @@ class GlobalManager:
         allocations : dict
             Number of each library item that exists in the shared environment.
         """
-
+        
         self._logs = []
         self._projects = {}
         self._counter = Counter()
@@ -178,8 +178,8 @@ class GlobalManager:
         log = {"name": name, "Initialized": self.env.now}
 
         resources = self._get_shared_resources(config)
-
         request = MultiRequest(self.env, dict(resources), name)
+        
         resource_data = self.library.request(request)
         yield request.trigger
 
@@ -251,12 +251,10 @@ class GlobalManager:
             dates = [dates]
 
         for date in dates:
-
             if isinstance(date, dt.datetime):
                 delay = (date - self._start).days * 24
-
             else:
-                delay = date - self._start
+                delay = (date - self._start.date()).days
 
             if delay < 0:
                 raise ValueError(
