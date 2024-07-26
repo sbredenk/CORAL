@@ -63,9 +63,9 @@ all_alloc = []
 all_future = []
 
 
-
+total_sim_time = time.time()
 for s in scenarios:
-
+    print("Running Scenario %s" % s)
     with open('analysis/scenarios/%s.yaml' % s) as f:
         scenario = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
@@ -87,18 +87,14 @@ for s in scenarios:
     all_alloc.append(allocations)
     all_future.append(future_resources)
     dfs.append(df)
-    print(df.dtypes)
     run_plots(prs, df, ne_ports)
 
     df.to_csv(os.path.join(results_fp, '%s.csv' % s), date_format='%Y-%m-%d %H:%M:%S')
 
-
-
-
 df_cap = installed_cap(prs, dfs, scenarios)
 # total_invest = vessel_investment_plot(prs, all_alloc, all_future, scenarios, vessel_types, vessel_costs)
 # cap_per_investment(prs, df_cap, total_invest)
-
+print("--- Total Sim Time: %s seconds ---" % (time.time() - total_sim_time))
 
 
 

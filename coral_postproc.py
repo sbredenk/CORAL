@@ -27,17 +27,20 @@ results_fp = 'analysis/results/%s' % filename
 dfs = []
 
 path = os.path.join(results_fp, '*.csv')
+desc = []
 
 for fname in glob.glob(path):
+    d = fname.replace('analysis/results/%s\\' % filename,'')
+    d = d.replace('.csv','')
+    desc.append(d)
     df = pd.read_csv(fname, parse_dates=['estimated_cod','Date Initialized','Date Finished', 'Date Started'])
     df = df.drop(df.columns[0],axis=1)
     # pd.to_datetime(df[["estimated_cod"]], unit='ns')
     dfs.append(df)
-    print(df.dtypes)
 
     run_plots(prs, df, ne_ports)
 
-
+df_cap = installed_cap(prs,dfs,desc,region=ne)
 
 savename = os.path.join(results_fp, 'post_proc.pptx')
 prs.save(savename)

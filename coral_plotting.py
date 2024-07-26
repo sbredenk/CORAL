@@ -128,7 +128,7 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
     """Gantt chcart of select region pipeline. Region determined by offtake states in region list. 
        Sorted sorts by expected start date."""
     df = df.drop(columns=['index'])
-    df_region = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+    df_region = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
 
     if sorted:
         df_region = df_region.drop(columns=['index'])
@@ -406,23 +406,23 @@ def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_cos
 
 def installed_cap(prs, dfs, desc, region = None):
     yrs = np.arange(2023,2051,1)
-    df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
-    df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
+    df_cap = pd.DataFrame(columns=desc, index = yrs)
+    df_cum = pd.DataFrame(columns=desc, index = yrs)
 
     df = dfs[0]
     if region:
         df = df.drop(columns=['index'])
-        df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+        df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
 
     df['cod'] = df['estimated_cod'].dt.year
     df_cod = df.groupby(['cod']).capacity.sum().reset_index()
     df_cod['sum'] = df_cod['capacity'].cumsum(axis=0) / 1000
     # print(df_cod)
-    # df_cum['cod'] = df_cod['sum']
+    df_cum['cod'] = df_cod['sum']
     
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(1,1,1)
-    # df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax)
+    df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax)
 
     i=0
     width = 0.25
@@ -431,7 +431,7 @@ def installed_cap(prs, dfs, desc, region = None):
         df['finished'] = df['Date Finished'].dt.year
         if region:
             df = df.drop(columns=['index'])
-            df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+            df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
         df_finished = df.groupby(['finished']).capacity.sum().reset_index()
         df_finished['capacity'] = df_finished['capacity'] / 1000
         df_finished['sum'] = df_finished['capacity'].cumsum(axis=0)
@@ -449,14 +449,16 @@ def installed_cap(prs, dfs, desc, region = None):
     ax.get_yaxis().set_major_formatter(
         matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
     
-    annual_label = [s + ' annual' for s in desc]
+    # annual_label = [s + ' annual' for s in desc]
     cum_label = [s + ' cumulative' for s in desc]
-    labels = cum_label
+    labels = ['cod'] + cum_label
     #ax.legend(labels)
     ax.legend(labels, prop={'size': 7})
 
-    slide = add_to_pptx(prs,'Installed Capacity')
-
+    if region:
+        slide = add_to_pptx(prs,'Installed Capacity')
+    else:
+        slide = add_to_pptx(prs,'Installed Capacity')
     return df_cum
 
 
@@ -473,19 +475,19 @@ def cap_per_investment(prs, df_cum, df_investments):
 
 def run_plots(prs, df, ports):
     ne = ['MA','ME','CT','RI','NH','RI/CT']
-    nynj = ['NY','NJ']
-    mid = ['NC', 'MD', 'VA', 'DE']
+    # nynj = ['NY','NJ']
+    # mid = ['NC', 'MD', 'VA', 'DE']
 
     full_gantt(prs, df)
     full_gantt(prs, df, sorted=True)
 
-    # regional_gantt(prs,, df, ne, 'New England')
-    # regional_gantt(prs,, df, ne, 'New England', sorted=True)
+    regional_gantt(prs, df, ne, 'New England')
+    regional_gantt(prs, df, ne, 'New England', sorted=True)
 
     port_throughput(prs,df)
     port_throughput(prs,df,ne)
-    port_throughput(prs,df,nynj)
-    port_throughput(prs,df,mid)
+    # port_throughput(prs,df,nynj)
+    # port_throughput(prs,df,mid)
 
     # regional_gantt(prs, df, nynj, 'New York/New Jersey')
     # regional_gantt(prs, df, nynj, 'New York/New Jersey', sorted=True)
@@ -496,7 +498,7 @@ def run_plots(prs, df, ports):
     # port_gantts(prs, df, ports)
     # port_gantts(prs, df, ports, sorted=True)
 
-    substructure_gantt(prs, df, 'fixed')
-    substructure_gantt(prs, df, 'fixed', sorted=True)
+    # substructure_gantt(prs, df, 'fixed')
+    # substructure_gantt(prs, df, 'fixed', sorted=True)
     # substructure_gantt(prs, df, 'floating')
     # substructure_gantt(prs, df, 'floating', sorted=True)
