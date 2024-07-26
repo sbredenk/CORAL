@@ -1,6 +1,6 @@
 description:
 - 'Foreign FFIVs cannot shuttle, no additional vessels added to pipeline'
-pipeline: natl_gaps_no_action_alternate_policy
+pipeline: no_action_pipeline
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel

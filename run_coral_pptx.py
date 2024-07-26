@@ -72,7 +72,7 @@ for s in scenarios:
     p = os.path.join(os.getcwd(), "analysis", "pipelines", "%s.csv" % scenario['pipeline'])
 
     start_time = time.time()
-    pipeline = Pipeline(p, base, base_float, enforce_feeders=True)
+    pipeline = Pipeline(p, base, base_float, ffiv_feeders=True)
 
     description = scenario['description']
 
