@@ -1,4 +1,5 @@
 from coral_imports import *
+from coral_helpers import *
 
 
 def add_text_slide(prs, title, text, left=0, top=7.2, width=13.33, height=0.3, fontsize=14):
@@ -345,67 +346,77 @@ def port_throughput(prs, df, region=None):
     ax.legend(fontsize=6, ncol=5)
 
     slide = add_to_pptx(prs,'Port Throughput')
+    plt.close(fig)
 
 
-def vessel_investment_plot(prs, allocs, futures, names, vessel_types, vessel_costs):
-    yrs = np.arange(2023,2060)
-    dates = pd.to_datetime(yrs, format='%Y')
-    fig, axes = plt.subplots(2,1, figsize=(10,6), dpi=200, sharex=True)
+def vessel_utilization_plot(prs, df):
 
-    us_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
-    total_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
-    foreign_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
-    for i in range(0,len(names)):
-        init_alloc = [allocs[i]['wtiv'][1][1], allocs[i]['wtiv'][0][1], allocs[i]['feeder'][1][1], allocs[i]['feeder'][1][1], allocs[i]['ahts_vessel'][1]]
-        vessel_investment = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
-        vessel_investment.iloc[0] = init_alloc
+    fig = plt.figure(figsize=(10,4), dpi=200)
+    ax = fig.add_subplot(111)
 
-        for vessel in vessel_types:
-            for vessel_type in futures[i]:
-                if vessel_type[1] == vessel:
-                    years = vessel_type[2]
-                    for year in years:
-                        vessel_investment.loc[[year],vessel] += 1
-            # vessel_investment[vessel] = vessel_investment[vessel] * vessel_costs[vessel]  # Just looking at # vessels rn
-        
-        us_vessels = ['example_feeder', 'example_heavy_feeder_1kit', 'example_ahts_vessel']
-        foreign_vessels = ['example_wtiv', 'example_heavy_lift_vessel']
-        vessel_investment.loc[:,'us_total'] = vessel_investment[us_vessels].sum(axis=1)
-        vessel_investment['us_total'] = vessel_investment['us_total'].cumsum() # / 1000 <- for $M to $B
-        vessel_investment.loc[:,'foreign_total'] = vessel_investment[foreign_vessels].sum(axis=1)
-        vessel_investment['foreign_total'] = vessel_investment['foreign_total'].cumsum() # / 1000 <- for $M to $B
-        vessel_investment.loc[:,'total'] = vessel_investment[vessel_types].sum(axis=1)
-        vessel_investment['total'] = vessel_investment['total'].cumsum() # / 1000 <- for $M to $B
+    scenario_path = 'analysis/scenarios'
+    scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
+    allocs = scen_yaml['allocations']
+    futures = scen_yaml['future_resources']
+    df_vessel_util = vessel_hours(df)
+    df_vessel_count = vessel_pipeline(allocs,futures)
+    df_perc_util = df_vessel_util / df_vessel_count / 8766 * 100
 
-        total_investments[names[i]] = vessel_investment['total']
-        us_investments[names[i]] = vessel_investment['us_total']
-        foreign_investments[names[i]] = vessel_investment['foreign_total']
+    df_perc_util.plot(kind='bar', ax=ax)
+    ax.set_xlabel("")
+    ax.set_ylabel("Vessel Utilization (%)")
+    ax.legend(fontsize=6)
+
+    slide = add_to_pptx(prs,'Vessel Utilization')
+    return(df_vessel_util)
+
+def vessel_investment_plot(prs, df_vessel_util):
+
+    fig = plt.figure(figsize=(10,4), dpi=200)
+    ax = fig.add_subplot(111)
     
-    total_investments['year'] = yrs
-    total_investments.set_index('year', inplace=True)
+    vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
+    vessel_rates = []
+    rate_path = 'analysis/library/vessels'
+    for vessel in vessel_types:
+        vessel_yaml = read_yaml(vessel, rate_path)
+        vessel_rate = vessel_yaml['vessel_specs']['day_rate'] / 24
+        vessel_rates.append(vessel_rate)
+
+    df_investment = df_vessel_util.mul(vessel_rates) / 1e6
+
+    df_investment.plot(kind='bar', ax=ax)
+    ax.set_ylabel("Annual Invesment ($M)")
+    ax.set_xlabel("")
+
+    slide = add_to_pptx(prs, 'Vessel Investment')
+    return(df_investment)
+
+
+def compare_investments(prs, df_investments, desc):
+    fig = plt.figure(figsize=(10,4), dpi=200)
+    ax = fig.add_subplot(111)
+
+    yrs = np.arange(2023,2065,1)
+    df_cum_investment = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
+    i=0
+    for df in df_investments:
+        df.loc[:,'total'] = df.sum(axis=1)
+        df_cum_investment[desc[i]] = df['total']
+        i+=1
+
+    df_cum_investment.plot(kind='line',ax=ax)
+    ax.set_ylabel("Annual Invesment ($M)")
+    ax.set_xlabel("")
+
+    slide = add_to_pptx(prs, 'Vessel Investment by Scenario')
+
+    return(df_cum_investment)
     
-    us_investments['year'] = yrs
-    us_investments.set_index('year', inplace=True)
 
-    us_investments['year'] = yrs
-    us_investments.set_index('year', inplace=True)
-    us_investments.plot(ax=axes[0])
-
-    foreign_investments['year'] = yrs
-    foreign_investments.set_index('year', inplace=True)
-    foreign_investments.plot(ax=axes[1])
-    axes[0].yaxis.set_major_locator(tck.MaxNLocator(integer=True))
-    axes[0].set_ylabel('US (# vessels)')
-    axes[1].set_ylabel('Foreign (# vessels)')
-    plt.minorticks_off()
-    axes[0].set_xticks(yrs[::2])
-
-    slide = add_to_pptx(prs,'Vessel Investment')
-
-    return total_investments
 
 def installed_cap(prs, dfs, desc, region = None):
-    yrs = np.arange(2023,2051,1)
+    yrs = np.arange(2023,2065,1)
     df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
 
@@ -422,7 +433,7 @@ def installed_cap(prs, dfs, desc, region = None):
     
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(1,1,1)
-    # df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax)
+    df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax)
 
     i=0
     width = 0.25
@@ -449,9 +460,8 @@ def installed_cap(prs, dfs, desc, region = None):
     ax.get_yaxis().set_major_formatter(
         matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
     
-    annual_label = [s + ' annual' for s in desc]
     cum_label = [s + ' cumulative' for s in desc]
-    labels = cum_label
+    labels = ['cod'] + cum_label
     #ax.legend(labels)
     ax.legend(labels, prop={'size': 7})
 
@@ -477,15 +487,15 @@ def run_plots(prs, df, ports):
     mid = ['NC', 'MD', 'VA', 'DE']
 
     full_gantt(prs, df)
-    full_gantt(prs, df, sorted=True)
+    # full_gantt(prs, df, sorted=True)
 
     # regional_gantt(prs,, df, ne, 'New England')
     # regional_gantt(prs,, df, ne, 'New England', sorted=True)
 
     port_throughput(prs,df)
-    port_throughput(prs,df,ne)
-    port_throughput(prs,df,nynj)
-    port_throughput(prs,df,mid)
+    # port_throughput(prs,df,ne)
+    # port_throughput(prs,df,nynj)
+    # port_throughput(prs,df,mid)
 
     # regional_gantt(prs, df, nynj, 'New York/New Jersey')
     # regional_gantt(prs, df, nynj, 'New York/New Jersey', sorted=True)
@@ -496,7 +506,8 @@ def run_plots(prs, df, ports):
     # port_gantts(prs, df, ports)
     # port_gantts(prs, df, ports, sorted=True)
 
-    substructure_gantt(prs, df, 'fixed')
-    substructure_gantt(prs, df, 'fixed', sorted=True)
+    # substructure_gantt(prs, df, 'fixed')
+    # substructure_gantt(prs, df, 'fixed', sorted=True)
     # substructure_gantt(prs, df, 'floating')
     # substructure_gantt(prs, df, 'floating', sorted=True)
+

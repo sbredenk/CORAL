@@ -81,7 +81,7 @@ class GlobalManager:
 
             new = deepcopy(log)
             if isinstance(self._start, dt.datetime):
-                for k in ["Initialized", "Started", "Finished"]:
+                for k in ["Initialized", "Started", "FoundationFinished", "Finished"]:
                     idx = int(np.ceil(log[k]))
                     new[f"Date {k}"] = self._start + dt.timedelta(hours=idx)
 
@@ -184,12 +184,26 @@ class GlobalManager:
         yield request.trigger
 
         log["Started"] = self.env.now
+        projectstart = self.env.now
         for key, data in resource_data.items():
             config[key] = data
 
         project = self._run_project(config)
+
         yield self.env.timeout(project.project_time)
         log["Finished"] = self.env.now
+        projectend = self.env.now
+
+        #Pull foundation finished time, add it to log
+        df2 = pd.DataFrame(project.actions)
+        if "MonopileInstallation" in df2["phase"].values:
+            foundation_time = (df2[df2["phase"] == "MonopileInstallation"]["time"].iloc[-1])+projectstart
+        elif "JacketInstallation" in df2["phase"].values:
+            foundation_time = (df2[df2["phase_name"] == "JacketInstallation"]["time"].iloc[-1])+projectstart
+        else:
+            foundation_time = projectend
+
+        log["FoundationFinished"] = foundation_time
 
         self._projects[name] = project
         self._logs.append(log)
