@@ -1,3 +1,73 @@
+description:
+- 'Foreign FFIVs cannot shuttle, no additional vessels added to pipeline'
+pipeline: no_action_pipeline
+allocations:
+  ahts_vessel: !!python/tuple
+  - example_ahts_vessel
+  - 2
+  feeder: 
+  - !!python/tuple
+    - example_heavy_feeder_1kit
+    - 6
+  - !!python/tuple
+    - example_feeder
+    - 4
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 100
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 3
+  - !!python/tuple
+    - example_wtiv
+    - 2
+  - !!python/tuple
+    - example_wtiv_us
+    - 1
+  port:
+  - !!python/tuple
+    - new_london_1
+    - 1
+  - !!python/tuple
+    - new_london_2
+    - 0
+  - !!python/tuple
+    - new_bedford
+    - 1
+  - !!python/tuple
+    - sbmt
+    - 0
+  - !!python/tuple
+    - njwp_1
+    - 0
+  - !!python/tuple
+    - njwp_2
+    - 0
+  - !!python/tuple
+    - searsport_1
+    - 0
+  - !!python/tuple
+    - searsport_2
+    - 0
+  - !!python/tuple
+    - tradepoint_1
+    - 0
+  - !!python/tuple
+    - tradepoint_2
+    - 0
+  - !!python/tuple
+    - portsmouth_1
+    - 0
+  - !!python/tuple
+    - portsmouth_2
+    - 0
+  - !!python/tuple
+    - salem
+    - 0
+  - !!python/tuple
+    - arthur_kill
+    - 0
 
 future_resources:
 - - port
