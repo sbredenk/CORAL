@@ -27,20 +27,30 @@ results_fp = 'analysis/results/%s' % filename
 dfs = []
 
 path = os.path.join(results_fp, '*.csv')
+
+df_investments = []
 desc = []
 
 for fname in glob.glob(path):
-    d = fname.replace('analysis/results/%s\\' % filename,'')
-    d = d.replace('.csv','')
-    desc.append(d)
-    df = pd.read_csv(fname, parse_dates=['estimated_cod','Date Initialized','Date Finished', 'Date Started'])
+    df = pd.read_csv(fname, parse_dates=['estimated_cod','Date Initialized','Date Finished', 'Date FoundationFinished', 'Date Started'])
+    #Extracting the name of the scenario for each csv file and putting it in a new column such that the corresponding yaml file can be called in coral_plotting
+    scenario_name = os.path.splitext(os.path.basename(fname))[0]
+    df['Scenario'] = scenario_name
+    desc.append(scenario_name)
+ 
     df = df.drop(df.columns[0],axis=1)
     # pd.to_datetime(df[["estimated_cod"]], unit='ns')
-    dfs.append(df)
-
+    dfs.append(df) 
     run_plots(prs, df, ne_ports)
 
-df_cap = installed_cap(prs,dfs,desc,region=ne)
+    df_util = vessel_utilization_plot(prs,df)
+    df_investment = vessel_investment_plot(prs,df_util)
+    df_investments.append(df_investment)
+
+
+df_cum_investments = compare_investments(prs, df_investments, desc)
+df_cum = installed_cap(prs,dfs,desc)
+# cap_per_investment(prs, df_cum, df_cum_investments)
 
 savename = os.path.join(results_fp, 'post_proc.pptx')
 prs.save(savename)

@@ -1,5 +1,5 @@
 description:
-- '3 AHTS vessels built every 4 years starting in 2027'
+- '3 total AHTS vessels, built every 4 years starting in 2027'
 pipeline: natl_gaps_AHTS_building_pipeline
 allocations:
   ahts_vessel: !!python/tuple

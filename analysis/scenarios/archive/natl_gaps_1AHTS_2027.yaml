@@ -1,6 +1,6 @@
 description:
 - '1 AHTS built in 2027'
-pipeline: natl_gaps_AHTS_building_pipeline
+pipeline: natl_gaps_high_gbf_pipeline
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel
