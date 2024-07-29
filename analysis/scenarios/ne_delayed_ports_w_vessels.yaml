@@ -88,7 +88,7 @@ future_resources:
     - 2032-01-01
 - - port
   - new_london_2
-  - - 2038-01-01
+  - - 2030-01-01
 - - port
   - arthur_kill
   - - 2027-01-01
