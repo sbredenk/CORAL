@@ -166,7 +166,7 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
     gbf = matplotlib.patches.Patch(color='#D55E00', label='GBF Project Time')
     jacket = matplotlib.patches.Patch(color='#CC79A7', label='SBJ Project Time')
     semisub = matplotlib.patches.Patch(color='#0072B2', label='Semisub Project Time')
-    ax.legend(handles=[mono, gbf, jacket, semisub])
+    ax.legend(handles=[mono, gbf, jacket, semisub], bbox_to_anchor=(1.35,1))
 
 
     ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df_region["Date Finished"].max() + dt.timedelta(days=30))
@@ -352,7 +352,7 @@ def port_throughput(prs, df, region=None):
 def vessel_utilization_plot(prs, df):
 
     fig = plt.figure(figsize=(10,4), dpi=200)
-    ax = fig.add_subplot(111)
+    # ax = fig.add_subplot(111)
 
     scenario_path = 'analysis/scenarios'
     scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
@@ -362,7 +362,7 @@ def vessel_utilization_plot(prs, df):
     df_vessel_count = vessel_pipeline(allocs,futures)
     df_perc_util = df_vessel_util / df_vessel_count / 8766 * 100
 
-    df_perc_util.plot(kind='bar', ax=ax)
+    ax = df_perc_util.plot(kind='bar')
     ax.set_xlabel("")
     ax.set_ylabel("Vessel Utilization (%)")
     ax.legend(fontsize=6)
@@ -370,7 +370,78 @@ def vessel_utilization_plot(prs, df):
     slide = add_to_pptx(prs,'Vessel Utilization')
     return(df_vessel_util)
 
-def vessel_investment_plot(prs, df_vessel_util):
+def vessel_investment_plot(prs, dfs, names):
+
+    # Vessel Investment Numbers
+    vessel_types = ['example_feeder', 'example_heavy_feeder_1kit', 'example_ahts_vessel']
+    vessel_costs = {
+        "example_heavy_feeder_1kit": 175,
+        "example_feeder": 60,
+        "example_ahts_vessel": 175
+    }
+
+    yrs = np.arange(2019,2043)
+    dates = pd.to_datetime(yrs, format='%Y')
+    # advance = pd.to_datetime(4, format='%Y')
+    fig = plt.figure(figsize=(10,4), dpi=200)
+    ax = fig.add_subplot(111)
+
+    us_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
+    total_investments = pd.DataFrame(index=dates, columns=names, data=np.zeros((len(yrs), len(names))))
+    us_invest = []
+    i = 0
+    for df in dfs:
+        scenario_path = 'analysis/scenarios'
+        scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
+        allocs = scen_yaml['allocations']
+        futures = scen_yaml['future_resources']
+        init_alloc = [allocs['feeder'][1][1], allocs['feeder'][0][1], allocs['ahts_vessel'][1]]
+        vessel_investment = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
+        vessel_investment.iloc[0] = init_alloc
+        # display(vessel_investment)
+        for vessel in vessel_types:
+            for vessel_type in futures:
+                if vessel_type[1] == vessel:
+                    years = vessel_type[2]
+                    # print(vessel_type[1])
+                    # print(years)
+                    for year in years:
+                        vessel_investment.loc[[year-relativedelta(years=4)],vessel] += 1
+            vessel_investment[vessel] = vessel_investment[vessel] * vessel_costs[vessel]
+        
+        us_vessels = ['example_feeder', 'example_ahts_vessel']
+        us_invest.append(vessel_investment[us_vessels])
+        vessel_investment.loc[:,'us_total'] = vessel_investment[us_vessels].sum(axis=1)
+        vessel_investment['us_total'] = vessel_investment['us_total'].cumsum() / 1000
+        vessel_investment.loc[:,'total'] = vessel_investment[vessel_types].sum(axis=1)
+        vessel_investment['total'] = vessel_investment['total'].cumsum() / 1000
+
+        total_investments[names[i]] = vessel_investment['total']
+        us_investments[names[i]] = vessel_investment['us_total']
+        i += 1
+    us_investments['year'] = yrs
+    us_investments.set_index('year', inplace=True)
+
+    total_investments['year'] = yrs
+    total_investments.set_index('year', inplace=True)
+
+    us_investments['year'] = yrs
+    us_investments.set_index('year', inplace=True)
+    us_investments.plot(ax=ax)
+
+    ax.set_ylabel('US ($B)')
+    ax.yaxis.set_major_locator(tck.MaxNLocator(integer=True))
+    plt.minorticks_off()
+    # plt.tick_params(bottom = False) 
+    ax.set_xticks(yrs[::2])
+
+    slide = add_to_pptx(prs, 'Vessel investment')
+
+    return(us_invest)
+
+
+
+def vessel_revenue_plot(prs, df_vessel_util):
 
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
@@ -383,35 +454,35 @@ def vessel_investment_plot(prs, df_vessel_util):
         vessel_rate = vessel_yaml['vessel_specs']['day_rate'] / 24
         vessel_rates.append(vessel_rate)
 
-    df_investment = df_vessel_util.mul(vessel_rates) / 1e6
+    df_revenue = df_vessel_util.mul(vessel_rates) / 1e6
 
-    df_investment.plot(kind='bar', ax=ax)
+    df_revenue.plot(kind='bar', ax=ax)
     ax.set_ylabel("Annual Invesment ($M)")
     ax.set_xlabel("")
 
-    slide = add_to_pptx(prs, 'Vessel Investment')
-    return(df_investment)
+    slide = add_to_pptx(prs, 'Vessel Revenue')
+    return(df_revenue)
 
 
-def compare_investments(prs, df_investments, desc):
+def compare_revenues(prs, df_revenues, desc):
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
 
     yrs = np.arange(2023,2065,1)
-    df_cum_investment = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
+    df_cum_revenue = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     i=0
-    for df in df_investments:
+    for df in df_revenues:
         df.loc[:,'total'] = df.sum(axis=1)
-        df_cum_investment[desc[i]] = df['total']
+        df_cum_revenue[desc[i]] = df['total']
         i+=1
 
-    df_cum_investment.plot(kind='line',ax=ax)
-    ax.set_ylabel("Annual Invesment ($M)")
+    df_cum_revenue.plot(kind='line',ax=ax)
+    ax.set_ylabel("Annual Revenue ($M)")
     ax.set_xlabel("")
 
-    slide = add_to_pptx(prs, 'Vessel Investment by Scenario')
+    slide = add_to_pptx(prs, 'Vessel Revenue by Scenario')
 
-    return(df_cum_investment)
+    return(df_cum_revenue)
     
 
 
@@ -433,7 +504,7 @@ def installed_cap(prs, dfs, desc, region = None):
     
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(1,1,1)
-    df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax)
+    # df_cod.plot(kind='line', x='cod', y='sum', color='k', ax=ax)
 
     i=0
     width = 0.25
@@ -463,13 +534,59 @@ def installed_cap(prs, dfs, desc, region = None):
     cum_label = [s + ' cumulative' for s in desc]
     labels = ['cod'] + cum_label
     #ax.legend(labels)
-    ax.legend(labels, prop={'size': 7})
+    # ax.legend(labels, prop={'size': 7})
 
     if region:
         slide = add_to_pptx(prs,'Installed Capacity')
     else:
         slide = add_to_pptx(prs,'Installed Capacity')
     return df_cum
+
+
+def summary_cap(prs, dfs, desc, us_invest, region=None):
+
+    df_2040 = pd.DataFrame(columns = ['2040'])
+    df_2030 = pd.DataFrame(columns = ['2040'])
+    
+    i=0
+    for df in dfs:
+        if region:
+            df = df.drop(columns=['index'])
+            df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
+        cap_by_year = pd.DataFrame()
+        cap_by_year['year'] = pd.DatetimeIndex(df['Date Finished']).year
+        cap_by_year['capacity'] = df['capacity']
+        cap = cap_by_year.groupby(['year'])['capacity'].sum().reset_index()
+        cap_2030 = cap.loc[cap['year'] <= 2030]['capacity'].sum()/1e3
+        cap_2040 = cap.loc[cap['year'] <= 2040]['capacity'].sum()/1e3
+        row_2030 = {'Scenario': desc[i], '2030': cap_2030}
+        row_2040 = {'Scenario': desc[i], '2040': cap_2040}
+        df_2030 = df_2030.append(row_2030, ignore_index=True)
+        df_2040 = df_2040.append(row_2040, ignore_index=True)
+        i+=1
+
+    fig = plt.figure(figsize=(6,4), dpi=200)
+    ax = fig.add_subplot(111)
+
+    df_2040.plot.bar(x='Scenario', rot=0, ax=ax, width=-0.1, align = 'edge', color='tab:orange')
+    df_2030.plot.bar(x='Scenario', rot=0, ax=ax, width=-0.2, align = 'edge', color = 'tab:blue')
+    us_invest.plot.bar(x='Scenario', rot=0, stacked=True, ax=ax, secondary_y=True, width=0.1, align='edge', color = ['tab:green', 'tab:purple', 'tab:red'])
+
+    ax.set_ylabel('Installed Capacity (GW)')
+    ax.right_ax.set_ylabel("$Billion")
+    ax.set_xlabel('')
+
+    colors = {'2030 Capacity':'tab:blue', 
+              '2040 Capacity':'tab:orange', 
+              'Port Investment (right)':'tab:green', 
+              'Feeder Investment (right)':'tab:purple', 
+              'AHTS Investment (right)':'tab:red'}         
+    labels = list(colors.keys())
+    handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
+    ax.legend(handles, labels, bbox_to_anchor=(0.7,-0.1), fontsize='small')
+    # ax.legend(labels = ['2030 Capacity','2040 Capacity', 'Investment'], loc=1, fontsize='small')
+    slide = add_to_pptx(prs,'Summary Installed Cap/Investment')
+    plt.close()
 
 
 def cap_per_investment(prs, df_cum, df_investments):
@@ -488,13 +605,13 @@ def run_plots(prs, df, ports):
     # nynj = ['NY','NJ']
     # mid = ['NC', 'MD', 'VA', 'DE']
 
-    full_gantt(prs, df)
-    # full_gantt(prs, df, sorted=True)
+    # full_gantt(prs, df)
+    # # full_gantt(prs, df, sorted=True)
 
     regional_gantt(prs, df, ne, 'New England')
-    regional_gantt(prs, df, ne, 'New England', sorted=True)
+    # regional_gantt(prs, df, ne, 'New England', sorted=True)
 
-    port_throughput(prs,df)
+    # port_throughput(prs,df)
     # port_throughput(prs,df,ne)
     # port_throughput(prs,df,nynj)
     # port_throughput(prs,df,mid)

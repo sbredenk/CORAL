@@ -85,8 +85,8 @@ def vessel_pipeline(allocs, futures):
     # dates = pd.to_datetime(yrs, format='%Y')
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
-    vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
-    init_alloc = [allocs['wtiv'][1][1], allocs['wtiv'][2][1], allocs['wtiv'][0][1], allocs['ahts_vessel'][1], allocs['feeder'][1][1]]
+    vessel_types = ['example_wtiv', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
+    init_alloc = [allocs['wtiv'][1][1], allocs['wtiv'][0][1], allocs['ahts_vessel'][1], allocs['feeder'][1][1]]
     vessel_count = pd.DataFrame(columns=vessel_types, data = np.ones((len(yrs), len(vessel_types))), index = yrs)
     vessel_count = vessel_count.mul(init_alloc)
     # vessel_count.iloc[0] = init_alloc
@@ -102,3 +102,16 @@ def vessel_pipeline(allocs, futures):
     # vessel_count['total'] = vessel_count['total'].cumsum()
 
     return(vessel_count)
+
+
+def vessel_port_invest(us_invest, desc):
+    i=0
+    df_out = pd.DataFrame(columns=['Port','Feeder','AHTS'])
+    port_cost = [1750 + 500, 1500, 1000]
+    for df in us_invest:
+        row = df.sum()
+        df_out = df_out.append({'Scenario': desc[i], 'Port': port_cost[i], 'Feeder': row[0], 'AHTS': row[1]}, ignore_index=True)
+        i += 1
+    return(df_out)
+
+
