@@ -352,7 +352,7 @@ def port_throughput(prs, df, region=None):
 def vessel_utilization_plot(prs, df):
 
     fig = plt.figure(figsize=(10,4), dpi=200)
-    # ax = fig.add_subplot(111)
+    ax = fig.add_subplot(111)
 
     scenario_path = 'analysis/scenarios'
     scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
@@ -361,11 +361,12 @@ def vessel_utilization_plot(prs, df):
     df_vessel_util = vessel_hours(df)
     df_vessel_count = vessel_pipeline(allocs,futures)
     df_perc_util = df_vessel_util / df_vessel_count / 8766 * 100
-
-    ax = df_perc_util.plot(kind='bar')
+    # print(df_perc_util)
+    ax = df_perc_util.plot.bar(rot=90)
     ax.set_xlabel("")
     ax.set_ylabel("Vessel Utilization (%)")
     ax.legend(fontsize=6)
+    ax.set_ylim(0,100)
 
     slide = add_to_pptx(prs,'Vessel Utilization')
     return(df_vessel_util)
@@ -572,6 +573,9 @@ def summary_cap(prs, dfs, desc, us_invest, region=None):
     df_2030.plot.bar(x='Scenario', rot=0, ax=ax, width=-0.2, align = 'edge', color = 'tab:blue')
     us_invest.plot.bar(x='Scenario', rot=0, stacked=True, ax=ax, secondary_y=True, width=0.1, align='edge', color = ['tab:green', 'tab:purple', 'tab:red'])
 
+    print("2030: %s" % df_2030)
+    print("2040: %s" % df_2040)
+
     ax.set_ylabel('Installed Capacity (GW)')
     ax.right_ax.set_ylabel("$Billion")
     ax.set_xlabel('')
@@ -612,7 +616,7 @@ def run_plots(prs, df, ports):
     # regional_gantt(prs, df, ne, 'New England', sorted=True)
 
     # port_throughput(prs,df)
-    # port_throughput(prs,df,ne)
+    port_throughput(prs,df,ne)
     # port_throughput(prs,df,nynj)
     # port_throughput(prs,df,mid)
 
@@ -629,4 +633,6 @@ def run_plots(prs, df, ports):
     # substructure_gantt(prs, df, 'fixed', sorted=True)
     # substructure_gantt(prs, df, 'floating')
     # substructure_gantt(prs, df, 'floating', sorted=True)
+
+    vessel_utilization_plot(prs, df)
 

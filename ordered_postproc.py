@@ -43,7 +43,7 @@ for s in args.scenarios:
     df = df.drop(df.columns[0],axis=1)
     # pd.to_datetime(df[["estimated_cod"]], unit='ns')
     dfs.append(df) 
-    # run_plots(prs, df, ne_ports)
+    run_plots(prs, df, ne_ports)
 
     # df_util = vessel_utilization_plot(prs,df)
     # df_revenue = vessel_revenue_plot(prs,df_util)
@@ -57,6 +57,6 @@ df_out = vessel_port_invest(us_invest, desc)
 summary_cap(prs, dfs, desc, df_out, region=ne)
 # cap_per_investment(prs, df_cum, df_cum_investments)
 
-savename = os.path.join(results_fp, 'lim_ports.pptx')
+savename = os.path.join(results_fp, 'foundations.pptx')
 prs.save(savename)
 print(f'\nresults saved to:\n{savename}')

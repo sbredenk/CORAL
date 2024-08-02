@@ -17,71 +17,70 @@ def read_yaml(scenario, path):
 
 
 def vessel_hours(df):
-    yrs = np.arange(2023,2065)
-    df_util = pd.DataFrame(columns = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder'], index=yrs)
+    yrs = np.arange(2023,2041)
+    df_util = pd.DataFrame(columns = ['example_wtiv', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder'], index=yrs)
     df_util = df_util.fillna(0)
 
     for _,project in df.iterrows():
-        # FOUNDATIONS
-        if project['substructure'] in ('monopile','jacket'):
-            if project['Date FoundationFinished'].year == project['Date Started'].year:
-                util = (project['Date FoundationFinished'].date() - project['Date Started'].date()).days * 24
-                df_util.loc[project['Date FoundationFinished'].year,'example_heavy_lift_vessel'] += util
-            else:
-                total = project['Date FoundationFinished'].date() - project['Date Started'].date()
-                for year in np.arange(project['Date Started'].year,project['Date FoundationFinished'].year + 1):
-                    if year == project['Date Started'].year:
-                        util = (dt.date(year + 1, 1, 1) - project["Date Started"].date()).days * 24
-                    elif year == project['Date FoundationFinished'].year:
-                        util = (project['Date FoundationFinished'].date() - dt.date(year,1,1)).days * 24
-                    else:
-                        util = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)).days * 24
-                    df_util.loc[year,'example_heavy_lift_vessel'] += util
-
-        # TURBINES
-        if project['substructure'] in ('monopile','jacket'):
-            if project['Date Finished'].year == project['Date FoundationFinished'].year:
-                util = (project['Date Finished'].date() - project['Date FoundationFinished'].date()).days * 24
-                if project['us_wtiv']:
-                    df_util.loc[project['Date Finished'].year,'example_wtiv_us'] += util
+        if project['Date Finished'].year <= yrs[-1]:
+            # FOUNDATIONS
+            if project['substructure'] in ('monopile','jacket'):
+                if project['Date FoundationFinished'].year == project['Date Started'].year:
+                    util = (project['Date FoundationFinished'].date() - project['Date Started'].date()).days * 24
+                    df_util.loc[project['Date FoundationFinished'].year,'example_heavy_lift_vessel'] += util
                 else:
-                    df_util.loc[project['Date Finished'].year,'example_wtiv'] += util
-                    df_util.loc[project['Date Finished'].year,'example_feeder'] += util * 2
-            else:
-                total = project['Date Finished'].date() - project['Date FoundationFinished'].date()
-                for year in np.arange(project['Date FoundationFinished'].year,project['Date Finished'].year + 1):
-                    if year == project['Date FoundationFinished'].year:
-                        util = (dt.date(year + 1, 1, 1) - project["Date FoundationFinished"].date()).days * 24
-                    elif year == project['Date Finished'].year:
-                        util = (project['Date Finished'].date() - dt.date(year,1,1)).days * 24
-                    else:
-                        util = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)).days * 24
+                    total = project['Date FoundationFinished'].date() - project['Date Started'].date()
+                    for year in np.arange(project['Date Started'].year,project['Date FoundationFinished'].year + 1):
+                        if year == project['Date Started'].year:
+                            util = (dt.date(year + 1, 1, 1) - project["Date Started"].date()).days * 24
+                        elif year == project['Date FoundationFinished'].year:
+                            util = (project['Date FoundationFinished'].date() - dt.date(year,1,1)).days * 24
+                        else:
+                            util = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)).days * 24
+                        df_util.loc[year,'example_heavy_lift_vessel'] += util
 
+            # TURBINES
+            if project['substructure'] in ('monopile','jacket'):
+                if project['Date Finished'].year == project['Date FoundationFinished'].year:
+                    util = (project['Date Finished'].date() - project['Date FoundationFinished'].date()).days * 24
                     if project['us_wtiv']:
-                        df_util.loc[year,'example_wtiv_us'] += util
+                        df_util.loc[project['Date Finished'].year,'example_wtiv_us'] += util
                     else:
-                        df_util.loc[year,'example_wtiv'] += util
-                        df_util.loc[year,'example_feeder'] += util * 2
+                        df_util.loc[project['Date Finished'].year,'example_wtiv'] += util
+                        df_util.loc[project['Date Finished'].year,'example_feeder'] += util * 2
+                else:
+                    for year in np.arange(project['Date FoundationFinished'].year,project['Date Finished'].year + 1):
+                        if year == project['Date FoundationFinished'].year:
+                            util = (dt.date(year + 1, 1, 1) - project["Date FoundationFinished"].date()).days * 24
+                        elif year == project['Date Finished'].year:
+                            util = (project['Date Finished'].date() - dt.date(year,1,1)).days * 24
+                        else:
+                            util = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)).days * 24
 
-        else:
-            if project['Date Finished'].year == project['Date Started'].year:
-                util = (project['Date Finished'].date() - project['Date Started'].date()).days * 24
-                df_util.loc[project['Date Finished'].year,'example_ahts_vessel'] += util
+                        if project['us_wtiv']:
+                            df_util.loc[year,'example_wtiv_us'] += util
+                        else:
+                            df_util.loc[year,'example_wtiv'] += util
+                            df_util.loc[year,'example_feeder'] += util * 2
+
             else:
-                total = project['Date Finished'].date() - project['Date Started'].date()
-                for year in np.arange(project['Date Started'].year,project['Date Finished'].year + 1):
-                    if year == project['Date Started'].year:
-                        util = (dt.date(year + 1, 1, 1) - project["Date Started"].date()).days * 24
-                    elif year == project['Date Finished'].year:
-                        util = (project['Date Finished'].date() - dt.date(year,1,1)).days * 24
-                    else:
-                        util = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)).days * 24
-                    df_util.loc[year,'example_ahts_vessel'] += util
+                if project['Date Finished'].year == project['Date Started'].year:
+                    util = (project['Date Finished'].date() - project['Date Started'].date()).days * 24
+                    df_util.loc[project['Date Finished'].year,'example_ahts_vessel'] += util
+                else:
+                    for year in np.arange(project['Date Started'].year,project['Date Finished'].year + 1):
+                        if year == project['Date Started'].year:
+                            util = (dt.date(year + 1, 1, 1) - project["Date Started"].date()).days * 24
+                        elif year == project['Date Finished'].year:
+                            util = (project['Date Finished'].date() - dt.date(year,1,1)).days * 24
+                        else:
+                            util = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)).days * 24
+                        df_util.loc[year,'example_ahts_vessel'] += util
         
     return(df_util)
 
 def vessel_pipeline(allocs, futures):
-    yrs = np.arange(2023,2065)
+    yrs = np.arange(2023,2041)
     # dates = pd.to_datetime(yrs, format='%Y')
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
@@ -107,11 +106,12 @@ def vessel_pipeline(allocs, futures):
 def vessel_port_invest(us_invest, desc):
     i=0
     df_out = pd.DataFrame(columns=['Port','Feeder','AHTS'])
-    port_cost = [1750 + 500, 1500, 1000]
+    port_cost = 1750 + 500
     for df in us_invest:
         row = df.sum()
-        df_out = df_out.append({'Scenario': desc[i], 'Port': port_cost[i], 'Feeder': row[0], 'AHTS': row[1]}, ignore_index=True)
+        df_out = df_out.append({'Scenario': desc[i], 'Port': port_cost/1000, 'Feeder': row[0]/1000, 'AHTS': row[1]/1000}, ignore_index=True)
         i += 1
+    df_out = df_out
     return(df_out)
 
 
