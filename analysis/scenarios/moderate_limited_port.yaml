@@ -26,11 +26,8 @@ allocations:
     - 2
   port:
   - !!python/tuple
-    - new_london_1
+    - new_london
     - 1
-  - !!python/tuple
-    - new_london_2
-    - 0
   - !!python/tuple
     - new_bedford
     - 1

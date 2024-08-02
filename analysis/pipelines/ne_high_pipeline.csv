@@ -1,13 +1,13 @@
 ﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,associated_port,us_wtiv
-South Fork,NY,-71.07590392,41.11050519,50,132,11MW_generic,40,monopile,1/1/2023 0:00,2024,new_london_1,FALSE
+South Fork,NY,-71.07590392,41.11050519,50,132,11MW_generic,40,monopile,1/1/2023 0:00,2024,new_london,FALSE
 Vineyard Wind 1,MA,-70.3809493,41.02365044,50,800,13MW_generic,40,monopile,1/1/2023 0:00,2024,new_bedford,FALSE
-Revolution Wind 1,RI/CT,-71.07607428,41.1159065,50,704,12MW_generic,40,monopile,1/1/2024 0:00,2025,new_london_1,FALSE
+Revolution Wind 1,RI/CT,-71.07607428,41.1159065,50,704,12MW_generic,40,monopile,1/1/2024 0:00,2025,new_london,FALSE
 CVOW-C,VA,-75.45761394,36.84342509,50,2587,15MW_generic,40,monopile,1/1/2026 0:00,2027,portsmouth_1,FALSE
 MarWin,MD,-74.75306642,38.27179677,50,248,15MW_generic,40,monopile,1/1/2026 0:00,2027,tradepoint_1,FALSE
 Atlantic Shores Offshore Wind South 1,NJ,-73.99422436,39.31937248,50,1510,15MW_generic,40,monopile,1/1/2026 0:00,2027,njwp_1,FALSE
 Empire Wind 1,NY,-73.22227313,40.24801683,50,816,15MW_generic,40,monopile,1/1/2027 0:00,2028,sbmt,FALSE
 Momentum Wind,MD,-74.75306642,38.27179677,50,809,15MW_generic,40,monopile,1/1/2027 0:00,2028,tradepoint_1,FALSE
-Sunrise Wind,NY,-70.82962083,40.99037717,50,924,11MW_generic,40,monopile,1/1/2028 0:00,2029,new_london_1,FALSE
+Sunrise Wind,NY,-70.82962083,40.99037717,50,924,11MW_generic,40,monopile,1/1/2028 0:00,2029,new_london,FALSE
 Maine Research Array,ME,-69.359846,43.393802,50,144,12MW_generic,800,semisub,1/1/2028 0:00,2029,searsport_1,FALSE
 Kitty Hawk North,VA,-75.02671099,36.23848619,50,1035,15MW_generic,40,monopile,1/1/2029 0:00,2030,portsmouth_2,FALSE
 SouthCoast 1 Phase 1 (Mayflower Wind 1),MA,-70.50430003,40.64106695,50,804,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
@@ -28,8 +28,8 @@ Leading Light Wind,NJ,-73.526616,39.2143787,50,2400,15MW_generic,40,monopile,1/1
 Atlantic Shores Offshore Wind North,NJ,-73.99414711,39.32477804,50,1182,15MW_generic,40,monopile,1/1/2031 0:00,2032,njwp_1,FALSE
 Atlantic Shores Offshore Wind South 2,NJ,-73.99422436,39.31937248,50,1500,15MW_generic,40,monopile,1/1/2031 0:00,2032,njwp_2,FALSE
 Excelsior Wind,NY,-73.11065926,40.20300636,50,1314,15MW_generic,40,monopile,1/1/2032 0:00,2033,sbmt,FALSE
-Bay State Wind a (Revolution Wind 2),RI,-70.82947169,40.98497498,50,880,15MW_generic,40,jacket,1/1/2032 0:00,2033,new_london_1,FALSE
-Bay State Wind b,MA,-70.82947169,40.98497498,50,1120,15MW_generic,40,jacket,1/1/2032 0:00,2033,new_london_2,FALSE
+Bay State Wind a (Revolution Wind 2),RI,-70.82947169,40.98497498,50,880,15MW_generic,40,jacket,1/1/2032 0:00,2033,new_london,FALSE
+Bay State Wind b,MA,-70.82947169,40.98497498,50,1120,15MW_generic,40,jacket,1/1/2032 0:00,2033,new_london,FALSE
 Hypothetical Central Atlantic WEA 4,NC,-75.120567,36.512551,50,1607,15MW_generic,40,monopile,1/1/2032 0:00,2033,portsmouth_1,FALSE
 Hypothetical Central Atlantic Draft WEA 7,VA,-73.650827,37.555451,50,1566,15MW_generic,800,semisub,1/1/2032 0:00,2033,portsmouth_1,FALSE
 Kitty Hawk South,NC,-75.02671099,36.23848619,50,2465,15MW_generic,40,monopile,1/1/2033 0:00,2034,portsmouth_2,FALSE
@@ -42,13 +42,13 @@ Ocean Wind 1,NJ,-74.28953405,39.02418816,50,1100,15MW_generic,40,monopile,1/1/20
 Vineyard Northeast,MA,-70.16378033,40.6450013,50,2600,15MW_generic,40,gbf,1/1/2034 0:00,2035,new_bedford,FALSE
 TotalEnergies,NC,-78.00283544,33.43107384,50,889,15MW_generic,40,monopile,1/1/2034 0:00,2035,portsmouth_2,FALSE
 Hypothetical Gulf of Maine Draft WEA 13,ME,-68.521338,42.976654,50,1424,15MW_generic,800,semisub,1/1/2034 0:00,2035,salem,FALSE
-Hypothetical NE Floating 3,RI,-70.092382,40.67661,50,1500,15MW_generic,800,semisub,1/1/2034 0:00,2035,new_london_1,FALSE
+Hypothetical NE Floating 3,RI,-70.092382,40.67661,50,1500,15MW_generic,800,semisub,1/1/2034 0:00,2035,new_london,FALSE
 Empire Wind 2,NY,-73.22227313,40.24801683,50,1260,15MW_generic,40,monopile,1/1/2035 0:00,2036,sbmt,FALSE
 Ocean Wind 2,NJ,-74.28958819,39.01878197,50,1148,15MW_generic,40,monopile,1/1/2035 0:00,2036,njwp_2,FALSE
 Garden State Offshore Energy I,NJ,-74.75173526,38.66111942,50,1080,15MW_generic,40,monopile,1/1/2035 0:00,2036,njwp_1,FALSE
 Hypothetical Central Atlantic WEA 5,MD,-74.70664,38.035256,50,713,15MW_generic,40,monopile,1/1/2035 0:00,2036,tradepoint_1,FALSE
 Hypothetical Gulf of Maine Draft WEA 5,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/2035 0:00,2036,searsport_1,FALSE
-Hypothetical NE Fixed 2,RI,-70.092382,40.67661,50,1500,15MW_generic,40,gbf,1/1/2035 0:00,2036,new_london_1,FALSE
+Hypothetical NE Fixed 2,RI,-70.092382,40.67661,50,1500,15MW_generic,40,gbf,1/1/2035 0:00,2036,new_london,FALSE
 Hypothetical Gulf of Maine Draft WEA 6,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/2036 0:00,2037,searsport_2,FALSE
 Hypothetical Central Atlantic WEA 6,MD,-74.70664,38.035256,50,713,15MW_generic,40,monopile,1/1/2036 0:00,2037,tradepoint_1,FALSE
 Hypothetical NY Bight Fixed 1,NY,-72.961754,40.211015,50,1500,15MW_generic,40,monopile,1/1/2036 0:00,2037,sbmt,FALSE
@@ -75,7 +75,7 @@ Hypothetical Central Atlantic Draft WEA 15,VA,-75.120567,36.512551,50,1566,15MW_
 Hypothetical Central Atlantic Draft WEA 14,DE,-75.120567,36.512551,50,1566,15MW_generic,800,semisub,1/1/2040 0:00,2041,tradepoint_2,FALSE
 Hypothetical Central Atlantic Draft WEA 9,NC,-75.120567,36.512551,50,1566,15MW_generic,800,semisub,1/1/2040 0:00,2041,portsmouth_2,FALSE
 Hypothetical Gulf of Maine Draft WEA 14,ME,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/2040 0:00,2041,searsport_2,FALSE
-Hypothetical NE Floating 4,RI,-70.092382,40.67661,50,1800,15MW_generic,800,semisub,1/1/2040 0:00,2041,new_london_1,FALSE
+Hypothetical NE Floating 4,RI,-70.092382,40.67661,50,1800,15MW_generic,800,semisub,1/1/2040 0:00,2041,new_london,FALSE
 Hypothetical Central Atlantic Draft WEA 10,MD,-75.120567,36.512551,50,1428,15MW_generic,800,semisub,1/1/2041 0:00,2042,tradepoint_1,FALSE
 Hypothetical Central Atlantic Draft WEA 11,VA,-75.120567,36.512551,50,1428,15MW_generic,800,semisub,1/1/2041 0:00,2042,portsmouth_1,FALSE
 Hypothetical Gulf of Maine Draft WEA 10,MA,-69.21235,42.246805,50,1424,15MW_generic,800,semisub,1/1/2041 0:00,2042,searsport_1,FALSE
