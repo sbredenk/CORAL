@@ -27,10 +27,7 @@ allocations:
     - 100
   port:
   - !!python/tuple
-    - new_london_1
-    - 100
-  - !!python/tuple
-    - new_london_2
+    - new_london
     - 100
   - !!python/tuple
     - new_bedford
@@ -80,9 +77,6 @@ future_resources:
   - - 2030-01-01
     - 2033-01-01
     - 2036-01-01
-- - port
-  - new_london_2
-  - - 2035-01-01
 - - port
   - arthur_kill
   - - 2027-01-01

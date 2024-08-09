@@ -155,7 +155,7 @@ class Pipeline:
             # )
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
-                1.0,
+                .2,
             )
 
             # Vessels
@@ -215,7 +215,7 @@ class Pipeline:
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "JacketInstallation",
-                1.0,
+                .2,
             )
 
             # Vessels

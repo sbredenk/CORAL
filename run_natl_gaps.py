@@ -48,7 +48,7 @@ description = [
     'Vessel Pathway: Base',
     'Port Pathway: Base',
 ]
-slide = add_text_slide(prs, 'Basline/Best Guess', description)
+slide = add_text_slide(prs, 'Baseline/Best Guess', description)
 
 # Define vessel and port allocations
 allocations = base_scenario['allocations']

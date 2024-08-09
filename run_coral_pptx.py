@@ -30,7 +30,7 @@ nynj = ['NY','NJ']
 mid = ['NC', 'MD', 'VA', 'DE']
 
 # List all ports
-ports = ['salem', 'searsport_1', 'searsport_2', 'new_bedford', 'new_london_1', 'new_london_2', 'arthur_kill', 'njwp_1', 'njwp_2', 'sbmt', 'tradepoint_1', 'tradepoint_2', 'portsmouth_1', 'portsmouth_2']
+ports = ['salem', 'searsport_1', 'searsport_2', 'new_bedford', 'new_london', 'arthur_kill', 'njwp_1', 'njwp_2', 'sbmt', 'tradepoint_1', 'tradepoint_2', 'portsmouth_1', 'portsmouth_2']
 ne_ports = ['salem', 'searsport','new_bedford','new_london']
 
 # Vessel Names and Costs
@@ -82,7 +82,7 @@ for s in scenarios:
 
     coral_time = time.time()
     manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
-    # manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources)
+    #manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)

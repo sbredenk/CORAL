@@ -27,11 +27,8 @@ allocations:
     - 1
   port:
   - !!python/tuple
-    - new_london_1
+    - new_london
     - 1
-  - !!python/tuple
-    - new_london_2
-    - 0
   - !!python/tuple
     - new_bedford
     - 1
@@ -78,9 +75,6 @@ future_resources:
   - example_heavy_lift_vessel
   - - 2030-01-01
     - 2033-01-01
-- - port
-  - new_london_2
-  - - 2035-01-01
 - - port
   - arthur_kill
   - - 2027-01-01
