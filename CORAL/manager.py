@@ -81,7 +81,7 @@ class GlobalManager:
 
             new = deepcopy(log)
             if isinstance(self._start, dt.datetime):
-                for k in ["Initialized", "Started", "FoundationFinished", "Finished"]:
+                for k in ["Initialized", "Started", "TurbineStart", "FoundationFinished", "Finished"]:
                     idx = int(np.ceil(log[k]))
                     new[f"Date {k}"] = self._start + dt.timedelta(hours=idx)
 
@@ -205,6 +205,14 @@ class GlobalManager:
 
         log["FoundationFinished"] = foundation_time
 
+        #Pull the start of turbine installation, add it to log
+        if "TurbineInstallation" in df2["phase"].values:
+            turbine_start = (df2[df2["phase"] == "TurbineInstallation"]["time"].iloc[0])+projectstart
+        else:
+            turbine_start = projectstart
+
+        log["TurbineStart"] = turbine_start
+        
         self._projects[name] = project
         self._logs.append(log)
         self.library.release(request)

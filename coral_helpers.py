@@ -40,18 +40,18 @@ def vessel_hours(df):
 
         # TURBINES
         if project['substructure'] in ('monopile','jacket'):
-            if project['Date Finished'].year == project['Date FoundationFinished'].year:
-                util = (project['Date Finished'].date() - project['Date FoundationFinished'].date()).days * 24
+            if project['Date Finished'].year == project['Date TurbineStart'].year:
+                util = (project['Date Finished'].date() - project['Date TurbineStart'].date()).days * 24
                 if project['us_wtiv']:
                     df_util.loc[project['Date Finished'].year,'example_wtiv_us'] += util
                 else:
                     df_util.loc[project['Date Finished'].year,'example_wtiv'] += util
                     df_util.loc[project['Date Finished'].year,'example_feeder'] += util * 2
             else:
-                total = project['Date Finished'].date() - project['Date FoundationFinished'].date()
-                for year in np.arange(project['Date FoundationFinished'].year,project['Date Finished'].year + 1):
-                    if year == project['Date FoundationFinished'].year:
-                        util = (dt.date(year + 1, 1, 1) - project["Date FoundationFinished"].date()).days * 24
+                total = project['Date Finished'].date() - project['Date TurbineStart'].date()
+                for year in np.arange(project['Date TurbineStart'].year,project['Date Finished'].year + 1):
+                    if year == project['Date TurbineStart'].year:
+                        util = (dt.date(year + 1, 1, 1) - project["Date TurbineStart"].date()).days * 24
                     elif year == project['Date Finished'].year:
                         util = (project['Date Finished'].date() - dt.date(year,1,1)).days * 24
                     else:
