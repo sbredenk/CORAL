@@ -17,7 +17,7 @@ def read_yaml(scenario, path):
 
 
 def vessel_hours(df):
-    yrs = np.arange(2023,2065)
+    yrs = np.arange(2023,2055)
     df_util = pd.DataFrame(columns = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder'], index=yrs)
     df_util = df_util.fillna(0)
     df['Date TurbineStart'] = pd.to_datetime(df['Date TurbineStart'])
@@ -82,7 +82,7 @@ def vessel_hours(df):
     return(df_util)
 
 def vessel_pipeline(allocs, futures):
-    yrs = np.arange(2023,2065)
+    yrs = np.arange(2023,2055)
     # dates = pd.to_datetime(yrs, format='%Y')
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
