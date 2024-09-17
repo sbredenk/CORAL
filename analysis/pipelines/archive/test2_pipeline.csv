@@ -1,7 +1,0 @@
-﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,associated_port
-South Fork,NY,-70.75,20.00,2000.00,132.00,11MW_generic,40,monopile,1/1/2023 0:00,2024,new_london
-Vineyard Wind 1,MA,-70.75,20.00,2000.00,800.00,13MW_generic,40,monopile,1/1/2023 0:00,2024,new_bedford
-Revolution Wind 1,RI/CT,-70.75,20.00,2000.00,704.00,12MW_generic,40,monopile,1/1/2024 0:00,2025,new_london
-Atlantic Shores Offshore Wind South 1,NJ,-70.75,20.00,2000.00,1510.00,15MW_generic,40,monopile,1/1/2026 0:00,2027,njwp
-CVOW-C,VA,-70.75,20.00,2000.00,2587.00,15MW_generic,40,monopile,1/1/2026 0:00,2027,portsmouth
-MarWin,MD,-70.75,20.00,2000.00,248.00,15MW_generic,40,monopile,1/1/2026 0:00,2027,tradepoint
