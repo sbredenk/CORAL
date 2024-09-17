@@ -63,6 +63,7 @@ us_investments, vessel_counts = vessel_investment_plot(prs, desc)
 # invest_w_vessels(prs, us_investments, us_rev, ffiv_rev, wtiv_rev, vessel_counts)
 summary_invest_plot(prs, us_investments, us_rev)
 df_cum = installed_cap(prs,dfs,desc)
+compare_installed_cap(prs,dfs,desc)
 # cap_per_investment(prs, df_cum, df_cum_investments)
 
 savename = os.path.join(results_fp, 'test_summary.pptx')

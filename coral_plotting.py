@@ -669,6 +669,93 @@ def installed_cap(prs, dfs, desc, region = None):
 
     return df_cum
 
+def compare_installed_cap(prs, dfs, desc, region=None):
+
+    df_2040 = pd.DataFrame(columns = ['2040'])
+    df_2030 = pd.DataFrame(columns = ['2040'])
+    df_2050 = pd.DataFrame(columns = ['2050'])
+    
+    i=0
+    for df in dfs:
+        if region:
+            df = df.drop(columns=['index'])
+            df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
+        cap_by_year = pd.DataFrame()
+        cap_by_year['year'] = pd.DatetimeIndex(df['Date Finished']).year
+        cap_by_year['capacity'] = df['capacity']
+        cap = cap_by_year.groupby(['year'])['capacity'].sum().reset_index()
+        cap_2030 = cap.loc[cap['year'] <= 2030]['capacity'].sum()/1e3
+        cap_2040 = cap.loc[cap['year'] <= 2040]['capacity'].sum()/1e3
+        cap_2050 = cap.loc[cap['year'] <= 2050]['capacity'].sum()/1e3
+        row_2030 = {'Scenario': desc[i], '2030': cap_2030}
+        row_2040 = {'Scenario': desc[i], '2040': cap_2040}
+        row_2050 = {'Scenario': desc[i], '2050': cap_2050}
+        df_2030 = df_2030.append(row_2030, ignore_index=True)
+        df_2040 = df_2040.append(row_2040, ignore_index=True)
+        df_2050 = df_2050.append(row_2050, ignore_index=True)
+        i+=1
+
+    df_2040_per_wtiv = df_2040.copy()
+    j=1
+    for index,row in df_2040.iterrows():
+        row['2040'] = row['2040']/j
+        df_2040_per_wtiv.iloc[index] = row
+        j += 1
+    
+    df_2040 = df_2040.set_index('Scenario')
+    df_2030 = df_2030.set_index('Scenario')
+    df_2040_per_wtiv = df_2040_per_wtiv.set_index('Scenario')
+
+    df_caps = pd.DataFrame(index=desc, columns = ['2030','2040','2040_per_wtiv'])
+    df_caps['2030'] = df_2030['2030']
+    df_caps['2040'] = df_2040['2040']
+    df_caps['2040_per_wtiv'] = df_2040_per_wtiv['2040']
+
+    fig = plt.figure(figsize=(6,4), dpi=200)
+    ax = fig.add_subplot(111)
+
+    df_caps.plot.bar(rot=0, ax=ax, width=0.3)
+
+    ax.set_ylabel('Installed Capacity (GW)')
+    ax.set_xlabel('')
+    ax.set_xlim(-0.25,3.25)
+
+    for p in ax.patches:
+        ax.annotate(str(int(p.get_height())), (p.get_x(), p.get_height() * 1.005), fontsize=6)
+
+    colors = {'2030 Capacity':'tab:blue', 
+              '2040 Capacity':'tab:orange',
+              '2040 Capacity per # WTIV':'tab:green'}
+
+    labels = list(colors.keys())
+    handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
+    ax.legend(handles, labels, loc='upper left', prop={'size': 6})
+    slide = add_to_pptx(prs,'Summary Installed Cap')
+
+    fig = plt.figure(figsize=(6,4), dpi=200)
+    ax = fig.add_subplot(111)
+    df_caps = df_caps.transpose()
+    df_caps.plot.bar(rot=0, ax=ax, width=0.3)
+
+    ax.set_ylabel('Installed Capacity (GW)')
+    ax.set_xlabel('')
+
+    for p in ax.patches:
+        ax.annotate(str(int(p.get_height())), (p.get_x(), p.get_height() * 1.005), fontsize=6)
+
+    colors = {'1 WTIV':'tab:blue', 
+              '2 WTIV':'tab:orange',
+              '3 WTIV':'tab:green',
+              '4 WTIV':'tab:red'}
+     
+    labels = list(colors.keys())
+    handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
+    ax.legend(handles, labels, loc='upper left', prop={'size': 6})
+    slide = add_to_pptx(prs,'Summary Installed Cap T')
+
+    plt.close()
+
+
 
 def cap_per_investment(prs, df_cum, df_investments):
     fig = plt.figure(figsize=(10,4), dpi=200)
