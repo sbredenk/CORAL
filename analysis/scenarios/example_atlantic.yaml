@@ -1,6 +1,6 @@
 description:
-- '1 US WTIV starting with CVOW, then 1 in 2030, 2033'
-pipeline: natl_gaps_3_us_wtiv_pipeline_us_forced
+- 'Example Altantic pipeline'
+pipeline: example_atlantic_2024
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel
@@ -8,17 +8,17 @@ allocations:
   feeder: 
   - !!python/tuple
     - example_heavy_feeder_1kit
-    - 6
+    - 4
   - !!python/tuple
     - example_feeder
     - 4
   towing_vessel: !!python/tuple
   - example_towing_vessel
-  - 100
+  - 10
   wtiv:
   - !!python/tuple
     - example_heavy_lift_vessel
-    - 2
+    - 1
   - !!python/tuple
     - example_wtiv
     - 1
@@ -36,28 +36,16 @@ allocations:
     - sbmt
     - 0
   - !!python/tuple
-    - njwp_1
+    - njwp
     - 0
   - !!python/tuple
-    - njwp_2
+    - searsport
     - 0
   - !!python/tuple
-    - searsport_1
+    - tradepoint
     - 0
   - !!python/tuple
-    - searsport_2
-    - 0
-  - !!python/tuple
-    - tradepoint_1
-    - 0
-  - !!python/tuple
-    - tradepoint_2
-    - 0
-  - !!python/tuple
-    - portsmouth_1
-    - 0
-  - !!python/tuple
-    - portsmouth_2
+    - portsmouth
     - 0
   - !!python/tuple
     - salem
@@ -68,13 +56,8 @@ allocations:
 
 future_resources:
 - - wtiv
-  - example_wtiv_us
+  - example_wtiv
   - - 2030-01-01
-    - 2033-01-01
-- - wtiv
-  - example_heavy_lift_vessel
-  - - 2030-01-01
-    - 2033-01-01
 - - port
   - arthur_kill
   - - 2027-01-01
@@ -82,29 +65,17 @@ future_resources:
   - sbmt
   - - 2027-01-01
 - - port
-  - njwp_1
+  - njwp
   - - 2025-01-01
 - - port
-  - njwp_2
-  - - 2029-01-01
-- - port
-  - tradepoint_1
+  - tradepoint
   - - 2025-01-01
 - - port
-  - tradepoint_2
-  - - 2030-01-01
-- - port
-  - portsmouth_1
-  - - 2024-01-01
-- - port
-  - portsmouth_2
+  - portsmouth
   - - 2024-01-01
 - - port
   - salem
   - - 2026-01-01
 - - port
-  - searsport_1
+  - searsport
   - - 2030-01-01
-- - port
-  - searsport_2
-  - - 2035-01-01
