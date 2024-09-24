@@ -1,6 +1,6 @@
 #  CHANGELOG
 
-## 0.1 (23 September 2024)
+## 0.1 (24 September 2024)
 
 ### Model Capability Development
 - Combine fixed and floating modules so pipelines can run with both
