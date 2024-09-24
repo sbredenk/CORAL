@@ -1,16 +1,43 @@
 from coral_imports import *
 
+# set up yaml reading
+def tuple_constructor(loader, node):
+    # Load the sequence of values from the YAML node
+    values = loader.construct_sequence(node)
+    # Return a tuple constructed from the sequence
+    return tuple(values)
+
+# run manager function 
+def run_manager(pipeline, allocations, library, weather=None, future_resources=None, sorted=False):
+    manager = GlobalManager(pipeline.configs, allocations, weather, library_path=library)
+
+    if future_resources != None: 
+        for i in future_resources:
+            manager.add_future_resources(i[0], i[1], i[2])
+        
+    manager.run()
+
+    # Format DataFrame for figure building
+    df = pd.DataFrame(manager.logs).iloc[::-1]
+    df = df.reset_index(drop=True).reset_index()
+
+    df_cols = ['substructure','depth', 'location','associated_port', 'capacity','us_wtiv']
+
+    for col in df_cols:
+        map = pipeline.projects[["name", col]].set_index("name").to_dict()[col]
+        df[col] = [map[name] for name in df['name']]
+    
+    cod_map = pipeline.projects[["name", "estimated_cod"]].set_index("name").to_dict()['estimated_cod']
+    df['estimated_cod'] = [cod_map[name] for name in df['name']]
+    df['estimated_cod'] = pd.to_datetime(df['estimated_cod'], format='%Y')
+
+    return manager, df
+
+
 def read_yaml(scenario, path):
-        # set up yaml reading
-    def tuple_constructor(loader, node):
-        # Load the sequence of values from the YAML node
-        values = loader.construct_sequence(node)
-        # Return a tuple constructed from the sequence
-        return tuple(values)
     # Register the constructor with PyYAML
     yaml.SafeLoader.add_constructor('tag:yaml.org,2002:python/tuple', tuple_constructor)
- 
-    yaml_path = '%s/%s.yaml' % (path, scenario)
+    yaml_path = os.path.join(os.getcwd(), "%s/%s.yaml" % (path,scenario))
     with open(yaml_path) as f:
         scenario = yaml.load(f.read(), Loader=yaml.SafeLoader)
     return(scenario)

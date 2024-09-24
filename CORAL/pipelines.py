@@ -315,7 +315,7 @@ class Pipeline:
     
     def calculate_port_distance(self, config, port_name):
         
-        port_path = os.path.join(os.getcwd(), "analysis", "library", "ports", "%s.yaml" % port_name)
+        port_path = os.path.join(os.getcwd(), "library", "ports", "%s.yaml" % port_name)
         with open(port_path, 'r') as stream:
             port_data = yaml.safe_load(stream)
         port_coords = (port_data["lat"], port_data["lon"])

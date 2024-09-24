@@ -4,7 +4,7 @@ CORAL
 Concurrent ORBIT for shared Resource Analysis Library
 
 
-:Authors: `Jake Nunemaker <https://www.linkedin.com/in/jake-nunemaker/>`_, `Matt Shields <https://www.linkedin.com/in/matt-shields-834a6b66/>`_, `Sophie Bredenkamp <https://www.linkedin.com/in/sophie-bredenkamp-839321150/>`_
+:Authors: `Sophie Bredenkamp <https://www.linkedin.com/in/sophie-bredenkamp-839321150/>`_, `Jake Nunemaker <https://www.linkedin.com/in/jake-nunemaker/>`_, `Matt Shields <https://www.linkedin.com/in/matt-shields-834a6b66/>`_
 
 
 Development Setup
@@ -84,4 +84,10 @@ Recommended packages for easy iteration and running of code:
 Setting Up a Run
 ----------------
 See coral_example_setup.ipynb for detailed explanation on running the model and understanding outputs.
+
+You may also run CORAL using the 'run_coral.py' script. The command for this is: 'python run_coral.py result_folder_name scenario_1 scenario_2 ...'. 
+The results dataframe for each run completed this way will be store in a folder with the name provided by results_folder_name in the postprocessing/results folder.
+
+To easily create a set of analysis plots, run the 'coral_postproc.py' command using this format: 'python coral_postproc.py results_folder_name' and a powerpoint 
+will be added to the folder named results_folder_name with a set of plots of each individual run and comparing all runs in the folder.
 

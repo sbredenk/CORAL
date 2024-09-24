@@ -132,7 +132,7 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
     """Gantt chcart of select region pipeline. Region determined by offtake states in region list. 
        Sorted sorts by expected start date."""
     df = df.drop(columns=['index'])
-    df_region = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+    df_region = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
 
     if sorted:
         df_region = df_region.drop(columns=['index'])
@@ -142,7 +142,7 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
     ax = fig.add_subplot(111)
 
     bar_color = []
-    for _,row in df.iterrows():
+    for _,row in df_region.iterrows():
         if row['substructure'] == 'monopile':
             bar_color.append("#F0E442")
         elif row['substructure'] == 'gbf':
@@ -153,7 +153,7 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
             bar_color.append("#0072B2")
 
     delay_bar_color = []
-    for _,row in df.iterrows():
+    for _,row in df_region.iterrows():
         if row['substructure'] == 'monopile':
             delay_bar_color.append("#F7F19D")
         elif row['substructure'] == 'gbf':
@@ -163,15 +163,15 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
         else:
             delay_bar_color.append("#77CEFF")
     
-    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
-    df["Date Started"].plot(kind="barh", color=delay_bar_color, ax=ax, zorder=4, label="Delay")
-    df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
+    df_region["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
+    df_region["Date Started"].plot(kind="barh", color=delay_bar_color, ax=ax, zorder=4, label="Delay")
+    df_region["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
-    df.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
+    df_region.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
     
     ax.set_xlabel("")
     ax.set_ylabel("")
-    _ = ax.set_yticklabels(df['name'])
+    _ = ax.set_yticklabels(df_region['name'])
 
     mono_delay = matplotlib.patches.Patch(color='#F7F19D', label='Monopile Delay')
     mono_install = matplotlib.patches.Patch(color='#F0E442', label='Monopile Installation')
@@ -183,7 +183,7 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
     semisub_install = matplotlib.patches.Patch(color='#0072B2', label='Semisub Installation')
     ax.legend(handles=[mono_delay, mono_install, gbf_delay, gbf_install, jacket_delay, jacket_install, semisub_delay, semisub_install])
 
-    ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
+    ax.set_xlim(df_region["Date Initialized"].min() - dt.timedelta(days=30), df_region["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
         slide = add_to_pptx(prs,'Sorted %s Gantt' % region_name)
     else:
@@ -231,14 +231,14 @@ def substructure_gantt(prs, df, substructure, sorted=False):
 def port_gantts(prs, df, ports, sorted=False): 
     """Gantt chart of specific ports. Creates subplot for each port in ports list. Sorted sorts by expected start date."""
     i = 1
-    ports_in_pipeline = df['port'].nunique()
-    fig_height = len(df) * (len(ports)/ports_in_pipeline) / 2.5
+    ports_in_pipeline = df['associated_port'].nunique()
+    fig_height = len(df) * (len(ports)/ports_in_pipeline) / 2
     fig = plt.figure(figsize=(10, fig_height), dpi=200)
     df_ports = df.drop(columns=['index'])
     num_ports = len(ports)
 
     for port in ports:
-        df_port = df_ports[df_ports['port'] == port].reset_index(drop=True).reset_index()
+        df_port = df_ports[df_ports['associated_port'] == port].reset_index(drop=True).reset_index()
 
         if sorted:
             df_port = df_port.drop(columns=['index'])
@@ -247,7 +247,7 @@ def port_gantts(prs, df, ports, sorted=False):
         ax = fig.add_subplot(num_ports,1,i)
     
         bar_color = []
-        for _,row in df.iterrows():
+        for _,row in df_port.iterrows():
             if row['substructure'] == 'monopile':
                 bar_color.append("#F0E442")
             elif row['substructure'] == 'gbf':
@@ -260,11 +260,11 @@ def port_gantts(prs, df, ports, sorted=False):
         matplotlib.rcParams.update({'hatch.linewidth': 3.0,
                                     'hatch.color': 'E8E9EB'})
         
-        df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color="#D55E00")
-        df["Date Started"].plot(kind="barh", color="#FFA65F", ax=ax, zorder=4, label="Delay")
-        df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
+        df_port["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color="#D55E00")
+        df_port["Date Started"].plot(kind="barh", color="#FFA65F", ax=ax, zorder=4, label="Delay")
+        df_port["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
-        df.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
+        df_port.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
 
         ax.set_xlabel("")
         ax.set_ylabel("")
@@ -273,8 +273,8 @@ def port_gantts(prs, df, ports, sorted=False):
 
         ax.legend()
 
-        ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df_port["Date Finished"].max() + dt.timedelta(days=30))
-
+        ax.set_xlim(df_port["Date Initialized"].min() - dt.timedelta(days=30), df_port["Date Finished"].max() + dt.timedelta(days=30))
+        fig.tight_layout()
         i += 1
 
     if sorted:
@@ -357,7 +357,7 @@ def vessel_utilization_plot(prs, df):
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
 
-    scenario_path = 'analysis/scenarios'
+    scenario_path = 'library/scenarios'
     scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
     allocs = scen_yaml['allocations']
     futures = scen_yaml['future_resources']
@@ -387,17 +387,12 @@ def run_plots(prs, df, ports):
     regional_gantt(prs, df, ne, 'New England')
     # regional_gantt(prs, df, ne, 'New England', sorted=True)
 
-    port_throughput(prs,df)
-    # port_throughput(prs,df,ne)
-    # port_throughput(prs,df,nynj)
-    # port_throughput(prs,df,mid)
-
     port_gantts(prs, df, ports)
     # port_gantts(prs, df, ports, sorted=True)
 
     substructure_gantt(prs, df, 'fixed')
     # substructure_gantt(prs, df, 'fixed', sorted=True)
-    substructure_gantt(prs, df, 'floating')
+    # substructure_gantt(prs, df, 'floating')
     # substructure_gantt(prs, df, 'floating', sorted=True)
 
     vessel_utilization_plot(prs,df)
@@ -419,7 +414,7 @@ def installed_cap(prs, dfs, desc, region = None):
     df = dfs[0]
     if region:
         df = df.drop(columns=['index'])
-        df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+        df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
 
     df['cod'] = df['estimated_cod'].dt.year
     df_cod = df.groupby(['cod']).capacity.sum().reset_index()
@@ -438,7 +433,7 @@ def installed_cap(prs, dfs, desc, region = None):
         df['finished'] = df['Date Finished'].dt.year
         if region:
             df = df.drop(columns=['index'])
-            df = df[df['offtake_state'].isin(region)].reset_index(drop=True).reset_index()
+            df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
         df_finished = df.groupby(['finished']).capacity.sum().reset_index()
         df_finished['capacity'] = df_finished['capacity'] / 1000
         df_finished['sum'] = df_finished['capacity'].cumsum(axis=0)
@@ -463,7 +458,7 @@ def installed_cap(prs, dfs, desc, region = None):
     #ax.legend(labels)
     ax.legend(labels, prop={'size': 7})
 
-    slide = add_to_pptx(prs,'Installed Capacity')
+    slide = add_to_pptx(prs,'Cumulative Installed Capacity')
 
     return df_cum
 
@@ -510,26 +505,26 @@ def compare_installed_cap(prs, dfs, desc, region=None):
     df_caps['2040'] = df_2040['2040']
     df_caps['2040_per_wtiv'] = df_2040_per_wtiv['2040']
 
-    fig = plt.figure(figsize=(6,4), dpi=200)
-    ax = fig.add_subplot(111)
+    # fig = plt.figure(figsize=(6,4), dpi=200)
+    # ax = fig.add_subplot(111)
 
-    df_caps.plot.bar(rot=0, ax=ax, width=0.3)
+    # df_caps.plot.bar(rot=0, ax=ax, width=0.3)
 
-    ax.set_ylabel('Installed Capacity (GW)')
-    ax.set_xlabel('')
-    ax.set_xlim(-0.25,3.25)
+    # ax.set_ylabel('Installed Capacity (GW)')
+    # ax.set_xlabel('')
+    # ax.set_xlim(-0.25,3.25)
 
-    for p in ax.patches:
-        ax.annotate(str(int(p.get_height())), (p.get_x(), p.get_height() * 1.005), fontsize=6)
+    # for p in ax.patches:
+    #     ax.annotate(str(int(p.get_height())), (p.get_x(), p.get_height() * 1.005), fontsize=6)
 
-    colors = {'2030 Capacity':'tab:blue', 
-              '2040 Capacity':'tab:orange',
-              '2040 Capacity per # WTIV':'tab:green'}
+    # colors = {'2030 Capacity':'tab:blue', 
+    #           '2040 Capacity':'tab:orange',
+    #           '2040 Capacity per # WTIV':'tab:green'}
 
-    labels = list(colors.keys())
-    handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
-    ax.legend(handles, labels, loc='upper left', prop={'size': 6})
-    slide = add_to_pptx(prs,'Summary Installed Cap')
+    # labels = list(colors.keys())
+    # handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
+    # ax.legend(handles, labels, loc='upper left', prop={'size': 6})
+    # slide = add_to_pptx(prs,'Summary Installed Cap')
 
     fig = plt.figure(figsize=(6,4), dpi=200)
     ax = fig.add_subplot(111)
@@ -550,7 +545,7 @@ def compare_installed_cap(prs, dfs, desc, region=None):
     labels = list(colors.keys())
     handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
     ax.legend(handles, labels, loc='upper left', prop={'size': 6})
-    slide = add_to_pptx(prs,'Summary Installed Cap T')
+    slide = add_to_pptx(prs,'Summary Installed Capacity')
 
     plt.close()
 

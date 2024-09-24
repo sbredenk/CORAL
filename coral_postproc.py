@@ -1,8 +1,9 @@
-from coral_imports import *
+import sys
+sys.path.insert(0, './postprocessing')
 from coral_plotting import *
 
 # Create presentation
-prs = pptx.Presentation('analysis/results/template.pptx')
+prs = pptx.Presentation('postprocessing/results/template.pptx')
 
 # List all ports for use in port throughput plots
 ports = ['salem', 'searsport', 'new_bedford', 'new_london', 'arthur_kill', 'njwp', 'sbmt', 'tradepoint', 'portsmouth']
@@ -13,7 +14,7 @@ parser.add_argument('filename')
 args = parser.parse_args()
 
 filename = args.filename
-results_fp = 'analysis/results/%s' % filename
+results_fp = 'postprocessing/results/%s' % filename
 
 
 # Read in dfs from csvs
@@ -34,7 +35,9 @@ for fname in glob.glob(path):
     scenario_name = os.path.splitext(os.path.basename(fname))[0]
     df['Scenario'] = scenario_name
     desc.append(scenario_name)
-    slide = add_text_slide(prs, scenario_name, "text")
+
+    scen_yaml = read_yaml(scenario_name, 'library/scenarios')
+    slide = add_text_slide(prs, scenario_name, scen_yaml['description'])
  
     df = df.drop(df.columns[0],axis=1)
     
@@ -42,12 +45,12 @@ for fname in glob.glob(path):
 
     dfs.append(df) 
 
-
+slide = add_text_slide(prs, 'Summary Plots', ["Plots comparing runs"])
 
 df_cum = installed_cap(prs,dfs,desc)
 compare_installed_cap(prs,dfs,desc)
 
 
-savename = os.path.join(results_fp, 'test_summary.pptx')
+savename = os.path.join(results_fp, '%s_results.pptx' % filename)
 prs.save(savename)
 print(f'\nresults saved to:\n{savename}')
