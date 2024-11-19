@@ -1,0 +1,130 @@
+description:
+- '1 Foreign WTIV and 1 FFIV recruited in 2026, 2 feeders built in 2026, US WTIV built in 2030, Foreign WTIV leaves pipeline in 2030, 2 AHTS built every 3 years starting in 2033'
+pipeline: hybrid_pipeline_optimized
+allocations:
+  ahts_vessel: 
+  - !!python/tuple
+    - example_ahts_vessel
+    - 2
+  - !!python/tuple
+    - gbf_ahts_vessel
+    - 100
+  feeder: 
+  - !!python/tuple
+    - example_heavy_feeder_1kit
+    - 6
+  - !!python/tuple
+    - example_feeder
+    - 4
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 100
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 2
+  - !!python/tuple
+    - example_wtiv
+    - 1
+  - !!python/tuple
+    - example_wtiv_us
+    - 1
+  port:
+  - !!python/tuple
+    - new_london
+    - 1
+  - !!python/tuple
+    - new_bedford
+    - 1
+  - !!python/tuple
+    - sbmt
+    - 0
+  - !!python/tuple
+    - njwp_1
+    - 0
+  - !!python/tuple
+    - njwp_2
+    - 0
+  - !!python/tuple
+    - searsport_1
+    - 0
+  - !!python/tuple
+    - searsport_2
+    - 0
+  - !!python/tuple
+    - tradepoint_1
+    - 0
+  - !!python/tuple
+    - tradepoint_2
+    - 0
+  - !!python/tuple
+    - portsmouth_1
+    - 0
+  - !!python/tuple
+    - portsmouth_2
+    - 0
+  - !!python/tuple
+    - salem
+    - 0
+  - !!python/tuple
+    - arthur_kill
+    - 0
+
+future_resources:
+- - wtiv
+  - example_wtiv_us
+  - - 2030-01-01
+- - wtiv
+  - example_wtiv
+  - - 2026-01-01
+- - wtiv
+  - example_heavy_lift_vessel
+  - - 2026-01-01
+- - ahts_vessel
+  - example_ahts_vessel
+  - - 2033-01-01
+    - 2033-01-01
+    - 2036-01-01
+    - 2036-01-01
+- - feeder
+  - example_feeder
+  - - 2026-01-01
+    - 2026-01-01
+- - port
+  - arthur_kill
+  - - 2027-01-01
+- - port
+  - sbmt
+  - - 2027-01-01
+- - port
+  - njwp_1
+  - - 2025-01-01
+- - port
+  - njwp_2
+  - - 2029-01-01
+- - port
+  - tradepoint_1
+  - - 2025-01-01
+- - port
+  - tradepoint_2
+  - - 2030-01-01
+- - port
+  - portsmouth_1
+  - - 2024-01-01
+- - port
+  - portsmouth_2
+  - - 2024-01-01
+- - port
+  - salem
+  - - 2026-01-01
+- - port
+  - searsport_1
+  - - 2030-01-01
+- - port
+  - searsport_2
+  - - 2035-01-01
+  
+future_remove:
+- - wtiv
+  - example_wtiv
+  - - 2030-12-30

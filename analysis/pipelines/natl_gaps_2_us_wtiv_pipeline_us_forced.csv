@@ -10,10 +10,10 @@ Momentum Wind,MD,-74.75306642,38.27179677,50,809,15MW_generic,40,monopile,1/1/20
 Sunrise Wind,NY,-70.82962083,40.99037717,50,924,11MW_generic,40,monopile,1/1/2028 0:00,2029,new_london,TRUE
 "New England Wind 1 (Park City Wind, Vineyard Wind South)",CT,-70.37381455,41.0237355,50,800,15MW_generic,40,gbf,1/1/2030 0:00,2029,salem,FALSE
 Maine Research Array,ME,-69.359846,43.393802,50,144,12MW_generic,800,semisub,1/1/2028 0:00,2029,searsport_1,FALSE
-Kitty Hawk North,VA,-75.02671099,36.23848619,50,1035,15MW_generic,40,monopile,1/1/2029 0:00,2030,portsmouth_2,FALSE
-MarWin Residual,MD,-74.75306642,38.27179677,50,600,15MW_generic,40,monopile,1/1/2029 0:00,2030,tradepoint_1,FALSE
-SouthCoast 1 Phase 1 (Mayflower Wind 1),MA,-70.50430003,40.64106695,50,804,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
-SouthCoast 1 Phase 2 (Mayflower Wind 2),MA,-70.50430003,40.64106695,50,400,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
+Kitty Hawk North,VA,-75.02671099,36.23848619,50,1035,15MW_generic,40,monopile,1/1/2029 0:00,2030,portsmouth_2,TRUE
+MarWin Residual,MD,-74.75306642,38.27179677,50,600,15MW_generic,40,monopile,1/1/2029 0:00,2030,tradepoint_1,TRUE
+SouthCoast 1 Phase 1 (Mayflower Wind 1),MA,-70.50430003,40.64106695,50,804,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,TRUE
+SouthCoast 1 Phase 2 (Mayflower Wind 2),MA,-70.50430003,40.64106695,50,400,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,TRUE
 SouthCoast Residual,MA,-70.50430003,40.64106695,50,800,15MW_generic,40,jacket,1/1/2029 0:00,2030,new_bedford,FALSE
 Attentive Energy One,NY,-73.07013631,39.64017504,50,1404,15MW_generic,40,monopile,1/1/2030 0:00,2031,arthur_kill,TRUE
 Attentive Energy Two,NJ,-73.07013631,39.64017504,50,1342,15MW_generic,40,monopile,1/1/2030 0:00,2031,njwp_1,TRUE

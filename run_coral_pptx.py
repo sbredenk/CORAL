@@ -10,7 +10,7 @@ prs = pptx.Presentation('analysis/results/template.pptx')
 base = os.path.join(os.getcwd(), "analysis", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "analysis", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "analysis", "library")
-weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whales.csv")
+weather_fp = os.path.join(os.getcwd(), "analysis", "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED.csv")
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
 
 # set up yaml reading
@@ -79,10 +79,11 @@ for s in scenarios:
     slide = add_text_slide(prs, s, description)
     allocations = scenario['allocations']
     future_resources = scenario['future_resources']
+    future_remove = scenario['future_remove']
 
     coral_time = time.time()
-    manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
-    #manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources)
+    manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources, future_remove=future_remove)
+    #manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources, future_remove=future_remove)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)

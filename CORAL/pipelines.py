@@ -161,7 +161,7 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
-                if port in ["new_bedford"]:
+                if port in ["new_bedford", "sbmt", "tradepoint"]:
                     config["feeder"] = "_shared_pool_:example_feeder"
                     config["num_feeders"] = 2
             else:
@@ -221,7 +221,7 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
-                if port in ["new_bedford"]:
+                if port in ["new_bedford", "sbmt", "tradepoint"]:
                     config["feeder"] = "_shared_pool_:example_feeder"
                     config["num_feeders"] = 2
             else:
@@ -272,7 +272,7 @@ class Pipeline:
             config.update(
                 {
                     "GravityBasedInstallation": {
-                        "ahts_vessel": "_shared_pool_:example_ahts_vessel",
+                        "ahts_vessel": "_shared_pool_:gbf_ahts_vessel",
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
                         "towing_vessel_groups": {
                             "towing_vessels": 2,

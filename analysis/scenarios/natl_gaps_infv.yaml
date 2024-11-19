@@ -2,9 +2,13 @@ description:
 - 'Default ports, unconstrained vessels'
 pipeline: no_action_pipeline
 allocations:
-  ahts_vessel: !!python/tuple
-  - example_ahts_vessel
-  - 100
+  ahts_vessel: 
+  - !!python/tuple
+    - example_ahts_vessel
+    - 100
+  - !!python/tuple
+    - gbf_ahts_vessel
+    - 100
   feeder: 
   - !!python/tuple
     - example_heavy_feeder_1kit
@@ -100,3 +104,5 @@ future_resources:
 - - port
   - searsport_2
   - - 2035-01-01
+
+future_remove:

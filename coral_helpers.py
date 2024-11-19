@@ -17,7 +17,7 @@ def read_yaml(scenario, path):
 
 
 def vessel_hours(df):
-    yrs = np.arange(2023,2055)
+    yrs = np.arange(2023,2065)
     df_util = pd.DataFrame(columns = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder'], index=yrs)
     df_util = df_util.fillna(0)
     df['Date TurbineStart'] = pd.to_datetime(df['Date TurbineStart'])
@@ -81,13 +81,13 @@ def vessel_hours(df):
         
     return(df_util)
 
-def vessel_pipeline(allocs, futures):
-    yrs = np.arange(2023,2055)
+def vessel_pipeline(allocs, futures, removals):
+    yrs = np.arange(2023,2065)
     # dates = pd.to_datetime(yrs, format='%Y')
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
     vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
-    init_alloc = [allocs['wtiv'][1][1], allocs['wtiv'][2][1], allocs['wtiv'][0][1], allocs['ahts_vessel'][1], allocs['feeder'][1][1]]
+    init_alloc = [allocs['wtiv'][1][1], allocs['wtiv'][2][1], allocs['wtiv'][0][1], allocs['ahts_vessel'][0][1], allocs['feeder'][1][1]]
     vessel_count = pd.DataFrame(columns=vessel_types, data = np.ones((len(yrs), len(vessel_types))), index = yrs)
     vessel_count = vessel_count.mul(init_alloc)
     # vessel_count.iloc[0] = init_alloc
@@ -98,6 +98,12 @@ def vessel_pipeline(allocs, futures):
                 years = [x.year for x in vessel_type[2]]
                 for year in years:
                     vessel_count.loc[year:,vessel] += 1
+    for vessel in vessel_types:
+        for vessel_type in removals:
+            if vessel_type[1] == vessel:
+                years = [x.year for x in vessel_type[2]]
+                for year in years:
+                    vessel_count.loc[year:,vessel] -= 1
     
     # vessel_count.loc[:,'total'] = vessel_count.sum(axis=1)
     # vessel_count['total'] = vessel_count['total'].cumsum()
