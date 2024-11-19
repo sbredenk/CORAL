@@ -344,7 +344,7 @@ class GlobalManager:
         name : str
             Resource name.
         delay : int | float
-            Delay time before resource is added to pool.
+            Delay time before resource is removed from pool.
         """
 
         yield self.env.timeout(delay)
