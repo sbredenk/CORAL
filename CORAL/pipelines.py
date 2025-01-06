@@ -24,6 +24,7 @@ class Pipeline:
         projects_fp,
         fixed_base_config,
         float_base_config,
+        phase_overlap,
         regional_ports=False,
         enforce_feeders=False,
         ffiv_feeders=False
@@ -51,6 +52,7 @@ class Pipeline:
         self.regional_ports = regional_ports
         self.enforce_feeders = enforce_feeders
         self.ffiv_feeders = ffiv_feeders
+        self.phase_overlap = phase_overlap
 
 
         self.configs = self.build_configs()
@@ -155,7 +157,7 @@ class Pipeline:
             # )
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
-                .2,
+                self.phase_overlap,
             )
 
             # Vessels
@@ -215,7 +217,7 @@ class Pipeline:
             # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "JacketInstallation",
-                .2,
+                self.phase_overlap,
             )
 
             # Vessels

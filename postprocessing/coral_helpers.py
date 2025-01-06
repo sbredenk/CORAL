@@ -8,13 +8,17 @@ def tuple_constructor(loader, node):
     return tuple(values)
 
 # run manager function 
-def run_manager(pipeline, allocations, library, weather=None, future_resources=None, sorted=False):
+def run_manager(pipeline, allocations, library, weather=None, future_resources=None, future_remove=None, sorted=False):
     manager = GlobalManager(pipeline.configs, allocations, weather, library_path=library)
 
     if future_resources != None: 
         for i in future_resources:
             manager.add_future_resources(i[0], i[1], i[2])
-        
+
+    if future_remove != None: 
+        for i in future_remove:
+            manager.remove_future_resources(i[0], i[1], i[2])
+                
     manager.run()
 
     # Format DataFrame for figure building

@@ -36,16 +36,19 @@ for s in scenarios:
 
     p = os.path.join(os.getcwd(), "library", "pipelines", "%s.csv" % scenario['pipeline'])
 
+    phase_overlap = scenario.get('phase_overlap',0.2)
+
     start_time = time.time()
-    pipeline = Pipeline(p, base, base_float, ffiv_feeders=True)
+    pipeline = Pipeline(p, base, base_float, phase_overlap, ffiv_feeders=True)
 
     description = scenario['description']
 
     allocations = scenario['allocations']
     future_resources = scenario['future_resources']
+    future_remove = scenario['future_remove']
 
     coral_time = time.time()
-    manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources)
+    manager, df = run_manager(pipeline, allocations, library, weather, future_resources=future_resources, future_remove=future_remove)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)

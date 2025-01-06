@@ -1,5 +1,6 @@
 description:
 - 'Example Altantic pipeline 1'
+phase_overlap: 0.2
 pipeline: example_atlantic_2024
 allocations:
   ahts_vessel: !!python/tuple
@@ -75,4 +76,9 @@ future_resources:
   - - 2026-01-01
 - - port
   - searsport
+  - - 2030-01-01
+
+future_remove:
+- - wtiv
+  - example_heavy_lift_vessel
   - - 2030-01-01

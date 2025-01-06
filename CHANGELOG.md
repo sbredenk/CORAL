@@ -19,3 +19,10 @@
 
 ### Documentation
 - Basic README for installing the model and dependancies
+
+## 0.2 (6 January 2025)
+
+### Model Capability Development
+- Added ability to remove vessels from pool
+- Updated examples
+- Made phase overlap an easily accessible variable (in scenario yaml)

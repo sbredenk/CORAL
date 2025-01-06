@@ -1,5 +1,6 @@
 description:
 - 'Example Altantic pipeline 2'
+phase_overlap: 0.2
 pipeline: example_atlantic_2024
 allocations:
   ahts_vessel: !!python/tuple
@@ -18,7 +19,7 @@ allocations:
   wtiv:
   - !!python/tuple
     - example_heavy_lift_vessel
-    - 3
+    - 1
   - !!python/tuple
     - example_wtiv
     - 1
