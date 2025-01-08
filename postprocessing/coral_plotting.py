@@ -387,7 +387,7 @@ def run_plots(prs, df, ports):
     regional_gantt(prs, df, ne, 'New England')
     # regional_gantt(prs, df, ne, 'New England', sorted=True)
 
-    port_gantts(prs, df, ports)
+    # port_gantts(prs, df, ports)
     # port_gantts(prs, df, ports, sorted=True)
 
     substructure_gantt(prs, df, 'fixed')
@@ -397,7 +397,7 @@ def run_plots(prs, df, ports):
 
     vessel_utilization_plot(prs,df)
 
-    port_throughput(prs,df)
+    # port_throughput(prs,df)
     # port_throughput(prs,df,ne)
     # port_throughput(prs,df,nynj)
     # port_throughput(prs,df,mid)

@@ -25,7 +25,7 @@ def run_manager(pipeline, allocations, library, weather=None, future_resources=N
     df = pd.DataFrame(manager.logs).iloc[::-1]
     df = df.reset_index(drop=True).reset_index()
 
-    df_cols = ['substructure','depth', 'location','associated_port', 'capacity','us_wtiv']
+    df_cols = ['substructure','depth', 'location','foundation_port', 'turbine_port', 'capacity','us_wtiv']
 
     for col in df_cols:
         map = pipeline.projects[["name", col]].set_index("name").to_dict()[col]

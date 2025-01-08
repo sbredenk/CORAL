@@ -86,3 +86,8 @@ future_resources:
 - - port
   - searsport
   - - 2030-01-01
+
+future_remove:
+- - wtiv
+  - example_heavy_lift_vessel
+  - - 2030-01-01

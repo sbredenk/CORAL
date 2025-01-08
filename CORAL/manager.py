@@ -363,6 +363,13 @@ class GlobalManager:
 
         weather = self._get_current_weather()
         project = ProjectManager(config, weather=weather)
+        if 'MonopileInstallation' in project.config["install_phases"]:
+            project.create_config_for_phase('MonopileInstallation')
+            project.create_config_for_phase('TurbineInstallation')
+        elif "JacketInstallation" in project.config["install_phases"]:
+            project.create_config_for_phase('JacketInstallation')
+            project.create_config_for_phase('TurbineInstallation')           
+
         project.run()
 
         return project

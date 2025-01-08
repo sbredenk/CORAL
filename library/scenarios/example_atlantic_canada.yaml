@@ -1,7 +1,7 @@
 description:
-- 'Example Altantic pipeline 2'
+- 'Example Altantic w/ Canadian Port'
 phase_overlap: 0.2
-pipeline: example_atlantic_2024
+pipeline: example_atlantic_2024_canada
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel
@@ -19,7 +19,7 @@ allocations:
   wtiv:
   - !!python/tuple
     - example_heavy_lift_vessel
-    - 1
+    - 3
   - !!python/tuple
     - example_wtiv
     - 1
@@ -32,6 +32,9 @@ allocations:
     - 1
   - !!python/tuple
     - new_bedford
+    - 1
+  - !!python/tuple
+    - halifax
     - 1
   - !!python/tuple
     - sbmt
@@ -62,6 +65,9 @@ future_resources:
 - - feeder
   - example_feeder
   - - 2030-01-01
+- - wtiv
+  - example_wtiv_us
+  - - 2035-01-01
 - - port
   - arthur_kill
   - - 2027-01-01
@@ -84,7 +90,7 @@ future_resources:
   - searsport
   - - 2030-01-01
 
-  future_remove:
+future_remove:
 - - wtiv
   - example_heavy_lift_vessel
   - - 2030-01-01
