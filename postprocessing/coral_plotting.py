@@ -395,7 +395,7 @@ def run_plots(prs, df, ports):
     # substructure_gantt(prs, df, 'floating')
     # substructure_gantt(prs, df, 'floating', sorted=True)
 
-    vessel_utilization_plot(prs,df)
+    # vessel_utilization_plot(prs,df)
 
     # port_throughput(prs,df)
     # port_throughput(prs,df,ne)
