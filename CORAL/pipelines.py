@@ -137,6 +137,14 @@ class Pipeline:
 
         _foundation_dist = self.calculate_port_distance(config, data["foundation_port"])
         _turbine_dist = self.calculate_port_distance(config, data["turbine_port"])
+
+        turbine_port_path = os.path.join(os.getcwd(), "library", "ports", "%s.yaml" % turbine_port)
+        with open(turbine_port_path, 'r') as stream:
+            turbine_port_data = yaml.safe_load(stream)
+
+        foundation_port_path = os.path.join(os.getcwd(), "library", "ports", "%s.yaml" % foundation_port)
+        with open(foundation_port_path, 'r') as stream:
+            foundation_port_data = yaml.safe_load(stream)
         
         if data['substructure'] == "monopile":
 
@@ -173,7 +181,7 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
-                if turbine_port in ["new_bedford", "sbmt", "tradepoint"]:
+                if not turbine_port_data["shuttle_wtiv"]:
                     config["feeder"] = "_shared_pool_:example_feeder"
                     config["num_feeders"] = 2
             else:
@@ -181,7 +189,7 @@ class Pipeline:
                 config["feeder"] = "_shared_pool_:example_feeder"
                 config["num_feeders"] = 2
 
-            if foundation_port in ["new_bedford", "sbmt", "tradepoint"] or self.ffiv_feeders:
+            if (not foundation_port_data["shuttle_wtiv"]) or self.ffiv_feeders:
                 config.update(
                     {
                         "MonopileInstallation": {
@@ -242,7 +250,7 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
-                if turbine_port in ["new_bedford", "sbmt", "tradepoint"]:
+                if not turbine_port_data["shuttle_wtiv"]:
                     config["feeder"] = "_shared_pool_:example_feeder"
                     config["num_feeders"] = 2
             else:
@@ -250,7 +258,7 @@ class Pipeline:
                 config["feeder"] = "_shared_pool_:example_feeder"
                 config["num_feeders"] = 2
 
-            if foundation_port in ["new_bedford", "sbmt", "tradepoint"] or self.ffiv_feeders:
+            if (not foundation_port_data["shuttle_wtiv"]) or self.ffiv_feeders:
                 config.update(
                     {
                         "JacketInstallation": {

@@ -1,3 +1,5 @@
 num_cranes: 1
 lat: 47.336961022734634
 lon: -53.985588668754396
+shuttle_wtiv: True
+
