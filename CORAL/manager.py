@@ -21,7 +21,7 @@ class MultiRequest:
     """Object used to hold multiple simpy.Requests and interface with
     `SharedLibrary` instance."""
 
-    def __init__(self, env, resources, name):
+    def __init__(self, env, resources, name, port_hold=False):
         """
         Creates an instance of `MultiRequest`.
 
@@ -34,6 +34,10 @@ class MultiRequest:
         self.trigger = Event(env)
         self.resources = resources
         self.name = name
+        if port_hold:
+            self.priority = 1
+        else:
+            self.priority = 2
 
     def __str__(self) -> str:
         return f"MultiRequest object for {self.name}"
@@ -176,23 +180,18 @@ class GlobalManager:
         idx = self._get_start_idx(start)
         yield self.env.timeout(idx)
         log = {"name": name, "Initialized": self.env.now}
-
         resources = self._get_shared_resources(config)
         request = MultiRequest(self.env, dict(resources), name)
         
         resource_data = self.library.request(request)
         yield request.trigger
-
+        print("project started: ", self.env.now)
         log["Started"] = self.env.now
         projectstart = self.env.now
         for key, data in resource_data.items():
             config[key] = data
 
         project = self._run_project(config)
-
-        yield self.env.timeout(project.project_time)
-        log["Finished"] = self.env.now
-        projectend = self.env.now
 
         #Pull foundation finished time, add it to log
         df2 = pd.DataFrame(project.actions)
@@ -201,9 +200,14 @@ class GlobalManager:
         elif "JacketInstallation" in df2["phase"].values:
             foundation_time = (df2[df2["phase_name"] == "JacketInstallation"]["time"].iloc[-1])+projectstart
         else:
-            foundation_time = projectend
+            foundation_time = project.project_time
 
         log["FoundationFinished"] = foundation_time
+
+        # release foundation vessels
+        yield self.env.timeout(foundation_time)
+        self.library.foundation_vessel_release(request)
+        print("foundation released at: ", foundation_time)
 
         #Pull the start of turbine installation, add it to log
         if "TurbineInstallation" in df2["phase"].values:
@@ -213,9 +217,20 @@ class GlobalManager:
 
         log["TurbineStart"] = turbine_start
         
+        yield self.env.timeout(project.project_time)
+        log["Finished"] = self.env.now
+        projectend = self.env.now
+
         self._projects[name] = project
         self._logs.append(log)
-        self.library.release(request)
+        # release turbine vessels
+        self.library.turbine_vessel_release(request)
+        print("project end: ", projectend)
+        # after dowtime release ports
+        port_downtime_hrs = 30 * 24 * config['port_downtime'] 
+        yield self.env.timeout(port_downtime_hrs)
+        self.library.port_release(request)        
+
 
     def _get_start_idx(self, start) -> int:
         """

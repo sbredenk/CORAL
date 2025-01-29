@@ -37,9 +37,10 @@ for s in scenarios:
     p = os.path.join(os.getcwd(), "library", "pipelines", "%s.csv" % scenario['pipeline'])
 
     phase_overlap = scenario.get('phase_overlap',0.2)
+    port_dowtime = scenario.get('port_downtime',3)
 
     start_time = time.time()
-    pipeline = Pipeline(p, base, base_float, phase_overlap, ffiv_feeders=True)
+    pipeline = Pipeline(p, base, base_float, phase_overlap, port_dowtime)
 
     description = scenario['description']
 

@@ -25,6 +25,7 @@ class Pipeline:
         fixed_base_config,
         float_base_config,
         phase_overlap,
+        port_dowtime,
         regional_ports=False,
         enforce_feeders=False,
         ffiv_feeders=False
@@ -53,6 +54,7 @@ class Pipeline:
         self.enforce_feeders = enforce_feeders
         self.ffiv_feeders = ffiv_feeders
         self.phase_overlap = phase_overlap
+        self.port_dowtime = port_dowtime
 
 
         self.configs = self.build_configs()
@@ -85,7 +87,8 @@ class Pipeline:
                 config = deepcopy(self.base_float)
             else:
                 config = deepcopy(self.base_fixed)
-
+            
+            config["port_downtime"] = self.port_dowtime
             config["project_name"] = data["name"]
             config["project_start"] = data["start_date"]
 
@@ -148,6 +151,8 @@ class Pipeline:
         
         if data['substructure'] == "monopile":
 
+            
+
             # Design Phases
             config["design_phases"] += [
                 "MonopileDesign",
@@ -175,7 +180,6 @@ class Pipeline:
                 "site": {
                     "distance": data.get("distance_to_turbine_port", _turbine_dist)
                 },
-                "port": turbine_port
             }
 
             # Vessels
@@ -199,7 +203,6 @@ class Pipeline:
                             "site": {
                                 "distance": data.get("distance_to_foundation_port", _foundation_dist)
                             },
-                            "port": foundation_port
                         }
                     }
                 )
@@ -210,14 +213,37 @@ class Pipeline:
                             "wtiv": "_shared_pool_:example_heavy_lift_vessel",
                             "site": {
                                 "distance": data.get("distance_to_foundation_port", _foundation_dist)
-                            },
-                            "port": foundation_port                       
+                            },                     
                         }
                     }
                 )
-                
+            
+            # Port Assignemnt
+            if turbine_port == foundation_port:
+                config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
+            else:
+                config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
+                config["MonopileInstallation"].update(
+                    {
+                        "port": ":".join(["_shared_pool_", data["foundation_port"]])
+                    }
+                ) 
+
 
         elif data['substructure'] == "jacket":
+
+            # Port Assignemnt
+            if turbine_port == foundation_port:
+                config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
+            else:
+                config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
+                config.update(
+                    {
+                        "JacketInstallation": {
+                            "port": ":".join(["_shared_pool_", data["foundation_port"]])
+                        }
+                    }
+                )
 
             # Design Phases
             config["design_phases"] += [
@@ -244,7 +270,6 @@ class Pipeline:
                 "site": {
                     "distance": data.get("distance_to_turbine_port", _turbine_dist)
                 },
-                "port": turbine_port
             }
 
             # Vessels
@@ -268,7 +293,6 @@ class Pipeline:
                             "site": {
                                 "distance": data.get("distance_to_foundation_port", _foundation_dist)
                             },
-                            "port": foundation_port
                         }
                     }
                 )
@@ -280,7 +304,6 @@ class Pipeline:
                             "site": {
                                 "distance": data.get("distance_to_foundation_port", _foundation_dist)
                             },
-                            "port": foundation_port
                         }
                     }
                 )
@@ -288,6 +311,10 @@ class Pipeline:
                 
 
         elif data['substructure'] == "gbf":
+
+            # Port
+            config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
+
             # Design Phases
             config["design_phases"] += [
                 "MonopileDesign",
@@ -320,12 +347,14 @@ class Pipeline:
                         "substructure": {
                             "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
                         },
-                        "port": turbine_port
                     }
                 }
             )
         
         elif data['substructure'] == "semisub":
+
+            # Port
+            config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
 
             # Design Phases
             config["design_phases"] += [
@@ -343,7 +372,6 @@ class Pipeline:
                     "MooredSubInstallation": {
                         "ahts_vessel": "_shared_pool_:example_ahts_vessel",
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
-                        "port": foundation_port
                     },
                 }
             )

@@ -95,7 +95,7 @@ class SharedLibrary:
 
         return _req
 
-    def release(self, request):
+    def vessel_release(self, request):
         """
         Release requests of `SharedResources` associated with MultiRequest
         `request`.
@@ -106,12 +106,70 @@ class SharedLibrary:
         """
 
         for k, v in request.resources.items():
-            try:
-                self.resources[k.split(".")[-1]][v].release(
-                    request.requests[k]
-                )
-            except RuntimeError:
-                pass
+            if k != "port":
+                try:
+                    self.resources[k.split(".")[-1]][v].release(
+                        request.requests[k]
+                    )
+                except RuntimeError:
+                    pass
+    
+    def foundation_vessel_release(self, request):
+        """
+        Release requests of `SharedResources` associated with MultiRequest
+        `request`.
+
+        Parameters
+        ----------
+        request : MultiRequest
+        """
+
+        for k, v in request.resources.items():
+            if v in (["example_heavy_lift_vessel","example_heavy_feeder_1kit"]):
+                try:
+                    self.resources[k.split(".")[-1]][v].release(
+                        request.requests[k]
+                    )
+                except RuntimeError:
+                    pass
+
+    def turbine_vessel_release(self, request):
+        """
+        Release requests of `SharedResources` associated with MultiRequest
+        `request`.
+
+        Parameters
+        ----------
+        request : MultiRequest
+        """
+
+        for k, v in request.resources.items():
+            if v in (["example_wtiv","example_wtiv_us","example_feeder", "example_ahts_vessel"]):
+                try:
+                    self.resources[k.split(".")[-1]][v].release(
+                        request.requests[k]
+                    )
+                except RuntimeError:
+                    pass
+    
+    def port_release(self, request):
+        """
+        Release requests of `SharedResources` associated with MultiRequest
+        `request`.
+
+        Parameters
+        ----------
+        request : MultiRequest
+        """
+
+        for k, v in request.resources.items():
+            if k == 'port':
+                try:
+                    self.resources[k.split(".")[-1]][v].release(
+                        request.requests[k]
+                    )
+                except RuntimeError:
+                    pass
 
     def check_requests(self):
         """
@@ -132,7 +190,6 @@ class SharedLibrary:
                     break
 
             if proceed:
-
                 request.requests = {
                     k: self.resources[k.split(".")[-1]][v].request()
                     for k, v in request.resources.items()
