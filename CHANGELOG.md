@@ -20,9 +20,12 @@
 ### Documentation
 - Basic README for installing the model and dependancies
 
-## 0.2 (6 January 2025)
+## 1.0 (1 March 2025)
 
 ### Model Capability Development
 - Added ability to remove vessels from pool
 - Updated examples
 - Made phase overlap an easily accessible variable (in scenario yaml)
+- Added ability to specify a port downtime between projects (in scenario yaml)
+- Added mooring to floating project installation
+- Ability to add specific routed distance from ports to project

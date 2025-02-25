@@ -13,6 +13,7 @@ import pandas as pd
 from ORBIT import ProjectManager
 from simpy import Event, Environment
 from benedict import benedict
+import os
 
 from CORAL.library import SharedLibrary
 
@@ -179,10 +180,10 @@ class GlobalManager:
 
         idx = self._get_start_idx(start)
         yield self.env.timeout(idx)
+        print("project init: ", self.env.now)
         log = {"name": name, "Initialized": self.env.now}
         resources = self._get_shared_resources(config)
         request = MultiRequest(self.env, dict(resources), name)
-        
         resource_data = self.library.request(request)
         yield request.trigger
         print("project started: ", self.env.now)
@@ -195,19 +196,31 @@ class GlobalManager:
 
         #Pull foundation finished time, add it to log
         df2 = pd.DataFrame(project.actions)
+        df2.to_csv(os.path.join('%s.csv' % name), date_format='%Y-%m-%d %H:%M:%S')
+        # print(project.project_time)
         if "MonopileInstallation" in df2["phase"].values:
-            foundation_time = (df2[df2["phase"] == "MonopileInstallation"]["time"].iloc[-1])+projectstart
+            found_vessel_release_time = df2[df2["phase"] == "MonopileInstallation"]["time"].iloc[-1]
+            foundation_time = found_vessel_release_time+projectstart
+            yield self.env.timeout(found_vessel_release_time)
+            print("foundation finished: ", self.env.now)
+            self.library.foundation_vessel_release(request)
         elif "JacketInstallation" in df2["phase"].values:
-            foundation_time = (df2[df2["phase_name"] == "JacketInstallation"]["time"].iloc[-1])+projectstart
+            found_vessel_release_time = df2[df2["phase_name"] == "JacketInstallation"]["time"].iloc[-1]
+            foundation_time = found_vessel_release_time+projectstart
+            yield self.env.timeout(found_vessel_release_time)
+            print("foundation finished: ", self.env.now)
+            self.library.foundation_vessel_release(request)
         else:
-            foundation_time = project.project_time
+            foundation_time = self.env.now + project.project_time
 
         log["FoundationFinished"] = foundation_time
 
-        # release foundation vessels
-        yield self.env.timeout(foundation_time)
-        self.library.foundation_vessel_release(request)
-        print("foundation released at: ", foundation_time)
+        # after downtime release port
+        # port_downtime_hrs = 30 * 24 * config['port_downtime'] 
+        # yield self.env.timeout(port_downtime_hrs)
+        # print("found port released: ", self.env.now)
+        # foundation_port = [x[1] for x in resources if x[0] in ["MonopileInstallation.port","JacketInstallation.port"]]
+        # self.library.foundation_port_release(request, str(foundation_port)) 
 
         #Pull the start of turbine installation, add it to log
         if "TurbineInstallation" in df2["phase"].values:
@@ -216,20 +229,29 @@ class GlobalManager:
             turbine_start = projectstart
 
         log["TurbineStart"] = turbine_start
+        # print(df2[df2["phase"] == "TurbineInstallation"]["time"].iloc[-1])
         
-        yield self.env.timeout(project.project_time)
+        if "MonopileInstallation" in df2["phase"].values or "JacketInstallation" in df2["phase"].values:
+            yield self.env.timeout(project.project_time-found_vessel_release_time)
+            print("project end: ", self.env.now)
+        else:
+            yield self.env.timeout(project.project_time)
+            print("project end: ", self.env.now)
         log["Finished"] = self.env.now
+        time_days = project.project_time/24
+        print(f"Project {name} finished at {time_days}")
         projectend = self.env.now
 
         self._projects[name] = project
         self._logs.append(log)
         # release turbine vessels
         self.library.turbine_vessel_release(request)
-        print("project end: ", projectend)
-        # after dowtime release ports
+        # after downtime release ports
         port_downtime_hrs = 30 * 24 * config['port_downtime'] 
         yield self.env.timeout(port_downtime_hrs)
-        self.library.port_release(request)        
+        print("turb port released: ", self.env.now)
+        self.library.turbine_port_release(request)
+        # print(resources)        
 
 
     def _get_start_idx(self, start) -> int:

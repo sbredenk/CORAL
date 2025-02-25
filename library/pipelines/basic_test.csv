@@ -1,0 +1,4 @@
+name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,foundation_port,turbine_port,us_wtiv
+Vineyard Wind 1,MA,-70.3809493,41.02365044,50,800,13MW_generic,40,monopile,1/1/2023 0:00,2024,halifax,new_london,FALSE
+Revolution Wind 1,RI/CT,-71.07607428,41.1159065,50,704,12MW_generic,40,monopile,1/1/2023 0:00,2025,halifax,new_london,FALSE
+floating,MA,-71.07607428,41.1159065,50,500,12MW_generic,800,semisub,1/1/2023 0:00,2024,new_london,new_london,FALSE

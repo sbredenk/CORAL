@@ -138,8 +138,8 @@ class Pipeline:
         foundation_port = data["foundation_port"].replace("_shared_pool_:", "")
         turbine_port = data["turbine_port"].replace("_shared_pool_:", "")
 
-        _foundation_dist = self.calculate_port_distance(config, data["foundation_port"])
-        _turbine_dist = self.calculate_port_distance(config, data["turbine_port"])
+        _foundation_dist = data.get("distance_to_foundation_port",self.calculate_port_distance(config, data["foundation_port"]))
+        _turbine_dist = data.get("distance_to_turbine_port",self.calculate_port_distance(config, data["turbine_port"]))
 
         turbine_port_path = os.path.join(os.getcwd(), "library", "ports", "%s.yaml" % turbine_port)
         with open(turbine_port_path, 'r') as stream:
@@ -362,7 +362,12 @@ class Pipeline:
             ]
 
             # Install Phases
-            config["install_phases"]["MooredSubInstallation"] = 0
+            config["install_phases"]["MooringSystemInstallation"] = 0
+
+            config["install_phases"]["MooredSubInstallation"] = (
+                            "MooringSystemInstallation",
+                            1,
+            )
 
             config["site"]["distance"] = data.get("distance_to_turbine_port", _turbine_dist)
 
@@ -375,6 +380,22 @@ class Pipeline:
                     },
                 }
             )
+
+            config.update(
+                {
+                    "MooringSystemInstallation": {
+                        "mooring_install_vessel": "example_support_vessel",
+                        "mooring_system": {
+                            "num_lines": 3,
+                            "line_mass": .5,
+                            "line_cost": 0, #placeholder: cost values needed for ORBIT but irrelevant for CORAL 
+                            "anchor_mass": .5,
+                            "anchor_cost": 0,},          
+                   
+                    }
+                }
+            )
+
 
         else:
             raise TypeError(f"Substructure '{data['substructure']}' not supported.")

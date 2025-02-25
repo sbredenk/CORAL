@@ -1,11 +1,10 @@
 description:
 - 'Example Altantic pipeline 1'
-phase_overlap: 0.2
 pipeline: example_atlantic_2024
 allocations:
   ahts_vessel: !!python/tuple
   - example_ahts_vessel
-  - 2
+  - 4
   feeder: 
   - !!python/tuple
     - example_heavy_feeder_1kit

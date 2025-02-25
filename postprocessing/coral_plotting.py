@@ -354,26 +354,195 @@ def port_throughput(prs, df, region=None):
 
 def vessel_utilization_plot(prs, df):
 
-    fig = plt.figure(figsize=(10,4), dpi=200)
+    fig = plt.figure(figsize=(14,4), dpi=500)
     ax = fig.add_subplot(111)
 
     scenario_path = 'library/scenarios'
     scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
     allocs = scen_yaml['allocations']
     futures = scen_yaml['future_resources']
+    removals = scen_yaml['future_remove']
+    if removals is None:
+        removals = []
     df_vessel_util = vessel_hours(df)
-    # print(df_vessel_util)
-    df_vessel_count = vessel_pipeline(allocs,futures)
+    df_vessel_count = vessel_pipeline(allocs,futures,removals)
     df_perc_util = df_vessel_util / df_vessel_count / 8766 * 100
-    # print(df_perc_util)
-    ax = df_perc_util.plot.bar(rot=90)
+    
+    ax = df_perc_util.plot.line()
+
+    name_updates = {
+        'example_wtiv' : 'Foreign WTIV',
+        'example_wtiv_us' : 'US WTIV',
+        'example_heavy_lift_vessel' : 'FFIV',
+        'example_ahts_vessel' : 'AHTS',
+        'example_feeder' : 'Feeder Barge'
+    }
+
+    handles, labels = ax.get_legend_handles_labels()
+    name_updates_list = [name_updates.get(label,label) for label in labels]
+
+    ax.set_xlim([2023, 2050])
+    ax.set_xticks(range(2025, 2051, 5))
+    ax.set_xticklabels([str(year) for year in range(2025, 2051, 5)])
     ax.set_xlabel("")
     ax.set_ylabel("Vessel Utilization (%)")
-    ax.legend(fontsize=6)
-    ax.set_ylim(0,100)
+    ax.legend(handles, name_updates_list, fontsize=6)
+    ax.set_ylim(0, 100)
 
-    # slide = add_to_pptx(prs,'Vessel Utilization')
-    return(df_vessel_util/24)
+    slide = add_to_pptx(prs, 'Vessel Utilization')
+    return(df_vessel_util / 24)
+
+
+def average_vessel_utilization_plot(prs, dfs, desc):
+    avg_utilization = {vessel: [] for vessel in ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']}
+
+    for i, df in enumerate(dfs):
+        scenario = desc[i]
+
+        scenario_path = 'analysis/scenarios'
+        scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
+        allocs = scen_yaml['allocations']
+        futures = scen_yaml['future_resources']
+        removals = scen_yaml['future_remove']
+        if removals is None:
+            removals = []
+
+        df_vessel_util = vessel_hours(df)
+        df_vessel_count = vessel_pipeline(allocs, futures, removals)
+
+        #Defining the start and end years for fixed and floating projects
+        fixed_start = df[df['substructure'].isin(['monopile', 'jacket'])]['Date Started'].min().year
+        fixed_end = df[df['substructure'].isin(['monopile', 'jacket'])]['Date Finished'].max().year
+        floating_start = df[df['substructure'] == 'semisub']['Date Started'].min().year
+        floating_end = df[df['substructure'] == 'semisub']['Date Finished'].max().year
+
+        #Can replace fixed_start, fixed_end with specific years
+        wtiv_start, wtiv_end = fixed_start, fixed_end
+        wtiv_us_start, wtiv_us_end = fixed_start, fixed_end
+        heavy_lift_start, heavy_lift_end = fixed_start, fixed_end
+        feeder_start, feeder_end = fixed_start, fixed_end
+        ahts_start, ahts_end = floating_start, floating_end
+
+        df_vessel_util_wtiv = df_vessel_util.loc[wtiv_start:wtiv_end]
+        df_vessel_util_wtiv_us = df_vessel_util.loc[wtiv_us_start:wtiv_us_end]
+        df_vessel_util_heavy_lift = df_vessel_util.loc[heavy_lift_start:heavy_lift_end]
+        df_vessel_util_feeder = df_vessel_util.loc[feeder_start:feeder_end]
+        df_vessel_util_ahts = df_vessel_util.loc[ahts_start:ahts_end]
+
+        df_vessel_count_wtiv = df_vessel_count.loc[wtiv_start:wtiv_end]
+        df_vessel_count_wtiv_us = df_vessel_count.loc[wtiv_us_start:wtiv_us_end]
+        df_vessel_count_heavy_lift = df_vessel_count.loc[heavy_lift_start:heavy_lift_end]
+        df_vessel_count_feeder = df_vessel_count.loc[feeder_start:feeder_end]
+        df_vessel_count_ahts = df_vessel_count.loc[ahts_start:ahts_end]
+
+        df_perc_util_wtiv = df_vessel_util_wtiv / df_vessel_count_wtiv / 8766 * 100
+        df_perc_util_wtiv_us = df_vessel_util_wtiv_us / df_vessel_count_wtiv_us / 8766 * 100
+        df_perc_util_heavy_lift = df_vessel_util_heavy_lift / df_vessel_count_heavy_lift / 8766 * 100
+        df_perc_util_feeder = df_vessel_util_feeder / df_vessel_count_feeder / 8766 * 100
+        df_perc_util_ahts = df_vessel_util_ahts / df_vessel_count_ahts / 8766 * 100
+
+        avg_utilization['example_wtiv'].append(df_perc_util_wtiv['example_wtiv'].mean())
+        avg_utilization['example_wtiv_us'].append(df_perc_util_wtiv_us['example_wtiv_us'].mean())
+        avg_utilization['example_heavy_lift_vessel'].append(df_perc_util_heavy_lift['example_heavy_lift_vessel'].mean())
+        avg_utilization['example_feeder'].append(df_perc_util_feeder['example_feeder'].mean())
+        avg_utilization['example_ahts_vessel'].append(df_perc_util_ahts['example_ahts_vessel'].mean())
+
+    df_avg_utilization = pd.DataFrame(avg_utilization, index=desc)
+
+    output_path = 'analysis/results/Select_Optimal_Scenarios'
+    os.makedirs(output_path, exist_ok=True)
+    csv_file_path = os.path.join(output_path, 'average_vessel_utilization.csv')
+    df_avg_utilization.to_csv(csv_file_path)
+
+    return avg_utilization
+
+
+def vessel_revenue_plot(prs, df_vessel_util):
+
+    fig = plt.figure(figsize=(10,4), dpi=200)
+    ax = fig.add_subplot(111)
+    vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
+    vessel_rates = []
+    df_vessel_cost = df_vessel_util
+    rate_path = 'analysis/library/vessels'
+    for vessel in vessel_types:
+        vessel_yaml = read_yaml(vessel, rate_path)
+        vessel_rate = vessel_yaml['vessel_specs']['day_rate']
+        df_vessel_cost[vessel] = df_vessel_util[vessel] * vessel_rate / 1e9
+
+    us_revenue = df_vessel_cost[['example_wtiv_us','example_ahts_vessel','example_feeder']].sum(axis=1).cumsum()
+    ffiv_revenue = df_vessel_cost[['example_heavy_lift_vessel']].sum(axis=1).cumsum()
+    wtiv_revenue = df_vessel_cost[['example_wtiv']].sum(axis=1).cumsum()
+
+    return(us_revenue, ffiv_revenue, wtiv_revenue)
+
+
+def vessel_investment_plot(prs, desc):
+    yrs = np.arange(2023,2043)
+    vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
+    vessel_costs = {
+        "example_wtiv": 400,
+        "example_wtiv_us": 600,
+        "example_heavy_lift_vessel": 625,
+        "example_feeder": 60,
+        "example_ahts_vessel": 175
+        }   
+    scen_path = 'analysis/scenarios'
+    dates = pd.to_datetime(yrs, format='%Y')
+    fig, ax = plt.subplots(1,1, figsize=(10,6), dpi=200)
+
+    us_investments = pd.DataFrame(index=dates, columns=desc, data=np.zeros((len(yrs), len(desc))))
+    total_investments = pd.DataFrame(index=dates, columns=desc, data=np.zeros((len(yrs), len(desc))))
+    vessel_counts = []
+    for i in range(0,len(desc)):
+        scen = read_yaml(desc[i], scen_path)
+        alloc = scen['allocations']
+        future = scen['future_resources']
+        init_alloc = [alloc['wtiv'][1][1], 
+                      alloc['wtiv'][2][1], 
+                      alloc['wtiv'][0][1], 
+                      alloc['ahts_vessel'][0][1], 
+                      alloc['feeder'][1][1]]
+        vessel_investment = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
+        vessel_count = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
+        vessel_count.iloc[0] = init_alloc
+        # display(vessel_investment)
+        for vessel in vessel_types:
+            for vessel_type in future:
+                if vessel_type[1] == vessel:
+                    years = vessel_type[2]
+                    # print(vessel_type[1])
+                    # print(years)
+                    for year in years:
+                        vessel_count.loc[[year],vessel] += 1
+            vessel_investment[vessel] = vessel_count[vessel] * vessel_costs[vessel]
+        
+        us_vessels = ['example_feeder', 'example_ahts_vessel', 'example_wtiv_us']
+        vessel_investment.loc[:,'us_total'] = vessel_investment[us_vessels].sum(axis=1)
+        vessel_investment['us_total'] = vessel_investment['us_total'].cumsum() / 1000
+        vessel_investment.loc[:,'total'] = vessel_investment[vessel_types].sum(axis=1)
+        vessel_investment['total'] = vessel_investment['total'].cumsum() / 1000
+        total_investments[desc[i]] = vessel_investment['total']
+        us_investments[desc[i]] = vessel_investment['us_total']
+
+        vessel_count = vessel_count.cumsum()
+        vessel_counts.append(vessel_count)
+
+    us_investments['year'] = yrs
+    us_investments.set_index('year', inplace=True)
+
+    us_investments['year'] = yrs
+    us_investments.set_index('year', inplace=True)
+    us_investments.plot(ax=ax)
+
+    ax.set_ylabel('Capital Investment ($B)')
+    ax.yaxis.set_major_locator(tck.MaxNLocator(integer=True))
+    plt.minorticks_off()
+    # plt.tick_params(bottom = False) 
+    ax.set_xticks(yrs[::2])
+    slide = add_to_pptx(prs, 'Vessel Investment')
+
+    return(us_investments, vessel_counts)
 
 
 def run_plots(prs, df, ports):
