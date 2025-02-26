@@ -1,0 +1,31 @@
+﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,foundation_port,turbine_port,us_wtiv
+South Fork,NY,-71.07590392,41.11050519,50,132,11MW_generic,40,monopile,1/1/2022,2024,new_london,new_london,FALSE
+Vineyard Wind 1,MA,-70.3809493,41.02365044,50,806,13MW_generic,40,monopile,1/1/2023,2025,new_bedford,new_bedford,FALSE
+Revolution Wind 1 CT,CT,-71.07607428,41.1159065,50,304,12MW_generic,40,monopile,1/1/2024,2026,new_london,new_london,FALSE
+Revolution Wind 1 RI,RI,-71.07607428,41.1159065,50,400,12MW_generic,40,monopile,1/1/2024,2026,new_london,new_london,FALSE
+CVOW-C,VA,-75.45761394,36.84342509,50,2587,15MW_generic,40,monopile,1/1/2024,2026,portsmouth_1,portsmouth_1,TRUE
+Sunrise Wind,NY,-70.82962083,40.99037717,50,924,11MW_generic,40,monopile,1/1/2025,2027,new_london,new_london,TRUE
+New England Wind 2 (Commonwealth Wind),MA,-70.37381455,41.0237355,50,1232,15MW_generic,40,monopile,1/1/2028,2030,salem,salem,FALSE
+New England Wind 1 (Park City Wind),MA,-70.37381455,41.0237355,50,791,15MW_generic,40,monopile,1/1/2027,2029,salem,salem,FALSE
+SouthCoast Wind 1 (Mayflower Wind) MA,MA,-70.50430003,40.64106695,50,1087,15MW_generic,40,monopile,1/1/2028,2030,new_bedford,new_bedford,FALSE
+SouthCoast Wind 1 (Mayflower Wind) RI,RI,-70.50430003,40.64106695,50,200,15MW_generic,40,monopile,1/1/2028,2030,new_bedford,new_bedford,FALSE
+Empire Wind 1,NY,-73.22227313,40.24801683,50,810,15MW_generic,40,monopile,1/1/2025,2027,sbmt,sbmt,FALSE
+Atlantic Shores Offshore Wind South 1,NJ,-73.99422436,39.31937248,50,1510,15MW_generic,40,monopile,1/1/2028,2030,njwp_1,njwp_1,FALSE
+Empire Wind 2,NY,-73.22227313,40.24801683,50,621,15MW_generic,40,monopile,1/1/2028,2030,sbmt,sbmt,FALSE
+MarWin (U.S. Wind Phase 1),MD,-74.75306642,38.27179677,50,300,15MW_generic,40,monopile,1/1/2027,2029,tradepoint_1,tradepoint_1,FALSE
+"Momentum Wind (U.S. Wind Phases 2, 3, and 4)",MD,-74.75306642,38.27179677,50,1410,15MW_generic,40,monopile,1/1/2028,2030,tradepoint_1,tradepoint_1,FALSE
+Beacon Wind 1,NY,-70.67561391,40.68194716,50,1230,15MW_generic,40,monopile,1/1/2030,2032,arthur_kill,arthur_kill,TRUE
+Vineyard Wind 2 (Vineyard Northeast) MA,MA,-70.16378033,40.6450013,50,800,15MW_generic,40,monopile,1/1/2032,2034,new_bedford,new_bedford,FALSE
+SouthCoast Wind Residual,MA,-70.50430003,40.64106695,50,1113,15MW_generic,40,monopile,1/1/2035,2037,new_bedford,new_bedford,FALSE
+Beacon Wind 2,NY,-70.67561391,40.68194716,50,1200,15MW_generic,40,monopile,1/1/2033,2035,sbmt,sbmt,TRUE
+Bay State Wind,RI,-70.82947169,40.98497498,50,2344.3,15MW_generic,40,monopile,1/1/2032,2034,new_london,new_london,FALSE
+Ocean Wind 1,NJ,-74.28953405,39.02418816,50,1222.6,15MW_generic,40,monopile,1/1/2029,2031,njwp_1,njwp_1,FALSE
+Attentive Energy Two,NJ,-73.07013631,39.64017504,50,1342,15MW_generic,40,monopile,1/1/2035,2037,njwp_1,njwp_1,FALSE
+Atlantic Shores Offshore Wind South 2,NJ,-73.99422436,39.31937248,50,1350,15MW_generic,40,monopile,1/1/2034,2036,njwp_1,njwp_1,FALSE
+Excelsior Wind (Vineyard Mid-Atlantic),NY,-73.11065926,40.20300636,50,1314,15MW_generic,40,monopile,1/1/2030,2032,sbmt,sbmt,TRUE
+Atlantic Shores Offshore Wind North,NJ,-73.99414711,39.32477804,50,1313.3,15MW_generic,40,monopile,1/1/2036,2038,njwp_1,njwp_1,TRUE
+Skipjack 1,MD,-74.64204139,38.53106333,50,120,12MW_generic,40,monopile,1/1/2027,2029,tradepoint_1,tradepoint_1,FALSE
+Skipjack  2,MD,-74.64204139,38.53106333,50,846,15MW_generic,40,monopile,1/1/2027,2029,tradepoint_1,tradepoint_1,FALSE
+CVOW-South (Kitty Hawk North),VA,-75.02671099,36.23848619,50,800,15MW_generic,40,monopile,1/1/2031,2033,portsmouth_1,portsmouth_1,FALSE
+Kitty Hawk South,NC,-75.02671099,36.23848619,50,1350.7,15MW_generic,40,monopile,1/1/2034,2036,portsmouth_1,portsmouth_1,TRUE
+Garden State Offshore Energy I,NJ,-74.75173526,38.66111942,50,1080,15MW_generic,40,monopile,1/1/2033,2035,njwp_1,njwp_1,FALSE
