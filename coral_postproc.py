@@ -36,8 +36,7 @@ for fname in glob.glob(path):
     df['Scenario'] = scenario_name
     desc.append(scenario_name)
 
-    scen_yaml = read_yaml(scenario_name, 'library/scenarios')
-    slide = add_text_slide(prs, scenario_name, scen_yaml['description'])
+    slide = add_text_slide(prs, scenario_name)
  
     df = df.drop(df.columns[0],axis=1)
     

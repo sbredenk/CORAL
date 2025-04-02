@@ -1,7 +1,6 @@
 description:
-- 'Example Altantic pipeline 1'
+- 'Example Altantic pipeline 2'
 phase_overlap: 0.2
-port_downtime: 6 # months
 pipeline: example_atlantic_2024
 allocations:
   ahts_vessel: !!python/tuple
@@ -20,7 +19,7 @@ allocations:
   wtiv:
   - !!python/tuple
     - example_heavy_lift_vessel
-    - 3
+    - 1
   - !!python/tuple
     - example_wtiv
     - 1
@@ -57,6 +56,12 @@ allocations:
     - 0
 
 future_resources:
+- - wtiv
+  - example_wtiv
+  - - 2030-01-01
+- - feeder
+  - example_feeder
+  - - 2030-01-01
 - - port
   - arthur_kill
   - - 2027-01-01
@@ -80,6 +85,3 @@ future_resources:
   - - 2030-01-01
 
 future_remove:
-- - wtiv
-  - example_heavy_lift_vessel
-  - - 2030-01-01

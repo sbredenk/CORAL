@@ -2,22 +2,11 @@ from coral_imports import *
 from coral_helpers import *
 
 
-def add_text_slide(prs, title, text, left=0, top=7.2, width=13.33, height=0.3, fontsize=14):
+def add_text_slide(prs, title, left=0, top=7.2, width=13.33, height=0.3, fontsize=14):
     """Add text slide for scenario description"""
-    blank_slide_layout = prs.slide_layouts[1]
+    blank_slide_layout = prs.slide_layouts[5]
     slide = prs.slides.add_slide(blank_slide_layout)
-    slide.shapes.title.text = title
-
-    text_shape = slide.shapes.placeholders[10]
-
-    text_frame = text_shape.text_frame
-
-   
-    text_frame.text = text[0]
-
-    for para_str in text[1:]:
-        p = text_frame.add_paragraph()
-        p.text = para_str
+    slide.shapes[0].text = title
 
 
 def add_to_pptx(
@@ -293,7 +282,7 @@ def port_throughput(prs, df, region=None):
     for _, project in df.iterrows():
 
         if project["Date Finished"].year == project["Date Started"].year:
-            res.append((project["Date Finished"].year, project["associated_port"], project["capacity"]))
+            res._append((project["Date Finished"].year, project["associated_port"], project["capacity"]))
 
         else:
 
@@ -308,7 +297,7 @@ def port_throughput(prs, df, region=None):
                 else:
                     perc = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)) / total
 
-                res.append((year, project["associated_port"], perc * project["capacity"]))
+                res._append((year, project["associated_port"], perc * project["capacity"]))
 
     throughput = pd.DataFrame(res, columns=["year", "associated_port", "capacity"]).pivot_table(
         index=["year"],
@@ -441,11 +430,11 @@ def average_vessel_utilization_plot(prs, dfs, desc):
         df_perc_util_feeder = df_vessel_util_feeder / df_vessel_count_feeder / 8766 * 100
         df_perc_util_ahts = df_vessel_util_ahts / df_vessel_count_ahts / 8766 * 100
 
-        avg_utilization['example_wtiv'].append(df_perc_util_wtiv['example_wtiv'].mean())
-        avg_utilization['example_wtiv_us'].append(df_perc_util_wtiv_us['example_wtiv_us'].mean())
-        avg_utilization['example_heavy_lift_vessel'].append(df_perc_util_heavy_lift['example_heavy_lift_vessel'].mean())
-        avg_utilization['example_feeder'].append(df_perc_util_feeder['example_feeder'].mean())
-        avg_utilization['example_ahts_vessel'].append(df_perc_util_ahts['example_ahts_vessel'].mean())
+        avg_utilization['example_wtiv']._append(df_perc_util_wtiv['example_wtiv'].mean())
+        avg_utilization['example_wtiv_us']._append(df_perc_util_wtiv_us['example_wtiv_us'].mean())
+        avg_utilization['example_heavy_lift_vessel']._append(df_perc_util_heavy_lift['example_heavy_lift_vessel'].mean())
+        avg_utilization['example_feeder']._append(df_perc_util_feeder['example_feeder'].mean())
+        avg_utilization['example_ahts_vessel']._append(df_perc_util_ahts['example_ahts_vessel'].mean())
 
     df_avg_utilization = pd.DataFrame(avg_utilization, index=desc)
 
@@ -653,9 +642,9 @@ def compare_installed_cap(prs, dfs, desc, region=None):
         row_2030 = {'Scenario': desc[i], '2030': cap_2030}
         row_2040 = {'Scenario': desc[i], '2040': cap_2040}
         row_2050 = {'Scenario': desc[i], '2050': cap_2050}
-        df_2030 = df_2030.append(row_2030, ignore_index=True)
-        df_2040 = df_2040.append(row_2040, ignore_index=True)
-        df_2050 = df_2050.append(row_2050, ignore_index=True)
+        df_2030 = df_2030._append(row_2030, ignore_index=True)
+        df_2040 = df_2040._append(row_2040, ignore_index=True)
+        df_2050 = df_2050._append(row_2050, ignore_index=True)
         i+=1
 
     df_2040_per_wtiv = df_2040.copy()

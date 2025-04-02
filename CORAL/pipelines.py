@@ -14,6 +14,7 @@ from ORBIT import load_config
 import os
 import yaml
 import time
+import pprint
 
 
 class Pipeline:
@@ -357,9 +358,10 @@ class Pipeline:
             config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
 
             # Design Phases
-            config["design_phases"] += [
-                "SemiSubmersibleDesign",
-            ]
+            # config["design_phases"] += [
+            #     "SemiSubmersibleDesign",
+            #     "MooringSystemDesign"
+            # ]
 
             # Install Phases
             config["install_phases"]["MooringSystemInstallation"] = 0

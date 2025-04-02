@@ -43,7 +43,7 @@ design_phases:
 - ArraySystemDesign
 - ElectricalDesign
 - SemiSubmersibleDesign
-- SemiTautMooringSystemDesign
+- MooringSystemDesign
 install_phases:
   ### to run without cable and mooring install phases:
   MooredSubInstallation: 0

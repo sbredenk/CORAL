@@ -1,0 +1,7 @@
+name: coral-v2 # Name of conda environment
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - geopandas
