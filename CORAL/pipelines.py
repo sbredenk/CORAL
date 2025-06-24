@@ -151,8 +151,6 @@ class Pipeline:
         
         if data['substructure'] == "monopile":
 
-            
-
             # Design Phases
             config["design_phases"] += [
                 "MonopileDesign",
@@ -384,7 +382,7 @@ class Pipeline:
             config.update(
                 {
                     "MooringSystemInstallation": {
-                        "mooring_install_vessel": "example_support_vessel",
+                        "ahts_vessel": "_shared_pool_:example_ahts_vessel",
                         "mooring_system": {
                             "num_lines": 3,
                             "line_mass": .5,

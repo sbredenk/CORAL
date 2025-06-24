@@ -1,0 +1,6 @@
+﻿name,location,lon,lat,distance_to_shore,capacity,turbine,depth,substructure,start_date,estimated_cod,foundation_port,turbine_port,us_wtiv
+Maine Research Array,ME,-69.359846,43.393802,50,144,12MW_generic,800,semisub,1/1/2031 0:00,2033,salem,salem,FALSE
+Invenergy NE Offshore Wind GoME 1,ME,-68.740168,43.105385,50,1964.167782,15MW_generic,800,semisub,1/1/2036 0:00,2038,salem,salem,FALSE
+Avangrid GoME 1,MA,-69.399348,42.324428,50,1785.604132,15MW_generic,800,semisub,1/1/2037 0:00,2039,salem,salem,FALSE
+Invenergy NE Offshore Wind GoME 2,MA,-69.388362,42.004805,50,1992.965238,15MW_generic,800,semisub,1/1/2038 0:00,2040,salem,salem,FALSE
+Avangrid GoME 2,ME,-69.157649,42.066005,50,2171.528889,15MW_generic,800,semisub,1/1/2038 0:00,2040,salem,salem,FALSE

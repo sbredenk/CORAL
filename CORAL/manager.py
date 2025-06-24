@@ -180,13 +180,12 @@ class GlobalManager:
 
         idx = self._get_start_idx(start)
         yield self.env.timeout(idx)
-        print("project init: ", self.env.now)
         log = {"name": name, "Initialized": self.env.now}
         resources = self._get_shared_resources(config)
         request = MultiRequest(self.env, dict(resources), name)
         resource_data = self.library.request(request)
         yield request.trigger
-        print("project started: ", self.env.now)
+        print("project started: ", name)
         log["Started"] = self.env.now
         projectstart = self.env.now
         for key, data in resource_data.items():
@@ -196,19 +195,17 @@ class GlobalManager:
 
         #Pull foundation finished time, add it to log
         df2 = pd.DataFrame(project.actions)
-        df2.to_csv(os.path.join('%s.csv' % name), date_format='%Y-%m-%d %H:%M:%S')
+        # df2.to_csv(os.path.join('%s.csv' % name), date_format='%Y-%m-%d %H:%M:%S')
         # print(project.project_time)
         if "MonopileInstallation" in df2["phase"].values:
             found_vessel_release_time = df2[df2["phase"] == "MonopileInstallation"]["time"].iloc[-1]
             foundation_time = found_vessel_release_time+projectstart
             yield self.env.timeout(found_vessel_release_time)
-            print("foundation finished: ", self.env.now)
             self.library.foundation_vessel_release(request)
         elif "JacketInstallation" in df2["phase"].values:
             found_vessel_release_time = df2[df2["phase_name"] == "JacketInstallation"]["time"].iloc[-1]
             foundation_time = found_vessel_release_time+projectstart
             yield self.env.timeout(found_vessel_release_time)
-            print("foundation finished: ", self.env.now)
             self.library.foundation_vessel_release(request)
         else:
             foundation_time = self.env.now + project.project_time
@@ -233,10 +230,10 @@ class GlobalManager:
         
         if "MonopileInstallation" in df2["phase"].values or "JacketInstallation" in df2["phase"].values:
             yield self.env.timeout(project.project_time-found_vessel_release_time)
-            print("project end: ", self.env.now)
+            
         else:
             yield self.env.timeout(project.project_time)
-            print("project end: ", self.env.now)
+            
         log["Finished"] = self.env.now
         time_days = project.project_time/24
         print(f"Project {name} finished at {time_days}")
@@ -249,7 +246,6 @@ class GlobalManager:
         # after downtime release ports
         port_downtime_hrs = 30 * 24 * config['port_downtime'] 
         yield self.env.timeout(port_downtime_hrs)
-        print("turb port released: ", self.env.now)
         self.library.turbine_port_release(request)
         # print(resources)        
 

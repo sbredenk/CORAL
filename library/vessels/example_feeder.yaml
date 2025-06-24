@@ -13,6 +13,6 @@ storage_specs:
 transport_specs:
   max_waveheight: 1.5       # m
   max_windspeed: 15         # m/s
-  transit_speed: 18.5          # km/h
+  transit_speed: 9          # km/h
 vessel_specs:
   day_rate: 75000           # USD/day

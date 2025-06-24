@@ -7,7 +7,7 @@ import time
 base = os.path.join(os.getcwd(), "library", "configs", "base.yaml")
 base_float = os.path.join(os.getcwd(), "library", "configs", "base_float.yaml")
 library = os.path.join(os.getcwd(), "library")
-weather_fp = os.path.join(os.getcwd(), "library", "weather", "vineyard_wind_repr_with_whales.csv")
+weather_fp = os.path.join(os.getcwd(), "library", "weather", "vineyard_wind_repr_with_whalesEXTENDED.csv")
 weather = pd.read_csv(weather_fp, parse_dates=["datetime"]).set_index("datetime")
 
 # Register the constructor with PyYAML
@@ -16,22 +16,25 @@ yaml.SafeLoader.add_constructor('tag:yaml.org,2002:python/tuple', tuple_construc
 # Parse scenarios names
 parser = argparse.ArgumentParser("simple_example")
 parser.add_argument('filename')
-parser.add_argument('scenarios', nargs='+')
+# parser.add_argument('scenarios', nargs='+')
 args = parser.parse_args()
 
 filename = args.filename
 results_fp = 'postprocessing/results/%s' % filename
 savename = os.path.join(results_fp, '%s.pptx' % filename)
 os.makedirs(results_fp)
-scenarios = args.scenarios
+scenarios = os.listdir('library/scenarios/%s' % filename)
+print(scenarios)
 
 dfs = []
 all_alloc = []
 all_future = []
 
+
+
 for s in scenarios:
 
-    with open('library/scenarios/%s.yaml' % s) as f:
+    with open(f'library/scenarios/{filename}/{s}') as f:
         scenario = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
     p = os.path.join(os.getcwd(), "library", "pipelines", "%s.csv" % scenario['pipeline'])

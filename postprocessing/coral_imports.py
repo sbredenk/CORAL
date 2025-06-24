@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, '/Users/sbredenk/Repos/ORBIT_natl_gaps')
-sys.path.insert(0, '/Users/sbredenk/Repos/CORAL_dev/CORAL')
+sys.path.insert(0, '/Users/sbredenk/Repos/CORAL/CORAL_east_coast_vessel')
 from CORAL import SharedLibrary, GlobalManager, Pipeline
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -17,3 +17,4 @@ import matplotlib
 import argparse
 import matplotlib.ticker as tck
 import glob
+import matplotlib.patches as mpatches

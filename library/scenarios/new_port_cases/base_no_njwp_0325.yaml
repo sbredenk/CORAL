@@ -1,0 +1,69 @@
+description:
+- '1 US WTIV starting with CVOW'
+pipeline: base_no_njwp_0325
+allocations:
+  ahts_vessel: 
+  - !!python/tuple
+    - example_ahts_vessel
+    - 2
+  feeder: 
+  - !!python/tuple
+    - example_heavy_feeder_1kit
+    - 4
+  - !!python/tuple
+    - example_feeder
+    - 4
+  towing_vessel: !!python/tuple
+  - example_towing_vessel
+  - 100
+  wtiv:
+  - !!python/tuple
+    - example_heavy_lift_vessel
+    - 2
+  - !!python/tuple
+    - example_wtiv
+    - 2
+  - !!python/tuple
+    - example_wtiv_us
+    - 0
+  port:
+  - !!python/tuple
+    - new_london
+    - 1
+  - !!python/tuple
+    - new_bedford
+    - 1
+  - !!python/tuple
+    - sbmt
+    - 1
+  - !!python/tuple
+    - njwp_1
+    - 0
+  - !!python/tuple
+    - tradepoint_1
+    - 1
+  - !!python/tuple
+    - portsmouth_1
+    - 1
+  - !!python/tuple
+    - salem
+    - 1
+  - !!python/tuple
+    - euro_fab
+    - 100
+  - !!python/tuple
+    - argentia
+    - 1
+  - !!python/tuple
+    - halifax
+    - 1
+
+future_resources:
+- - wtiv
+  - example_wtiv_us
+  - - 2024-01-01
+
+future_remove:
+- - wtiv
+  - example_wtiv
+  - - 2024-01-01

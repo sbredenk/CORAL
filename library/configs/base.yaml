@@ -39,7 +39,7 @@ jacket:
   foundation_type: suction
 # Configured Phases
 design_phases:
-- ArraySystemDesign
-- ExportSystemDesign
-- OffshoreSubstationDesign
+# - ArraySystemDesign
+# - ExportSystemDesign
+# - OffshoreSubstationDesign
 

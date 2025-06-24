@@ -1,0 +1,10 @@
+name: coral-v2 # Name of conda environment
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - geopy
+  - python-pptx
+  - pip
+  - pip:
+    - orbit-nrel
