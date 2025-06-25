@@ -1,7 +1,7 @@
 __author__ = "Jake Nunemaker"
 __copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
-__maintainer__ = "Jake Nunemaker"
-__email__ = "jake.nunemaker@nrel.gov"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
 
 
 import datetime as dt
@@ -22,7 +22,7 @@ class MultiRequest:
     """Object used to hold multiple simpy.Requests and interface with
     `SharedLibrary` instance."""
 
-    def __init__(self, env, resources, name, port_hold=False):
+    def __init__(self, env, resources, name):
         """
         Creates an instance of `MultiRequest`.
 
@@ -35,10 +35,6 @@ class MultiRequest:
         self.trigger = Event(env)
         self.resources = resources
         self.name = name
-        if port_hold:
-            self.priority = 1
-        else:
-            self.priority = 2
 
     def __str__(self) -> str:
         return f"MultiRequest object for {self.name}"
@@ -55,10 +51,13 @@ class GlobalManager:
         ----------
         configs : list
             List of ORBIT configurations to run.
-        library_path : str
-            Path to shared library items.
         allocations : dict
             Number of each library item that exists in the shared environment.
+        weather : str
+            Path to weather csv.
+        library_path : str
+            Path to shared library items.
+        
         """
         
         self._logs = []
@@ -216,7 +215,6 @@ class GlobalManager:
             turbine_start = projectstart
 
         log["TurbineStart"] = turbine_start
-        # print(df2[df2["phase"] == "TurbineInstallation"]["time"].iloc[-1])
         
         if "MonopileInstallation" in df2["phase"].values or "JacketInstallation" in df2["phase"].values:
             yield self.env.timeout(project.project_time-found_vessel_release_time)
@@ -231,7 +229,7 @@ class GlobalManager:
         # after downtime release ports
         port_downtime_hrs = 30 * 24 * config['port_downtime'] 
         yield self.env.timeout(port_downtime_hrs)
-        self.library.turbine_port_release(request)
+        self.library.port_release(request)
 
 
     def _get_start_idx(self, start) -> int:

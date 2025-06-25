@@ -1,3 +1,8 @@
+__author__ = "Sophie Bredenkamp"
+__copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
+
 from coral_imports import *
 from coral_helpers import *
 
@@ -7,7 +12,6 @@ def add_text_slide(prs, title, left=0, top=7.2, width=13.33, height=0.3, fontsiz
     blank_slide_layout = prs.slide_layouts[5]
     slide = prs.slides.add_slide(blank_slide_layout)
     slide.shapes[0].text = title
-
 
 def add_to_pptx(
         prs, title=None, file=None, left=0, top=0.62, width=13.33, height=None,
@@ -37,7 +41,6 @@ def add_to_pptx(
         print(title)
     return slide
 
-
 def add_textbox(
         text, slide,
         left=0, top=7.2, width=13.33, height=0.3,
@@ -57,18 +60,154 @@ def add_textbox(
     font.size = Pt(fontsize)
     return slide
 
+def plot_shared_resource_capacities(prs, history, ignore_cols=None, col_map=None):
+    """
+    Plots number of shared resources in poolin each year.
 
-def full_gantt(prs, df, sorted=False):
-    """Gantt chart of full pipeline. Sorted sorts by expected start date."""
+    Parameters
+    ----------
+    history: DataFrame
+        Shared resource history.
+    ignore_cols : list (optional)
+        List of columns to ignore.
+    col_map : dict (optional)
+        Map of column name to label.    
+    """
+
+    if ignore_cols is None:
+        ignore_cols = []
+
+    if col_map is None:
+        col_map = {}
+
+    history['time'] = pd.to_datetime(history['time'])
+    history["time"] = history["time"].dt.date
+    history = history.groupby("time").tail(1)
+    
+
+    cols = [
+        c for c in list(history.columns) if c not in ["time", *ignore_cols]
+    ]
+
+
+    def invert(column):
+        return max(column) - column
+    
+    history[cols] = history[cols].apply(invert)
+
+    vessel_cols = [c for c in cols if "port" not in c]
+    port_cols = [c for c in cols if "port" in c]
+
+
+    fig,axs = plt.subplots(len(vessel_cols)-1, 1, sharey=True, figsize=(10, 20))
+    fig.tight_layout()
+    for i, col in enumerate(vessel_cols[1:]):
+
+        data = list(zip(history["time"], history[col]))
+        data = squarify(data)
+
+        try:
+            label = col_map[col]
+
+        except KeyError:
+            label = col
+
+        axs[i].plot(data["time"], data["capacity"], color='g')
+        axs[i].set_title(label)
+        axs[i].set_ylabel("Resource Capacity")
+        axs[i].set_ylim([0,6])
+        axs[i].set_xlim([dt.date(2020, 1, 1), dt.date(2055, 1, 1)])
+
+    slide = add_to_pptx(prs,'Shared Resource Capacity - Vessels', width=4.25)
+
+    fig,axs = plt.subplots(len(port_cols), 1, sharey=True, figsize=(10, 20))
+    fig.tight_layout()
+    for i, col in enumerate(port_cols):
+
+        data = list(zip(history["time"], history[col]))
+        data = squarify(data)
+
+        try:
+            label = col_map[col]
+
+        except KeyError:
+            label = col
+
+        axs[i].plot(data["time"], data["capacity"], color='g')
+        axs[i].set_title(label)
+        axs[i].set_ylabel("Resource Capacity")
+        axs[i].set_ylim([0,6])
+        axs[i].set_xlim([dt.date(2020, 1, 1), dt.date(2055, 1, 1)])
+
+    slide = add_to_pptx(prs,'Shared Resource Capacity - Ports', width=4.25)
+
+    history = history.drop(ignore_cols, axis=1)
+
+    return history
+
+def percent_resource_demand(history, filename):
+
+    history.set_index('time', inplace=True)
+    new_time_index = pd.date_range(start=history.index.min(), end=history.index.max(), freq='1D')
+    history_resampled = history.reindex(new_time_index)
+    history_resampled.fillna(method='ffill', inplace=True)
+    # history_resampled.reset_index(inplace=True)
+    # history_resampled.reset_index(drop=True)
+    history_resampled = history_resampled.drop(['Unnamed: 0'],axis=1)
+
+    decades = [(2025, 2030), (2030, 2035), (2035,2040), (2040, 2045), (2045, 2100)]
+
+
+
+    for d_low, d_high in decades:
+        summary_table = pd.DataFrame(columns=history_resampled.columns)
+        history_in_decade = history_resampled[(history_resampled.index.year >= d_low) & (history_resampled.index.year < d_high)]
+        if not history_in_decade.empty:
+            for i in range(0,int(history_in_decade.max().max())+1):
+                new_row = {}
+                for col in history_in_decade.columns:
+                    value = (history_in_decade[col] == i).sum() / len(history_in_decade)
+                    new_row[col] = value
+                summary_table = summary_table.append(new_row, ignore_index=True)
+
+            with pd.ExcelWriter(filename, engine='openpyxl', mode='a') as writer:
+                summary_table.to_excel(writer, sheet_name=f'{d_low}-{d_high}')
+
+            # Step 2: Apply percentage formatting using openpyxl directly
+            wb = load_workbook(filename)
+            ws = wb[f'{d_low}-{d_high}']
+
+            # Format the 'Completion' column (assumed to be column B)
+            for row in ws.iter_rows(min_row=2, min_col=2):
+                for cell in row:
+                    cell.number_format = '0.0%'
+
+            # Save changes
+            wb.save(filename)
+    return summary_table
+
+def full_gantt(prs, log, sorted=False):
+    """
+    Gantt chart of full pipeline.
+
+    Parameters
+    ----------
+    prs : object
+        Powerpoint presentation
+    log : DataFrame
+        CORAL run log
+    sorted : bool (optional)
+        Sorts projects by expected start date
+    """
     if sorted:
-        df = df.drop(columns=['index'])
-        df = df.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
+        log = log.drop(columns=['index'])
+        log = log.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
 
-    fig = plt.figure(figsize=(8, len(df)/4), dpi=200) # LEN(DF)/4
+    fig = plt.figure(figsize=(8, len(log)/4), dpi=200)
     ax = fig.add_subplot(111)
 
     bar_color = []
-    for _,row in df.iterrows():
+    for _,row in log.iterrows():
         if row['substructure'] == 'monopile':
             bar_color.append("#F0E442")
         elif row['substructure'] == 'gbf':
@@ -79,7 +218,7 @@ def full_gantt(prs, df, sorted=False):
             bar_color.append("#0072B2")
 
     delay_bar_color = []
-    for _,row in df.iterrows():
+    for _,row in log.iterrows():
         if row['substructure'] == 'monopile':
             delay_bar_color.append("#F7F19D")
         elif row['substructure'] == 'gbf':
@@ -89,15 +228,15 @@ def full_gantt(prs, df, sorted=False):
         else:
             delay_bar_color.append("#77CEFF")
     
-    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
-    df["Date Started"].plot(kind="barh", color=delay_bar_color, ax=ax, zorder=4, label="Delay")
-    df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
+    log["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color=bar_color)
+    log["Date Started"].plot(kind="barh", color=delay_bar_color, ax=ax, zorder=4, label="Delay")
+    log["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
-    df.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
+    log.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
     
     ax.set_xlabel("")
     ax.set_ylabel("")
-    _ = ax.set_yticklabels(df['name'])
+    _ = ax.set_yticklabels(log['name'])
 
     mono_delay = matplotlib.patches.Patch(color='#F7F19D', label='Monopile Delay')
     mono_install = matplotlib.patches.Patch(color='#F0E442', label='Monopile Installation')
@@ -109,19 +248,33 @@ def full_gantt(prs, df, sorted=False):
     semisub_install = matplotlib.patches.Patch(color='#0072B2', label='Semisub Installation')
     ax.legend(handles=[mono_delay, mono_install, gbf_delay, gbf_install, jacket_delay, jacket_install, semisub_delay, semisub_install])
 
-    ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
+    ax.set_xlim(log["Date Initialized"].min() - dt.timedelta(days=30), log["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
         slide = add_to_pptx(prs,'Sorted Full Gantt', width=5.25)
     else:
         slide = add_to_pptx(prs,'Full Gantt', width=4.25)
+
     plt.close(fig)
 
+def regional_gantt(prs, log, region, region_name, sorted=False):
+    """
+    Gantt chart of regional pipeline.
 
-def regional_gantt(prs, df, region, region_name, sorted=False):
-    """Gantt chcart of select region pipeline. Region determined by offtake states in region list. 
-       Sorted sorts by expected start date."""
-    df = df.drop(columns=['index'])
-    df_region = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
+    Parameters
+    ----------
+    prs : object
+        Powerpoint presentation
+    log : DataFrame
+        CORAL run log
+    region : list
+        States in region of interest
+    region_name : str
+        Label for region
+    sorted : bool (optional)
+        Sorts projects by expected start date
+    """
+    log = log.drop(columns=['index'])
+    df_region = log[log['location'].isin(region)].reset_index(drop=True).reset_index()
 
     if sorted:
         df_region = df_region.drop(columns=['index'])
@@ -179,51 +332,75 @@ def regional_gantt(prs, df, region, region_name, sorted=False):
         slide = add_to_pptx(prs,'%s Gantt' % region_name)
     plt.close(fig)
 
+def substructure_gantt(prs, log, substructure, sorted=False):
+    """
+    Gantt chart of substrucutre specific pipeline.
 
-def substructure_gantt(prs, df, substructure, sorted=False):
-    """ Gantt filtered by either fixed or floating projects. Sorted sorts by expected start date."""
+    Parameters
+    ----------
+    prs : object
+        Powerpoint presentation
+    log : DataFrame
+        CORAL run log
+    substructure : str
+        Nmae of substructure of interest
+    sorted : bool (optional)
+        Sorts projects by expected start date
+    """
 
-    df = df.drop(columns=['index'])
+    log = log.drop(columns=['index'])
     if substructure == 'fixed':
-        df = df[df['substructure'].isin(["jacket", "monopile"])].reset_index(drop=True).reset_index()
+        log = log[log['substructure'].isin(["jacket", "monopile"])].reset_index(drop=True).reset_index()
     else:
-        df = df[df['depth'] > 200].reset_index(drop=True).reset_index()
+        log = log[log['depth'] > 200].reset_index(drop=True).reset_index()
     if sorted:
-        df = df.drop(columns=['index'])
-        df = df.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
+        log = log.drop(columns=['index'])
+        log = log.sort_values(by=['Date Initialized'], ascending=False).reset_index(drop=True).reset_index()
 
-    fig = plt.figure(figsize=(8, len(df)/4), dpi=200)
+    fig = plt.figure(figsize=(8, len(log)/4), dpi=200)
     ax = fig.add_subplot(111)
     
-    df["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color="#D55E00")
-    df["Date Started"].plot(kind="barh", color="#FFA65F", ax=ax, zorder=4, label="Delay")
-    df["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
+    log["Date Finished"].plot(kind="barh", ax=ax, zorder=4, label="Project Time", color="#D55E00")
+    log["Date Started"].plot(kind="barh", color="#FFA65F", ax=ax, zorder=4, label="Delay")
+    log["Date Initialized"].plot(kind='barh', ax=ax, zorder=4, label = "__nolabel__", color = 'w')
 
-    df.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
+    log.plot(kind="scatter", x="Date Started", y="index", color='k', ax=ax, zorder=5, label="Expected Start", marker=">")
     
     ax.set_xlabel("")
     ax.set_ylabel("")
-    _ = ax.set_yticklabels(df['name'])
+    _ = ax.set_yticklabels(log['name'])
 
     delay = matplotlib.patches.Patch(color='#FFA65F', label='Delay')
     install = matplotlib.patches.Patch(color='#D55E00', label='Installation')
     ax.legend(handles=[delay,install])
 
-    ax.set_xlim(df["Date Initialized"].min() - dt.timedelta(days=30), df["Date Finished"].max() + dt.timedelta(days=30))
+    ax.set_xlim(log["Date Initialized"].min() - dt.timedelta(days=30), log["Date Finished"].max() + dt.timedelta(days=30))
     if sorted:
         slide = add_to_pptx(prs,'Sorted %s Gantt' % substructure.capitalize())
     else:
         slide = add_to_pptx(prs,'%s Gantt' % substructure.capitalize())
     plt.close(fig)
 
+def port_gantts(prs, log, ports, sorted=False): 
+    """
+    Gantt charts of port specific pipelines (subplotted).
 
-def port_gantts(prs, df, ports, sorted=False): 
-    """Gantt chart of specific ports. Creates subplot for each port in ports list. Sorted sorts by expected start date."""
+    Parameters
+    ----------
+    prs : object
+        Powerpoint presentation
+    log : DataFrame
+        CORAL run log
+    ports : list
+        Port names of interest
+    sorted : bool (optional)
+        Sorts projects by expected start date
+    """
     i = 1
-    ports_in_pipeline = df['associated_port'].nunique()
-    fig_height = len(df) * (len(ports)/ports_in_pipeline) / 2
+    ports_in_pipeline = log['associated_port'].nunique()
+    fig_height = len(log) * (len(ports)/ports_in_pipeline) / 2
     fig = plt.figure(figsize=(10, fig_height), dpi=200)
-    df_ports = df.drop(columns=['index'])
+    df_ports = log.drop(columns=['index'])
     num_ports = len(ports)
 
     for port in ports:
@@ -273,13 +450,24 @@ def port_gantts(prs, df, ports, sorted=False):
 
     plt.close(fig)
 
+def port_throughput(prs, log, region=None):
+    """
+    Plot of port throughput.
 
-def port_throughput(prs, df, region=None):
+    Parameters
+    ----------
+    prs : object
+        Powerpoint presentation
+    log : DataFrame
+        CORAL run log
+    region : list (optional)
+        States in region of interest
+    """
     if region:
-        df = df.drop(columns=['index'])
-        df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
+        log = log.drop(columns=['index'])
+        log = log[log['location'].isin(region)].reset_index(drop=True).reset_index()
     res = []
-    for _, project in df.iterrows():
+    for _, project in log.iterrows():
 
         if project["Date Finished"].year == project["Date Started"].year:
             res._append((project["Date Finished"].year, project["associated_port"], project["capacity"]))
@@ -340,20 +528,19 @@ def port_throughput(prs, df, region=None):
     slide = add_to_pptx(prs,'Port Throughput')
     plt.close(fig)
 
-
-def vessel_utilization_plot(prs, df):
+def vessel_utilization_plot(prs, log):
 
     fig = plt.figure(figsize=(14,4), dpi=500)
     ax = fig.add_subplot(111)
 
     scenario_path = 'library/scenarios'
-    scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
+    scen_yaml = read_yaml(log['Scenario'].iloc[0], scenario_path)
     allocs = scen_yaml['allocations']
     futures = scen_yaml['future_resources']
     removals = scen_yaml['future_remove']
     if removals is None:
         removals = []
-    df_vessel_util = vessel_hours(df)
+    df_vessel_util = vessel_hours(log)
     df_vessel_count = vessel_pipeline(allocs,futures,removals)
     df_perc_util = df_vessel_util / df_vessel_count / 8766 * 100
     
@@ -381,29 +568,28 @@ def vessel_utilization_plot(prs, df):
     slide = add_to_pptx(prs, 'Vessel Utilization')
     return(df_vessel_util / 24)
 
-
-def average_vessel_utilization_plot(prs, dfs, desc):
+def average_vessel_utilization_plot(prs, logs, desc):
     avg_utilization = {vessel: [] for vessel in ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']}
 
-    for i, df in enumerate(dfs):
+    for i, log in enumerate(logs):
         scenario = desc[i]
 
         scenario_path = 'analysis/scenarios'
-        scen_yaml = read_yaml(df['Scenario'].iloc[0], scenario_path)
+        scen_yaml = read_yaml(log['Scenario'].iloc[0], scenario_path)
         allocs = scen_yaml['allocations']
         futures = scen_yaml['future_resources']
         removals = scen_yaml['future_remove']
         if removals is None:
             removals = []
 
-        df_vessel_util = vessel_hours(df)
+        df_vessel_util = vessel_hours(log)
         df_vessel_count = vessel_pipeline(allocs, futures, removals)
 
         #Defining the start and end years for fixed and floating projects
-        fixed_start = df[df['substructure'].isin(['monopile', 'jacket'])]['Date Started'].min().year
-        fixed_end = df[df['substructure'].isin(['monopile', 'jacket'])]['Date Finished'].max().year
-        floating_start = df[df['substructure'] == 'semisub']['Date Started'].min().year
-        floating_end = df[df['substructure'] == 'semisub']['Date Finished'].max().year
+        fixed_start = log[log['substructure'].isin(['monopile', 'jacket'])]['Date Started'].min().year
+        fixed_end = log[log['substructure'].isin(['monopile', 'jacket'])]['Date Finished'].max().year
+        floating_start = log[log['substructure'] == 'semisub']['Date Started'].min().year
+        floating_end = log[log['substructure'] == 'semisub']['Date Finished'].max().year
 
         #Can replace fixed_start, fixed_end with specific years
         wtiv_start, wtiv_end = fixed_start, fixed_end
@@ -445,137 +631,50 @@ def average_vessel_utilization_plot(prs, dfs, desc):
 
     return avg_utilization
 
-
-def vessel_revenue_plot(prs, df_vessel_util):
-
-    fig = plt.figure(figsize=(10,4), dpi=200)
-    ax = fig.add_subplot(111)
-    vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
-    vessel_rates = []
-    df_vessel_cost = df_vessel_util
-    rate_path = 'analysis/library/vessels'
-    for vessel in vessel_types:
-        vessel_yaml = read_yaml(vessel, rate_path)
-        vessel_rate = vessel_yaml['vessel_specs']['day_rate']
-        df_vessel_cost[vessel] = df_vessel_util[vessel] * vessel_rate / 1e9
-
-    us_revenue = df_vessel_cost[['example_wtiv_us','example_ahts_vessel','example_feeder']].sum(axis=1).cumsum()
-    ffiv_revenue = df_vessel_cost[['example_heavy_lift_vessel']].sum(axis=1).cumsum()
-    wtiv_revenue = df_vessel_cost[['example_wtiv']].sum(axis=1).cumsum()
-
-    return(us_revenue, ffiv_revenue, wtiv_revenue)
-
-
-def vessel_investment_plot(prs, desc):
-    yrs = np.arange(2023,2043)
-    vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
-    vessel_costs = {
-        "example_wtiv": 400,
-        "example_wtiv_us": 600,
-        "example_heavy_lift_vessel": 625,
-        "example_feeder": 60,
-        "example_ahts_vessel": 175
-        }   
-    scen_path = 'analysis/scenarios'
-    dates = pd.to_datetime(yrs, format='%Y')
-    fig, ax = plt.subplots(1,1, figsize=(10,6), dpi=200)
-
-    us_investments = pd.DataFrame(index=dates, columns=desc, data=np.zeros((len(yrs), len(desc))))
-    total_investments = pd.DataFrame(index=dates, columns=desc, data=np.zeros((len(yrs), len(desc))))
-    vessel_counts = []
-    for i in range(0,len(desc)):
-        scen = read_yaml(desc[i], scen_path)
-        alloc = scen['allocations']
-        future = scen['future_resources']
-        init_alloc = [alloc['wtiv'][1][1], 
-                      alloc['wtiv'][2][1], 
-                      alloc['wtiv'][0][1], 
-                      alloc['ahts_vessel'][0][1], 
-                      alloc['feeder'][1][1]]
-        vessel_investment = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
-        vessel_count = pd.DataFrame(columns=vessel_types, data = np.zeros((len(yrs), len(vessel_types))), index = dates)
-        vessel_count.iloc[0] = init_alloc
-        # display(vessel_investment)
-        for vessel in vessel_types:
-            for vessel_type in future:
-                if vessel_type[1] == vessel:
-                    years = vessel_type[2]
-                    # print(vessel_type[1])
-                    # print(years)
-                    for year in years:
-                        vessel_count.loc[[year],vessel] += 1
-            vessel_investment[vessel] = vessel_count[vessel] * vessel_costs[vessel]
-        
-        us_vessels = ['example_feeder', 'example_ahts_vessel', 'example_wtiv_us']
-        vessel_investment.loc[:,'us_total'] = vessel_investment[us_vessels].sum(axis=1)
-        vessel_investment['us_total'] = vessel_investment['us_total'].cumsum() / 1000
-        vessel_investment.loc[:,'total'] = vessel_investment[vessel_types].sum(axis=1)
-        vessel_investment['total'] = vessel_investment['total'].cumsum() / 1000
-        total_investments[desc[i]] = vessel_investment['total']
-        us_investments[desc[i]] = vessel_investment['us_total']
-
-        vessel_count = vessel_count.cumsum()
-        vessel_counts.append(vessel_count)
-
-    us_investments['year'] = yrs
-    us_investments.set_index('year', inplace=True)
-
-    us_investments['year'] = yrs
-    us_investments.set_index('year', inplace=True)
-    us_investments.plot(ax=ax)
-
-    ax.set_ylabel('Capital Investment ($B)')
-    ax.yaxis.set_major_locator(tck.MaxNLocator(integer=True))
-    plt.minorticks_off()
-    # plt.tick_params(bottom = False) 
-    ax.set_xticks(yrs[::2])
-    slide = add_to_pptx(prs, 'Vessel Investment')
-
-    return(us_investments, vessel_counts)
-
-
-def run_plots(prs, df, ports):
+def run_plots(prs, log, history, ports, summary_table_filename):
     ne = ['MA','ME','CT','RI','NH','RI/CT']
     nynj = ['NY','NJ']
     mid = ['NC', 'MD', 'VA', 'DE']
 
-    full_gantt(prs, df)
-    # full_gantt(prs, df, sorted=True)
+    history = plot_shared_resource_capacities(prs, history)
+    summary_table = percent_resource_demand(history, summary_table_filename)
 
-    regional_gantt(prs, df, ne, 'New England')
-    # regional_gantt(prs, df, ne, 'New England', sorted=True)
 
-    # port_gantts(prs, df, ports)
-    # port_gantts(prs, df, ports, sorted=True)
+    full_gantt(prs, log)
+    full_gantt(prs, log, sorted=True)
 
-    substructure_gantt(prs, df, 'fixed')
-    # substructure_gantt(prs, df, 'fixed', sorted=True)
-    # substructure_gantt(prs, df, 'floating')
-    # substructure_gantt(prs, df, 'floating', sorted=True)
+    # regional_gantt(prs, log, ne, 'New England')
+    # regional_gantt(prs, log, ne, 'New England', sorted=True)
 
-    # vessel_utilization_plot(prs,df)
+    # port_gantts(prs, log, ports)
+    # port_gantts(prs, log, ports, sorted=True)
 
-    # port_throughput(prs,df)
-    # port_throughput(prs,df,ne)
-    # port_throughput(prs,df,nynj)
-    # port_throughput(prs,df,mid)
+    # substructure_gantt(prs, log, 'fixed')
+    # substructure_gantt(prs, log, 'fixed', sorted=True)
+    # substructure_gantt(prs, log, 'floating')
+    # substructure_gantt(prs, log, 'floating', sorted=True)
 
+    # vessel_utilization_plot(prs,log)
+
+    # port_throughput(prs,log)
+    # port_throughput(prs,log,ne)
+    # port_throughput(prs,log,nynj)
+    # port_throughput(prs,log,mid)
 
 ## Summary Plots ##
-
-    
-def installed_cap(prs, dfs, desc, region = None):
+   
+def installed_cap(prs, logs, desc, region = None):
     yrs = np.arange(2023,2043,1)
     df_cap = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
     df_cum = pd.DataFrame(columns=desc, data = np.zeros((len(yrs), len(desc))), index = yrs)
 
-    df = dfs[0]
+    log = logs[0]
     if region:
-        df = df.drop(columns=['index'])
-        df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
+        log = log.drop(columns=['index'])
+        log = log[log['location'].isin(region)].reset_index(drop=True).reset_index()
 
-    df['cod'] = df['estimated_cod'].dt.year
-    df_cod = df.groupby(['cod']).capacity.sum().reset_index()
+    log['cod'] = log['estimated_cod'].dt.year
+    df_cod = log.groupby(['cod']).capacity.sum().reset_index()
     df_cod['sum'] = df_cod['capacity'].cumsum(axis=0) / 1000
     # print(df_cod)
     # df_cum['cod'] = df_cod['sum']
@@ -587,12 +686,12 @@ def installed_cap(prs, dfs, desc, region = None):
     i=0
     width = 0.25
 
-    for df in dfs:
-        df['finished'] = df['Date Finished'].dt.year
+    for log in logs:
+        log['finished'] = log['Date Finished'].dt.year
         if region:
-            df = df.drop(columns=['index'])
-            df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
-        df_finished = df.groupby(['finished']).capacity.sum().reset_index()
+            log = log.drop(columns=['index'])
+            log = log[log['location'].isin(region)].reset_index(drop=True).reset_index()
+        df_finished = log.groupby(['finished']).capacity.sum().reset_index()
         df_finished['capacity'] = df_finished['capacity'] / 1000
         df_finished['sum'] = df_finished['capacity'].cumsum(axis=0)
 
@@ -620,21 +719,20 @@ def installed_cap(prs, dfs, desc, region = None):
 
     return df_cum
 
-
-def compare_installed_cap(prs, dfs, desc, region=None):
+def compare_installed_cap(prs, logs, desc, region=None):
 
     df_2040 = pd.DataFrame(columns = ['2040'])
     df_2030 = pd.DataFrame(columns = ['2040'])
     df_2050 = pd.DataFrame(columns = ['2050'])
     
     i=0
-    for df in dfs:
+    for log in logs:
         if region:
-            df = df.drop(columns=['index'])
-            df = df[df['location'].isin(region)].reset_index(drop=True).reset_index()
+            log = log.drop(columns=['index'])
+            log = log[log['location'].isin(region)].reset_index(drop=True).reset_index()
         cap_by_year = pd.DataFrame()
-        cap_by_year['year'] = pd.DatetimeIndex(df['Date Finished']).year
-        cap_by_year['capacity'] = df['capacity']
+        cap_by_year['year'] = pd.DatetimeIndex(log['Date Finished']).year
+        cap_by_year['capacity'] = log['capacity']
         cap = cap_by_year.groupby(['year'])['capacity'].sum().reset_index()
         cap_2030 = cap.loc[cap['year'] <= 2030]['capacity'].sum()/1e3
         cap_2040 = cap.loc[cap['year'] <= 2040]['capacity'].sum()/1e3

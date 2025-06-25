@@ -1,3 +1,8 @@
+__author__ = "Sophie Bredenkamp"
+__copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
+
 import sys
 sys.path.insert(0, './postprocessing')
 from coral_helpers import *
@@ -24,7 +29,6 @@ savename = os.path.join(results_fp, '%s.pptx' % filename)
 os.makedirs(results_fp)
 scenarios = os.listdir('library/scenarios/%s' % filename)
 
-dfs = []
 all_alloc = []
 all_future = []
 
@@ -48,13 +52,15 @@ for s in scenarios:
     future_remove = scenario['future_remove']
 
     coral_time = time.time()
-    manager, df = run_manager(pipeline, allocations, library, future_resources=future_resources, future_remove=future_remove)
+    manager, log, history = run_manager(pipeline, allocations, library, weather, future_resources=future_resources, future_remove=future_remove)
     print("--- CORAL run time: %s seconds ---" % (time.time() - coral_time))
     all_alloc.append(allocations)
     all_future.append(future_resources)
-    dfs.append(df)
     s = s.replace('.yaml', '')
 
-    df.to_csv(os.path.join(results_fp, '%s.csv' % s), date_format='%Y-%m-%d %H:%M:%S')
+    log.to_csv(os.path.join(results_fp, '%s_log.csv' % s), date_format='%Y-%m-%d %H:%M:%S')
+    history.to_csv(os.path.join(results_fp, '%s_resource_history.csv' % s))
+
+
 
 

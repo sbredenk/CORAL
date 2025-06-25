@@ -1,14 +1,29 @@
+__author__ = "Sophie Bredenkamp"
+__copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
+
 from coral_imports import *
 
-# set up yaml reading
-def tuple_constructor(loader, node):
-    # Load the sequence of values from the YAML node
-    values = loader.construct_sequence(node)
-    # Return a tuple constructed from the sequence
-    return tuple(values)
+def run_manager(pipeline, allocations, library, weather=None, future_resources=None, future_remove=None):
+    """
+    Runs GlobalManager and returns logs and resource history.
 
-# run manager function 
-def run_manager(pipeline, allocations, library, weather=None, future_resources=None, future_remove=None, sorted=False):
+    Parameters
+    ----------
+    pipeline : str
+        Filepath for project pipeline.
+    allocations : dict
+        Number of each library item that exists in the shared environment.
+    library : str
+        Path to shared library items.
+    weather : str (optional)
+        Path to weather csv.
+    future_resources : list (optional)
+        Date and type of each resource to be added during run.
+    future_remove : list (optional)
+        Date and type of each resource to be removed during run.    
+    """
     manager = GlobalManager(pipeline.configs, allocations, weather, library_path=library)
 
     if future_resources != None: 
@@ -22,23 +37,40 @@ def run_manager(pipeline, allocations, library, weather=None, future_resources=N
     manager.run()
 
     # Format DataFrame for figure building
-    df = pd.DataFrame(manager.logs).iloc[::-1]
-    df = df.reset_index(drop=True).reset_index()
+    log = pd.DataFrame(manager.logs).iloc[::-1]
+    log = log.reset_index(drop=True).reset_index()
 
     df_cols = ['substructure','depth', 'location','foundation_port', 'turbine_port', 'capacity','us_wtiv']
 
     for col in df_cols:
         map = pipeline.projects[["name", col]].set_index("name").to_dict()[col]
-        df[col] = [map[name] for name in df['name']]
+        log[col] = [map[name] for name in log['name']]
     
     cod_map = pipeline.projects[["name", "estimated_cod"]].set_index("name").to_dict()['estimated_cod']
-    df['estimated_cod'] = [cod_map[name] for name in df['name']]
-    df['estimated_cod'] = pd.to_datetime(df['estimated_cod'], format='%Y')
+    log['estimated_cod'] = [cod_map[name] for name in log['name']]
+    log['estimated_cod'] = pd.to_datetime(log['estimated_cod'], format='%Y')
 
-    return manager, df
+    history = manager.resource_history
+    history_df = pd.DataFrame(history)
+    return manager, log, history_df
+
+
+def tuple_constructor(loader, node):
+    values = loader.construct_sequence(node)
+    return tuple(values)
 
 
 def read_yaml(scenario, path):
+    """
+    Read yaml file.
+
+    Parameters
+    ----------
+    scenario : str
+        Scenario name.
+    path : str
+        Filepath to scenario.
+    """
     # Register the constructor with PyYAML
     yaml.SafeLoader.add_constructor('tag:yaml.org,2002:python/tuple', tuple_constructor)
     yaml_path = os.path.join(os.getcwd(), "%s/%s.yaml" % (path,scenario))
@@ -47,13 +79,21 @@ def read_yaml(scenario, path):
     return(scenario)
 
 
-def vessel_hours(df):
+def vessel_hours(log):
+    """
+    Calculates hours of vessel utilization in given year.
+
+    Parameters
+    ----------
+    log : DataFrame
+       Log output of CORAL run 
+    """
     yrs = np.arange(2023,2055)
     df_util = pd.DataFrame(columns = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder'], index=yrs)
     df_util = df_util.fillna(0)
-    df['Date TurbineStart'] = pd.to_datetime(df['Date TurbineStart'])
+    log['Date TurbineStart'] = pd.to_datetime(log['Date TurbineStart'])
 
-    for _,project in df.iterrows():
+    for _,project in log.iterrows():
         # FOUNDATIONS
         if project['substructure'] in ('monopile','jacket'):
             if project['Date FoundationFinished'].year == project['Date Started'].year:
@@ -112,16 +152,24 @@ def vessel_hours(df):
         
     return(df_util)
 
-def vessel_pipeline(allocs, futures):
+def vessel_pipeline(allocations, futures):
+    """
+    Counts total vessel of each type in shared resources in each year.
+
+    Parameters
+    ----------
+    allocations : dict
+        Number of each library item that exists in the shared environment.
+    futures : list
+        List of vessel type and year for all added vessel resources.
+    """
     yrs = np.arange(2023,2055)
-    # dates = pd.to_datetime(yrs, format='%Y')
     fig = plt.figure(figsize=(10,4), dpi=200)
     ax = fig.add_subplot(111)
     vessel_types = ['example_wtiv', 'example_wtiv_us', 'example_heavy_lift_vessel', 'example_ahts_vessel', 'example_feeder']
-    init_alloc = [allocs['wtiv'][1][1], allocs['wtiv'][2][1], allocs['wtiv'][0][1], allocs['ahts_vessel'][1], allocs['feeder'][1][1]]
+    init_alloc = [allocations['wtiv'][1][1], allocations['wtiv'][2][1], allocations['wtiv'][0][1], allocations['ahts_vessel'][1], allocations['feeder'][1][1]]
     vessel_count = pd.DataFrame(columns=vessel_types, data = np.ones((len(yrs), len(vessel_types))), index = yrs)
     vessel_count = vessel_count.mul(init_alloc)
-    # vessel_count.iloc[0] = init_alloc
 
     for vessel in vessel_types:
         for vessel_type in futures:
@@ -129,8 +177,28 @@ def vessel_pipeline(allocs, futures):
                 years = [x.year for x in vessel_type[2]]
                 for year in years:
                     vessel_count.loc[year:,vessel] += 1
-    
-    # vessel_count.loc[:,'total'] = vessel_count.sum(axis=1)
-    # vessel_count['total'] = vessel_count['total'].cumsum()
 
     return(vessel_count)
+
+
+def squarify(data):
+    """
+    Formats data in DataFrame.
+
+    Parameters
+    ----------
+    data : list
+        Resource history data list.
+    """
+    out = []
+    for i, (time, cap) in enumerate(data):
+
+        out.append((time, cap))
+        try:
+            if cap != data[i + 1][1]:
+                out.append((data[i + 1][0], cap))
+
+        except IndexError:
+            pass
+
+    return pd.DataFrame(out, columns=["time", "capacity"])

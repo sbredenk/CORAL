@@ -1,7 +1,7 @@
 __author__ = "Jake Nunemaker"
 __copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
-__maintainer__ = "Jake Nunemaker"
-__email__ = "jake.nunemaker@nrel.gov"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
 
 
 import re
@@ -14,7 +14,6 @@ from ORBIT import load_config
 import os
 import yaml
 import time
-import pprint
 
 
 class Pipeline:
@@ -25,9 +24,8 @@ class Pipeline:
         projects_fp,
         fixed_base_config,
         float_base_config,
-        phase_overlap,
-        port_dowtime,
-        regional_ports=False,
+        phase_overlap=None,
+        port_downtime=None,
         enforce_feeders=False,
         ffiv_feeders=False
         
@@ -38,26 +36,30 @@ class Pipeline:
         Parameters
         ----------
         projects_fp : str
-            Filepath
-        base_config : str
-            Filepath
-        regional_ports : bool (optional)
-            Toggle for regional ports or specific ports.
+            Project pipeline filepath
+        fixed_base_config : str
+            Fixed-bottom project config filepath
+        float_base_config : str
+            Floating project config filepath
+        phase_overlap : float (optional)
+            Decimal percent overlap between foundation and installation phases
+        port_downtime : int (optional)
+            Months of port downtime between projects
         enforce_feeders : bool (optional)
-            Toggle for enforcing feeder barges for all fixed bottom projects.
+            Toggle to enforcing feedering for all fixed bottom projects 
+            (turbine and foundation phases).
+        ffiv_feeders : bool (optional)
+            Toggle to enforcing foundation feedering for all fixed bottom projects.
         """
 
         self.projects = pd.read_csv(projects_fp, parse_dates=["start_date"])
         self.append_num_turbines()
         self.base_fixed = load_config(fixed_base_config)
         self.base_float = load_config(float_base_config)
-        self.regional_ports = regional_ports
         self.enforce_feeders = enforce_feeders
-        self.ffiv_feeders = ffiv_feeders
+        self.ffiv_feeders = ffiv_feeders or enforce_feeders
         self.phase_overlap = phase_overlap
-        self.port_dowtime = port_dowtime
-
-
+        self.port_downtime = port_downtime
         self.configs = self.build_configs()
 
 
@@ -89,7 +91,7 @@ class Pipeline:
             else:
                 config = deepcopy(self.base_fixed)
             
-            config["port_downtime"] = self.port_dowtime
+            config["port_downtime"] = self.port_downtime
             config["project_name"] = data["name"]
             config["project_start"] = data["start_date"]
 
@@ -104,19 +106,6 @@ class Pipeline:
 
             config["us_wtiv"] = data.get("us_wtiv",False)
             config["us_ffiv"] = data.get("us_ffiv", False)
-
-
-            # if self.regional_ports:
-            #     config["port"] = {":".join(
-            #         ["_shared_pool_", data["port_region"]]
-            #     )}
-            #     # TODO: Check for NaNs in both cases
-
-            # else:
-            #     config["port"] = {
-            #         ":".join(["_shared_pool_", data["foundation_port"]]),
-            #         ":".join(["_shared_pool_", data["turbine_port"]])
-            #     }
 
             config = self.add_substructure_specific_config(
                 config, data 
@@ -134,10 +123,10 @@ class Pipeline:
         config : dict
             ORBIT config
         data : dict
-            project data
+            Project data
         """
-        foundation_port = data["foundation_port"].replace("_shared_pool_:", "")
-        turbine_port = data["turbine_port"].replace("_shared_pool_:", "")
+        foundation_port = data.get("foundation_port","associated_port").replace("_shared_pool_:", "")
+        turbine_port = data.get("turbine_port","associated_port").replace("_shared_pool_:", "")
 
         _foundation_dist = data.get("distance_to_foundation_port",self.calculate_port_distance(config, data["foundation_port"]))
         _turbine_dist = data.get("distance_to_turbine_port",self.calculate_port_distance(config, data["turbine_port"]))
@@ -151,8 +140,6 @@ class Pipeline:
             foundation_port_data = yaml.safe_load(stream)
         
         if data['substructure'] == "monopile":
-
-            
 
             # Design Phases
             config["design_phases"] += [
@@ -168,10 +155,7 @@ class Pipeline:
                         }
                     }
                 )
-            # config["install_phases"]["ScourProtectionInstallation"] = (
-            #     "MonopileInstallation",
-            #     .25,
-            # )
+
             config["install_phases"]["TurbineInstallation"] = (
                 "MonopileInstallation",
                 self.phase_overlap,
@@ -186,7 +170,7 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
-                if not turbine_port_data["shuttle_wtiv"]:
+                if (not turbine_port_data["shuttle_wtiv"]) or self.enforce_feeders:
                     config["feeder"] = "_shared_pool_:example_feeder"
                     config["num_feeders"] = 2
             else:
@@ -261,7 +245,6 @@ class Pipeline:
                     }
                 )
             
-            # config["install_phases"]["TurbineInstallation"] = 0
             config["install_phases"]["TurbineInstallation"] = (
                 "JacketInstallation",
                 self.phase_overlap,
@@ -276,7 +259,7 @@ class Pipeline:
             # Vessels
             if config["us_wtiv"]:
                 config["wtiv"] = "_shared_pool_:example_wtiv_us"
-                if not turbine_port_data["shuttle_wtiv"]:
+                if (not turbine_port_data["shuttle_wtiv"]) or self.enforce_feeders:
                     config["feeder"] = "_shared_pool_:example_feeder"
                     config["num_feeders"] = 2
             else:
@@ -322,8 +305,6 @@ class Pipeline:
                 "ScourProtectionDesign",
             ]
             
-
-
             # Install Phases
             config.update(
                     {
@@ -343,7 +324,7 @@ class Pipeline:
                         "towing_vessel": "_shared_pool_:example_towing_vessel",
                         "towing_vessel_groups": {
                             "towing_vessels": 2,
-                            "station_keeping_vessels": 2,
+                            "ahts_vessels": 2,
                         },
                         "substructure": {
                             "unit_cost": 0, # placeholder, needed for ORBIT but irrelevant for CORAL
@@ -356,12 +337,6 @@ class Pipeline:
 
             # Port
             config["port"] = ":".join(["_shared_pool_", data["turbine_port"]])
-
-            # Design Phases
-            # config["design_phases"] += [
-            #     "SemiSubmersibleDesign",
-            #     "MooringSystemDesign"
-            # ]
 
             # Install Phases
             config["install_phases"]["MooringSystemInstallation"] = 0
@@ -386,7 +361,7 @@ class Pipeline:
             config.update(
                 {
                     "MooringSystemInstallation": {
-                        "mooring_install_vessel": "example_support_vessel",
+                        "ahts_vessel": "example_support_vessel",
                         "mooring_system": {
                             "num_lines": 3,
                             "line_mass": .5,
@@ -397,8 +372,6 @@ class Pipeline:
                     }
                 }
             )
-
-
         else:
             raise TypeError(f"Substructure '{data['substructure']}' not supported.")
 
@@ -406,7 +379,16 @@ class Pipeline:
 
     
     def calculate_port_distance(self, config, port_name):
-        
+        """
+        Calculate straight line distance from port to project using port and project coordinates.
+
+        Parameters
+        ----------
+        config : dict
+            ORBIT config
+        port_name : str
+            name of port
+        """
         port_path = os.path.join(os.getcwd(), "library", "ports", "%s.yaml" % port_name)
         with open(port_path, 'r') as stream:
             port_data = yaml.safe_load(stream)

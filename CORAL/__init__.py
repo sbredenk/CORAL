@@ -1,7 +1,7 @@
 __author__ = "Jake Nunemaker"
 __copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
-__maintainer__ = "Jake Nunemaker"
-__email__ = "jake.nunemaker@nrel.gov"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
 
 
 from .library import SharedLibrary

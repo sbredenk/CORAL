@@ -1,7 +1,7 @@
 __author__ = "Jake Nunemaker"
 __copyright__ = "Copyright 2022, National Renewable Energy Laboratory"
-__maintainer__ = "Jake Nunemaker"
-__email__ = "jake.nunemaker@nrel.gov"
+__maintainer__ = "Sophie Bredenkamp"
+__email__ = "sophie.bredenkamp@nrel.gov"
 
 
 import os
@@ -26,10 +26,10 @@ class SharedLibrary:
 
         Parameters
         ----------
-        path : str
-            Path to shared resource library.
         allocations : dict
             Number of each library item that exists in the shared environment.
+        path : str
+            Path to shared resource library.
         """
 
         self.env = env
@@ -133,27 +133,8 @@ class SharedLibrary:
                     )
                 except RuntimeError:
                     pass
-    
-    def foundation_port_release(self, request, foundation_port):
-        """
-        Release requests of `SharedResources` associated with MultiRequest
-        `request`.
 
-        Parameters
-        ----------
-        request : MultiRequest
-        """
-
-        for k, v in request.resources.items():
-            if v == foundation_port:
-                try:
-                    self.resources[k.split(".")[-1]][v].release(
-                        request.requests[k]
-                    )
-                except RuntimeError:
-                    pass
-
-    def turbine_port_release(self, request):
+    def port_release(self, request):
         """
         Release requests of `SharedResources` associated with MultiRequest
         `request`.
@@ -206,9 +187,10 @@ class SharedLibrary:
 
         self._history.append(self.resource_capacities)
 
+
     @property
     def resource_capacities(self):
-
+        """Calculates resource capacities"""
         out = {"time": self.env.now}
 
         for cat, d in self.resources.items():

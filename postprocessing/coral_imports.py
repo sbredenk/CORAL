@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/Users/sbredenk/Repos/ORBIT')
+sys.path.insert(0, '/Users/sbredenk/Repos/ORBIT_natl_gaps')
 sys.path.insert(0, '/Users/sbredenk/Repos/CORAL_dev/CORAL')
 from CORAL import SharedLibrary, GlobalManager, Pipeline
 import pandas as pd
@@ -17,3 +17,4 @@ import matplotlib
 import argparse
 import matplotlib.ticker as tck
 import glob
+from openpyxl import load_workbook
