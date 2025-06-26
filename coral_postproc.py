@@ -10,11 +10,11 @@ ports = ['salem', 'searsport', 'new_bedford', 'new_london', 'arthur_kill', 'njwp
 
 # Read result path to analyze
 parser = argparse.ArgumentParser("simple_example")
-parser.add_argument('filename')
+parser.add_argument('foldername')
 args = parser.parse_args()
 
-filename = args.filename
-results_fp = 'postprocessing/results/%s' % filename
+foldername = args.foldername
+results_fp = 'postprocessing/results/%s' % foldername
 
 
 # Read in dfs from csvs
@@ -48,31 +48,24 @@ for scenario_name in scen_list:
  
     log = log.drop(log.columns[0],axis=1)
     
-    run_plots(prs, log, history, ports, summary_table_filename)
+    run_plots(prs, foldername, log, history, ports, summary_table_filename)
     # summary_table = percent_resource_demand(history_to_print, summary_table_filename)
 
     wb = load_workbook(summary_table_filename)
     del wb['Sheet1']
     wb.save(summary_table_filename)
 
-    # with pd.ExcelWriter(summary_table_filename, engine='openpyxl', mode='a') as writer:
-    #     summary_table.to_excel(writer, sheet_name=scenario_name)
-
-    # summary_table.to_excel(os.path.join(results_fp, 'percent_count.xlsx'), sheet_name=scenario_name)
-    # history_to_print.to_csv(os.path.join(results_fp, 'history', f'{scenario_name}_history.csv'))
-
     logs.append(log) 
 
 slide = add_text_slide(prs, 'Summary Plots', ["Plots comparing runs"])
 
 df_cum = installed_cap(prs,logs,desc)
-# compare_installed_cap(prs,logs,desc)
+compare_installed_cap(prs,logs,desc)
+df_cum_region = installed_cap_region(prs,logs,desc)
+df_cancel = cancellations(prs,logs,desc)
+df_delay_tile = avg_delay_tile(prs,logs,desc)
 
 
-savename = os.path.join(results_fp, '%s_results.pptx' % filename)
+savename = os.path.join(results_fp, '%s_results.pptx' % foldername)
 prs.save(savename)
 print(f'\nresults saved to:\n{savename}')
-
-# wb = load_workbook(summary_table_filename)
-# del wb['Sheet1']
-# wb.save(summary_table_filename)

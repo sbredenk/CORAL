@@ -470,7 +470,7 @@ def port_throughput(prs, log, region=None):
     for _, project in log.iterrows():
 
         if project["Date Finished"].year == project["Date Started"].year:
-            res._append((project["Date Finished"].year, project["associated_port"], project["capacity"]))
+            res.append((project["Date Finished"].year, project["turbine_port"], project["capacity"]))
 
         else:
 
@@ -485,11 +485,11 @@ def port_throughput(prs, log, region=None):
                 else:
                     perc = (dt.date(year + 1, 1, 1) - dt.date(year, 1, 1)) / total
 
-                res._append((year, project["associated_port"], perc * project["capacity"]))
+                res.append((year, project["turbine_port"], perc * project["capacity"]))
 
-    throughput = pd.DataFrame(res, columns=["year", "associated_port", "capacity"]).pivot_table(
+    throughput = pd.DataFrame(res, columns=["year", "turbine_port", "capacity"]).pivot_table(
         index=["year"],
-        columns=["associated_port"],
+        columns=["turbine_port"],
         aggfunc="sum",
         fill_value=0.
     )["capacity"]
@@ -497,7 +497,6 @@ def port_throughput(prs, log, region=None):
 
     index = np.arange(throughput.index.min(),throughput.index.max()+1)
     throughput = throughput.reindex(index, fill_value=0)
-    # throughput = throughput.drop(columns=['associated_port'])
 
     fig = plt.figure(figsize=(6, 4), dpi=200)
     ax = fig.add_subplot(111)
@@ -528,12 +527,12 @@ def port_throughput(prs, log, region=None):
     slide = add_to_pptx(prs,'Port Throughput')
     plt.close(fig)
 
-def vessel_utilization_plot(prs, log):
+def vessel_utilization_plot(prs, foldername, log):
 
     fig = plt.figure(figsize=(14,4), dpi=500)
     ax = fig.add_subplot(111)
 
-    scenario_path = 'library/scenarios'
+    scenario_path = f'library/scenarios/{foldername}' 
     scen_yaml = read_yaml(log['Scenario'].iloc[0], scenario_path)
     allocs = scen_yaml['allocations']
     futures = scen_yaml['future_resources']
@@ -616,11 +615,11 @@ def average_vessel_utilization_plot(prs, logs, desc):
         df_perc_util_feeder = df_vessel_util_feeder / df_vessel_count_feeder / 8766 * 100
         df_perc_util_ahts = df_vessel_util_ahts / df_vessel_count_ahts / 8766 * 100
 
-        avg_utilization['example_wtiv']._append(df_perc_util_wtiv['example_wtiv'].mean())
-        avg_utilization['example_wtiv_us']._append(df_perc_util_wtiv_us['example_wtiv_us'].mean())
-        avg_utilization['example_heavy_lift_vessel']._append(df_perc_util_heavy_lift['example_heavy_lift_vessel'].mean())
-        avg_utilization['example_feeder']._append(df_perc_util_feeder['example_feeder'].mean())
-        avg_utilization['example_ahts_vessel']._append(df_perc_util_ahts['example_ahts_vessel'].mean())
+        avg_utilization['example_wtiv'].append(df_perc_util_wtiv['example_wtiv'].mean())
+        avg_utilization['example_wtiv_us'].append(df_perc_util_wtiv_us['example_wtiv_us'].mean())
+        avg_utilization['example_heavy_lift_vessel'].append(df_perc_util_heavy_lift['example_heavy_lift_vessel'].mean())
+        avg_utilization['example_feeder'].append(df_perc_util_feeder['example_feeder'].mean())
+        avg_utilization['example_ahts_vessel'].append(df_perc_util_ahts['example_ahts_vessel'].mean())
 
     df_avg_utilization = pd.DataFrame(avg_utilization, index=desc)
 
@@ -631,7 +630,7 @@ def average_vessel_utilization_plot(prs, logs, desc):
 
     return avg_utilization
 
-def run_plots(prs, log, history, ports, summary_table_filename):
+def run_plots(prs, foldername, log, history, ports, summary_table_filename):
     ne = ['MA','ME','CT','RI','NH','RI/CT']
     nynj = ['NY','NJ']
     mid = ['NC', 'MD', 'VA', 'DE']
@@ -643,21 +642,21 @@ def run_plots(prs, log, history, ports, summary_table_filename):
     full_gantt(prs, log)
     full_gantt(prs, log, sorted=True)
 
-    # regional_gantt(prs, log, ne, 'New England')
-    # regional_gantt(prs, log, ne, 'New England', sorted=True)
+    regional_gantt(prs, log, ne, 'New England')
+    regional_gantt(prs, log, ne, 'New England', sorted=True)
 
     # port_gantts(prs, log, ports)
     # port_gantts(prs, log, ports, sorted=True)
 
-    # substructure_gantt(prs, log, 'fixed')
-    # substructure_gantt(prs, log, 'fixed', sorted=True)
-    # substructure_gantt(prs, log, 'floating')
-    # substructure_gantt(prs, log, 'floating', sorted=True)
+    substructure_gantt(prs, log, 'fixed')
+    substructure_gantt(prs, log, 'fixed', sorted=True)
+    substructure_gantt(prs, log, 'floating')
+    substructure_gantt(prs, log, 'floating', sorted=True)
 
-    # vessel_utilization_plot(prs,log)
+    vessel_utilization_plot(prs, foldername, log)
 
-    # port_throughput(prs,log)
-    # port_throughput(prs,log,ne)
+    port_throughput(prs,log)
+    port_throughput(prs,log,ne)
     # port_throughput(prs,log,nynj)
     # port_throughput(prs,log,mid)
 
@@ -740,9 +739,9 @@ def compare_installed_cap(prs, logs, desc, region=None):
         row_2030 = {'Scenario': desc[i], '2030': cap_2030}
         row_2040 = {'Scenario': desc[i], '2040': cap_2040}
         row_2050 = {'Scenario': desc[i], '2050': cap_2050}
-        df_2030 = df_2030._append(row_2030, ignore_index=True)
-        df_2040 = df_2040._append(row_2040, ignore_index=True)
-        df_2050 = df_2050._append(row_2050, ignore_index=True)
+        df_2030 = df_2030.append(row_2030, ignore_index=True)
+        df_2040 = df_2040.append(row_2040, ignore_index=True)
+        df_2050 = df_2050.append(row_2050, ignore_index=True)
         i+=1
 
     df_2040_per_wtiv = df_2040.copy()
@@ -760,27 +759,6 @@ def compare_installed_cap(prs, logs, desc, region=None):
     df_caps['2030'] = df_2030['2030']
     df_caps['2040'] = df_2040['2040']
     df_caps['2040_per_wtiv'] = df_2040_per_wtiv['2040']
-
-    # fig = plt.figure(figsize=(6,4), dpi=200)
-    # ax = fig.add_subplot(111)
-
-    # df_caps.plot.bar(rot=0, ax=ax, width=0.3)
-
-    # ax.set_ylabel('Installed Capacity (GW)')
-    # ax.set_xlabel('')
-    # ax.set_xlim(-0.25,3.25)
-
-    # for p in ax.patches:
-    #     ax.annotate(str(int(p.get_height())), (p.get_x(), p.get_height() * 1.005), fontsize=6)
-
-    # colors = {'2030 Capacity':'tab:blue', 
-    #           '2040 Capacity':'tab:orange',
-    #           '2040 Capacity per # WTIV':'tab:green'}
-
-    # labels = list(colors.keys())
-    # handles = [plt.Rectangle((0,0),1,1, color=colors[label]) for label in labels]
-    # ax.legend(handles, labels, loc='upper left', prop={'size': 6})
-    # slide = add_to_pptx(prs,'Summary Installed Cap')
 
     fig = plt.figure(figsize=(6,4), dpi=200)
     ax = fig.add_subplot(111)
@@ -805,7 +783,232 @@ def compare_installed_cap(prs, logs, desc, region=None):
 
     plt.close()
 
+def installed_cap_region(prs, dfs, desc):
+    """Line plots of cumulative installed capacity separated by region."""
+    regions = {
+        'All Regions': None,
+        'NE': ['MA', 'ME', 'CT', 'RI', 'NH', 'RI/CT'],
+        'NY/NJ': ['NY', 'NJ'],
+        'Central Atlantic': ['NC', 'MD', 'VA', 'DE']
+    }
 
+    regional_targets = {
+        'NE': {
+            2030: 3.43,
+            2035: 9.03,
+            2040: 12.03},
+        'NY/NJ': {
+            2035: 9,
+            2040: 20},
+        'Central Atlantic': {
+            2031: 8.5,
+            2032: 13.7,
+            }
+    }
 
+    yrs = np.arange(2023, 2065, 1)
 
+    for region_name, region_states in regions.items():
+        df_cap = pd.DataFrame(columns=desc, data=np.zeros((len(yrs), len(desc))), index=yrs)
+        df_cum_region = pd.DataFrame(columns=desc, data=np.zeros((len(yrs), len(desc))), index=yrs)
 
+        df = dfs[0]
+        if region_states:
+            df = df[df['location'].isin(region_states)].reset_index(drop=True)
+
+        df['cod'] = df['estimated_cod'].dt.year
+        df_cod = df.groupby(['cod']).capacity.sum().reset_index()
+        df_cod['sum'] = df_cod['capacity'].cumsum(axis=0) / 1000
+
+        fig = plt.figure(figsize=(10, 4), dpi=200)
+        ax = fig.add_subplot(1, 1, 1)
+
+        i = 0
+        for df in dfs:
+            df['finished'] = df['Date Finished'].dt.year
+            if region_states:
+                df = df[df['location'].isin(region_states)].reset_index(drop=True)
+            df_finished = df.groupby(['finished']).capacity.sum().reset_index()
+            df_finished['capacity'] = df_finished['capacity'] / 1000
+            df_finished['sum'] = df_finished['capacity'].cumsum(axis=0)
+
+            cap_mapping = dict(df_finished[['finished', 'capacity']].values)
+            df_cap[desc[i]] = df_cap.index.map(cap_mapping).fillna(0)
+            df_cum_region[desc[i]] = df_cap[desc[i]].cumsum(axis=0)
+            i += 1
+
+        df_cum_region[desc].plot(linestyle='-', ax=ax, label='cumulative')
+        ax.set_xlabel("")
+        ax.set_ylabel("Capacity (GW)")
+        ax.get_yaxis().set_major_formatter(
+            matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ','))
+        )
+
+        if region_name in regional_targets:
+            region = regional_targets[region_name]
+            for year, capacity in region.items():
+                ax.scatter(year, capacity, color='red', alpha=.5, label=f'{region_name} Targets')
+                props = dict(boxstyle='square', facecolor='white', alpha=0.8, fill=True)
+                ax.text(year+0.5, capacity-1, f"{capacity} GW", bbox=props)
+
+        ax.set_xlim(right=2045)
+        ax.set_ylim(top=30)
+
+        slide_title = f'Installed Capacity - {region_name}'
+        slide = add_to_pptx(prs, slide_title)
+
+    return df_cum_region
+
+def avg_delay_tile(prs, dfs, desc):
+    """Generate tiled heat maps of average delay for fixed-bottom projects, including a combined map for all regions."""
+
+    cod_groups = {
+        '2025-2030': (2025, 2030),
+        '2030-2035': (2031, 2035),
+        '2035-2040': (2036, 2040),
+    }
+
+    regions = {
+        'All Regions': None,
+        'NE': ['MA', 'ME', 'CT', 'RI', 'NH', 'RI/CT'],
+        'NY/NJ': ['NY', 'NJ'],
+        'Mid-Atlantic': ['NC', 'MD', 'VA', 'DE']
+    }
+
+    combined_df = pd.DataFrame()
+
+    for region_name, region_states in regions.items():
+        df_delay_tile = pd.DataFrame(index=desc, columns=cod_groups.keys())
+
+        for i, df in enumerate(dfs):
+            df['estimated_cod'] = pd.to_datetime(df['estimated_cod'])
+            df['Date Started'] = pd.to_datetime(df['Date Started'])
+            df['Date Initialized'] = pd.to_datetime(df['Date Initialized'])
+
+            df['delay'] = ((df['Date Started'] - df['Date Initialized']).dt.days) / 365
+
+            # Filter for fixed-bottom projects
+            df = df[df['substructure'].isin(['monopile', 'jacket'])]
+
+            if region_states:
+                df = df[df['location'].isin(region_states)]
+
+            for group_name, (start_year, end_year) in cod_groups.items():
+                group_df = df[(df['estimated_cod'].dt.year >= start_year) &
+                              (df['estimated_cod'].dt.year <= end_year)]
+                avg_delay = group_df['delay'].mean() if not group_df.empty else 0
+                df_delay_tile.at[desc[i], group_name] = avg_delay
+
+        if region_name != 'All Regions':
+            df_delay_tile['Region'] = region_name
+            combined_df = pd.concat([combined_df, df_delay_tile])
+
+        fig, ax = plt.subplots(figsize=(8, len(desc) * 0.5), dpi=200)
+        for i, scenario in enumerate(desc):
+            for j, time_bin in enumerate(cod_groups.keys()):
+                value = df_delay_tile.loc[scenario, time_bin]
+                color = 'green' if value < 1 else 'yellow' if value <= 3 else 'red'
+                rect = plt.Rectangle((j, i), 1, 1, facecolor=color, edgecolor='black')
+                ax.add_patch(rect)
+
+        green_patch = mpatches.Patch(color='green', label='Delay < 1 year')
+        yellow_patch = mpatches.Patch(color='yellow', label='1 ≤ Delay ≤ 3 years')
+        red_patch = mpatches.Patch(color='red', label='Delay > 3 years')
+        ax.legend(handles=[green_patch, yellow_patch, red_patch],
+                  loc='upper left', bbox_to_anchor=(1.05, 1), fontsize=8, frameon=False)
+
+        ax.set_xticks(np.arange(len(cod_groups)) + 0.5)
+        ax.set_xticklabels(cod_groups.keys(), rotation=0, ha='center')
+        ax.set_yticks(np.arange(len(desc)) + 0.5)
+        ax.set_yticklabels(desc)
+        ax.set_xlim(0, len(cod_groups))
+        ax.set_ylim(0, len(desc))
+        ax.invert_yaxis()
+        ax.set_title(f"Average Delay (Years) - {region_name}")
+
+        fig.tight_layout()
+        slide_title = f'Average Delay Heat Map - {region_name}'
+        slide = add_to_pptx(prs, slide_title)
+
+def cancellations(prs, dfs, desc):
+    """Bar chart showing the GW of cancelled projects for each scenario. Projects are grouped by their intended COD."""
+    cod_groups = {
+        '2025-2030': (2025, 2030),
+        '2030-2035': (2031, 2035),
+        '2035-2040': (2036, 2040),
+        #'2040-2045': (2041, 2045)
+    }
+
+    """ legend_labels = {
+        'natl_gaps_2us_2_1': '2 WTIVs',
+        'natl_gaps_3us_2_1': '3 WTIVs',
+        'natl_gaps_4us_2_1': '4 WTIVs',
+        'natl_gaps_no_action_2_1': 'No Action'
+    } """
+
+    legend_labels = {
+        'natl_gaps_infv': 'Infinite Vessels',
+        'natl_gaps_4foreign_2_1': 'US Feeder Emphasis',
+        'natl_gaps_4AHTS_2_1': 'AHTS Emphasis',
+        'natl_gaps_3us_2_1': 'US WTIV Emphasis',
+        'natl_gaps_no_action_2_1': 'No Action'
+    }
+
+    regions = {
+        'All Regions': None,
+        'NE': ['MA', 'ME', 'CT', 'RI', 'NH', 'RI/CT'],
+        'NY/NJ': ['NY', 'NJ'],
+        'Mid-Atlantic': ['NC', 'MD', 'VA', 'DE']
+    }
+
+    for region_name, region_states in regions.items():
+        df_cancel = pd.DataFrame(index=cod_groups.keys(), columns=desc)
+
+        for i, df in enumerate(dfs):
+            df['estimated_cod'] = pd.to_datetime(df['estimated_cod'])
+            df['Date Started'] = pd.to_datetime(df['Date Started'])
+            df['Date Initialized'] = pd.to_datetime(df['Date Initialized'])
+
+            df['delay'] = ((df['Date Started'] - df['Date Initialized']).dt.days) / 365
+
+            # Filter for only fixed-bottom projects
+            df = df[df['substructure'].isin(['monopile', 'jacket'])]
+
+            # Filter for specific regions if region_states is defined
+            if region_states:
+                df = df[df['location'].isin(region_states)]
+
+            # Filter for projects delayed 2 years or more
+            df = df[df['delay'] >= 2]
+
+            for group_name, (start_year, end_year) in cod_groups.items():
+                group_df = df[(df['estimated_cod'].dt.year >= start_year) &
+                              (df['estimated_cod'].dt.year <= end_year)]
+
+                total_capacity = group_df['capacity'].sum()/1000 if not group_df.empty else 0
+                df_cancel.at[group_name, desc[i]] = total_capacity
+
+        fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+        bar_width = 0.10
+        index = np.arange(len(cod_groups))
+
+        #order = [0, 2, 3, 1]  # Custom order for desc
+        #desc = [desc[i] for i in order]
+
+        for i, scenario in enumerate(desc):
+            bars = ax.bar(index + i * bar_width, df_cancel[scenario].astype(float),
+                          bar_width, label=legend_labels.get(scenario, scenario), color=f'C{i}')
+        
+        for p in ax.patches:
+            ax.annotate(str(int(p.get_height())), (p.get_x(), p.get_height() * 1.005), fontsize=6)
+
+        ax.set_xticks(index + bar_width * (len(desc) - 1) / 2)
+        ax.set_xticklabels(cod_groups.keys())
+        ax.set_ylabel("Projects at Risk of Cancellation (GW)")
+        ax.set_xlabel("Intended COD")
+        ax.legend(title="Scenarios", prop={'size': 8})
+
+        slide_title = f'Total Capacity at Risk by COD - {region_name}'
+        slide = add_to_pptx(prs, slide_title)
+
+    return df_cancel

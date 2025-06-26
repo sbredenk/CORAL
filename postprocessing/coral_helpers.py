@@ -152,7 +152,7 @@ def vessel_hours(log):
         
     return(df_util)
 
-def vessel_pipeline(allocations, futures):
+def vessel_pipeline(allocations, futures, removal):
     """
     Counts total vessel of each type in shared resources in each year.
 
@@ -173,6 +173,13 @@ def vessel_pipeline(allocations, futures):
 
     for vessel in vessel_types:
         for vessel_type in futures:
+            if vessel_type[1] == vessel:
+                years = [x.year for x in vessel_type[2]]
+                for year in years:
+                    vessel_count.loc[year:,vessel] += 1
+    
+    for vessel in vessel_types:
+        for vessel_type in removal:
             if vessel_type[1] == vessel:
                 years = [x.year for x in vessel_type[2]]
                 for year in years:
