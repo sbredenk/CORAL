@@ -20,7 +20,7 @@
 ### Documentation
 - Basic README for installing the model and dependancies
 
-## 1.0 (15 April 2025)
+## 1.0 (1 August 2025)
 
 ### Model Capability Development
 - Added ability to remove vessels from pool

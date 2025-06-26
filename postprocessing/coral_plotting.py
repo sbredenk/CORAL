@@ -62,7 +62,7 @@ def add_textbox(
 
 def plot_shared_resource_capacities(prs, history, ignore_cols=None, col_map=None):
     """
-    Plots number of shared resources in poolin each year.
+    Plots number of shared resources in pool in each year.
 
     Parameters
     ----------

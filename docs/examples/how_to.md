@@ -55,24 +55,27 @@ remove_resources:
 ```
 
 ## Running CORAL
-The below command in the command line will run run_coral.py, running each specified scenario and saving the results in individual csv files within the folder with the folder name provided at postprocessing/results.
+The below command in the command line will run run_coral.py, a script that runs each scenario saved in the specified folder ("foldername") and saving both the resource pool history and the ORBIT logs for each scenario in individual csv files within a folder of the same name in postprocessing/results.
 
 ```{code-block} python
-python run_coral.py foldername scenario1 scenario2 scenario3
+python run_coral.py foldername
 
 ```
 
 The line below would be used to run the example scenarios provided.
 
 ```{code-block} python
-python run_coral.py atlantic_example example_atlantic_1 example_atlantic_2 example_atlantic_3
+python run_coral.py atlantic_example
 ```
+The output folder would be names atlantic_example and include the following files: atlantic_example_1_resource_history, atlantic_example_1_log, atlantic_example_2_resource_history, atlantic_example_2_log, atlantic_example_3_resource_history, atlantic_example_3_log.
+
+These csv files are the basis of all the postprocessing done by coral_plotting.py, which can be run with the postprocessing script. 
 
 ## Running postprocessing script
-The below command will run coral_postproc.py which creates a summary slide deck, comparing the runs in the given folder. 
+The below command will run coral_postproc.py which creates a summary slide deck, including visualizations of individual runs and plots comparing the runs in the given folder. 
 ```{code-block} python 
 python coral_postproc.py foldername
 ```
-The figures included in the slide deck are created in the coral_plotting.py file. 
+The figures included in the slide deck are created in the coral_plotting.py file and are saved to foldername_results.pptx in results/foldername.
 
 
