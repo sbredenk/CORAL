@@ -1,0 +1,21 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: index
+parts:
+- caption: Getting Started
+  chapters:
+  - file: install
+  - file: contributing
+  - file: team
+- caption: Working With the Code Base
+  chapters:
+  - file: examples/index
+    sections:
+    - file: examples/how_to
+    - file: examples/examples_reference
+  - file: API/index
+    sections:
+    - file: API/core
+  - file: changelog
